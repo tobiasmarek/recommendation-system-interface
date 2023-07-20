@@ -1,27 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.Analysis;
+using RecommendationSystem.Interfaces;
 
 namespace RecommendationSystem
 {
     abstract class Approach
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DataFrame dataFrame { get; set; }
+
+        public ISimilarityEvaluator Evaluator { get; set; }
+
         public abstract void Recommend();
     }
 
 
 
 
-    class ContentBasedApproach : Approach // nebylo by dobrý to udělat abstract?
+    class ContentBasedApproach : Approach
     {
-        public ISimilarity Similarity { get; set; }
         public User User { get; set; }
+
+        public IUserAndRowVectorizer Vectorizer { get; set; }
 
         public override void Recommend()
         {
-            throw new NotImplementedException();
+            var newColumn = new PrimitiveDataFrameColumn<float>($"{Name}_results.txt", dataFrame.Rows.Count);
+
+            float[] userVector = Vectorizer.VectorizeUser(User, dataFrame);
+
+            long rowNum = 0;
+            foreach (var row in dataFrame.Rows)
+            {
+                float[] rowVector = Vectorizer.VectorizeRow();
+
+                float similarity = Evaluator.EvaluateSimilarity(rowVector, userVector);
+
+                newColumn[rowNum] = similarity;
+
+                rowNum++;
+            }
+
+            dataFrame.Columns.Add(newColumn);
         }
     }
 
@@ -34,8 +54,10 @@ namespace RecommendationSystem
     }
 
 
+
+
     abstract class HybridApproach : Approach
     {
-
+        public User[] Users { get; set; }
     }
 }

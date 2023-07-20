@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Analysis;
+using RecommendationSystem.Interfaces;
 
 namespace RecommendationSystem
 {
@@ -9,19 +10,20 @@ namespace RecommendationSystem
             // var parser = new SisSubjectParser { Url = sis.cuni.uk };
             string csvFilePath = "path"; // parser.Parse();
             
-            DataFrame df = DataFrame.LoadCsv(csvFilePath);
+            DataFrame dataFrame = DataFrame.LoadCsv(csvFilePath); // v try catch?
 
-            var approach = new ContentBasedApproach 
+            var approach = new ContentBasedApproach()
             {
-                Similarity = new CosineSimilarity(),
-                User = new SisUser()
+                Evaluator = new CosineSimilarityEvaluator(),
+                Vectorizer = new UserAndRowVectorizer(),
+                User = new SisUser(),
             };
 
             var viewer = new ConsoleViewer();
 
             var fw = new Framework
             {
-                Data = df,
+                Data = dataFrame,
                 Approach = approach,
                 Viewer = viewer
             };

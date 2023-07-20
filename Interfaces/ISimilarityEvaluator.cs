@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecommendationSystem
+namespace RecommendationSystem.Interfaces
 {
-    interface ISimilarity
+    interface ISimilarityEvaluator
     {
-        public float Similarity(float[] u, float[] v); // nebo z toho udělat <T>, protože třeba NN může dostat jinej vstup
+        float EvaluateSimilarity(float[] u, float[] v); // nebo z toho udělat <T>, protože třeba NN může dostat jinej vstup
         // protože NN může mít svoje převádění na vektorovou reprezentaci, nebo ne?
         // tzn dám si pozor jestli vůbec chci dělat jinej interface pro převádění reprezentace do vektorový
         // protože ještě k tomu - similarity nemusim dělat jen z float[] reprezentace, ale třeba z množin
@@ -16,27 +16,27 @@ namespace RecommendationSystem
     }
 
 
-    class EuclideanSimilarity : ISimilarity
+    class EuclideanSimilarityEvaluator : ISimilarityEvaluator
     {
-        public float Similarity(float[] u, float[] v)
+        public float EvaluateSimilarity(float[] u, float[] v)
         {
             if (u.Length != v.Length) { return -1; }
 
             float sum = 0;
-            
+
             for (int i = 0; i < u.Length; i++)
             {
                 sum += (u[i] - v[i]) * (u[i] - v[i]);
             }
 
-            return 1/(float)Math.Sqrt(sum);
+            return 1 / (float)Math.Sqrt(sum);
         }
     }
 
 
-    class CosineSimilarity : ISimilarity
+    class CosineSimilarityEvaluator : ISimilarityEvaluator
     {
-        public float Similarity(float[] u, float[] v)
+        public float EvaluateSimilarity(float[] u, float[] v)
         {
             if (u.Length != v.Length) { return -1; }
 

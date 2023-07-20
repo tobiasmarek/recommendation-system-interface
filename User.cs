@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.Analysis;
 
 namespace RecommendationSystem
 {
@@ -16,6 +17,7 @@ namespace RecommendationSystem
 
     class SisUser : User
     {
-        private Dictionary<string, string> interests { get; set; }
+        private DataFrameRow[] favourites { get; set; }
+        private DataFrameRow[] wishList { get; set; }
     }
 }
