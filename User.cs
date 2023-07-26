@@ -9,7 +9,7 @@ namespace RecommendationSystem
 {
     abstract class User
     {
-        private string name { get; set; }
+        private string userID { get; set; }
     }
 
 
@@ -17,7 +17,7 @@ namespace RecommendationSystem
 
     class SisUser : User
     {
-        private DataFrameRow[] favourites { get; set; }
-        private DataFrameRow[] wishList { get; set; }
+        public int[] Favourites { get; set; } = new int[] {9,10,11,12};
+        public int[] WishList { get; set; } = new int[0];
     }
 }
