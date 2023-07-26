@@ -36,6 +36,8 @@ namespace RecommendationSystem.Interfaces
 
     class CosineSimilarityEvaluator : ISimilarityEvaluator
     {
+        private int k = 0;
+
         public float EvaluateSimilarity(float[] u, float[] v)
         {
             if (u.Length != v.Length) { return -1; }
