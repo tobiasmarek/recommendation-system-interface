@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Analysis;
 using RecommendationSystem.Interfaces;
 using System.Text.Json;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RecommendationSystem
 {
@@ -27,22 +26,31 @@ namespace RecommendationSystem
 
         public void SelectApproach(string name = "TfIdf")
         {
-            var preprocessor = new TfIdf();
+            var preProcessor = new TfIdf();
             var evaluator = new CosineSimilarityEvaluator();
 
-            approach = new NonModelContentBasedApproach()
+            approach = new NonModelContentBasedApproach
             {
                 Name = name,
                 dataFrame = dataFrame,
-                DataPreprocessor = preprocessor,
+                PreProcessor = preProcessor,
                 Evaluator = evaluator,
                 User = new SisUser() // neměl bych ho dát do Framework?
             };
         }
 
-        public void AddFavourite() // tady spis ne, nebo ne?
+        public void LoadCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
         {
+            try { dataFrame = DataFrame.LoadCsv(csvFilePath, separator); }
+            catch (Exception e) { Console.WriteLine("Failed to LoadCsv"); return; }
 
+            Viewer.View(dataFrame.Head(5));
+        }
+
+        public void SaveCsv(string csvResultFilePath = "subjects_11310_result.csv", char separator = '|')
+        {
+            try { DataFrame.SaveCsv(dataFrame, csvResultFilePath, separator); }
+            catch (Exception e) { Console.WriteLine("Failed to SaveCsv"); }
         }
 
         public void ShowSessions() // nebo nejak proste jenom view bude handlovat? bez tvorby takovejch funkci tim myslim
@@ -109,20 +117,6 @@ namespace RecommendationSystem
             }
         }
 
-        public void LoadCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
-        {
-            try { dataFrame = DataFrame.LoadCsv(csvFilePath, separator); }
-            catch (Exception e) { Console.WriteLine("Failed to LoadCsv"); return; }
-
-            Viewer.View(dataFrame.Head(5));
-        }
-
-        public void SaveCsv(string csvResultFilePath = "subjects_11310_result.csv", char separator = '|')
-        {
-            try { DataFrame.SaveCsv(dataFrame, csvResultFilePath, separator); }
-            catch (Exception e) { Console.WriteLine("Failed to SaveCsv"); }
-        }
-
         public void Parse()
         {
             // var parser = new SisSubjectParser { Url = sis.cuni.uk };
@@ -155,4 +149,15 @@ namespace RecommendationSystem
             Controller.TakeInput();
         }
     }
+
+
+
+
+    class ConsoleSubjectSession : ConsoleSession
+    {
+        public void AddFavourite() // tady spis ne, nebo ne?
+        {
+
+        }
+    } 
 }

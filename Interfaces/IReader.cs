@@ -66,7 +66,7 @@ namespace RecommendationSystem.Interfaces
 
     class FileStreamWordReader : IDisposableWordReader
     {
-        public bool EndOfLine;
+        public bool EndOfLine; // nedát to do interface?
 
         private readonly StreamReader _sr;
         private readonly char[] _separators;
@@ -139,5 +139,30 @@ namespace RecommendationSystem.Interfaces
         }
 
         public void Dispose() { _sr.Dispose(); }
+    }
+
+
+    class SqlWordReader : IDisposableWordReader // ale potrebuju taky aby umel EndOfRow
+    {
+        public string? ReadWord()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    class CsvFileStreamWordReader : FileStreamWordReader // nebo nejakej EndOfRowFileStreamWordReader?
+    {
+        public bool EndOfRow;
+
+        public CsvWordReader(string path, char[] separators) : base(path, separators)
+        {
+            EndOfRow = false;
+        }
     }
 }

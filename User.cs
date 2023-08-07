@@ -7,7 +7,7 @@ using Microsoft.Data.Analysis;
 
 namespace RecommendationSystem
 {
-    abstract class User
+    class User
     {
         private string userID { get; set; }
     }
