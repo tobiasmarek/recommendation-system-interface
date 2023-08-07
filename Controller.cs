@@ -18,11 +18,11 @@ namespace RecommendationSystem
 
             switch (cmd[0]) // nebo to nejak jinak zpracovat
             {
-            case "loadcsv":
-                Session.LoadCsv();
+            case "loadfromcsv":
+                Session.LoadFromCsv();
                 break;
-            case "savecsv":
-                Session.SaveCsv();
+            case "loadfromdbs":
+                Session.LoadFromDbs();
                 break;
             case "selectapproach":
                 Session.SelectApproach();

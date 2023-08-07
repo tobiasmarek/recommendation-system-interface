@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Data.Analysis;
-
-namespace RecommendationSystem.Interfaces
+﻿namespace RecommendationSystem.Interfaces
 {
     internal interface IPreProcessor
     {
-        float[][] Preprocess(string csvFilePath);
+        float[][] Preprocess(IDisposableLineReader lr);
     }
 
 
@@ -24,14 +16,14 @@ namespace RecommendationSystem.Interfaces
         private readonly Dictionary<string, int> _wordIndexMap = new();
         private long numOfRows { get; set; } = 0;
 
-        public float[][] Preprocess(string csvFilePath) // vubec nemusi byt 2D  // pouzit Math.Numerics kde jsou efficient matice
+        public float[][] Preprocess(IDisposableLineReader lr) // vubec nemusi byt 2D  // pouzit Math.Numerics kde jsou efficient matice
         {
             _rowAppearance = new();
             _uniqueWords = new();
 
             string tempTfFilePath = Path.GetTempFileName();
 
-            GetFrequencies(csvFilePath, tempTfFilePath);
+            GetFrequencies(lr, tempTfFilePath);
             string tfIdfFilePath = GetTfIdfFile(numOfRows, tempTfFilePath);
 
             File.Delete(tempTfFilePath);
@@ -92,9 +84,9 @@ namespace RecommendationSystem.Interfaces
             return tfIdfFilePath;
         }
 
-        private void GetFrequencies(string csvFilePath, string tempTfFilePath)
+        private void GetFrequencies(IDisposableLineReader rr, string tempTfFilePath)
         {
-            var sr = new CsvFileStreamWordReader(csvFilePath, new[]
+            var sr = new RecordStreamWordReader(rr, new[]
             {
                 ' ', '\t', '\n', '\r', // Whitespace characters
                 '!', '"', '#', '$', '%', '&', '\'', '(', ')', // Punctuation marks
@@ -159,10 +151,10 @@ namespace RecommendationSystem.Interfaces
 
     class UserItemMatrixPreProcessor : IPreProcessor
     {
-        public float[][] Preprocess(string csvFilePath)
+        public float[][] Preprocess(IDisposableLineReader rr)
         {
             Dictionary<int, Dictionary<int, int>> userRatings = new();
-            var sr = new CsvFileStreamWordReader(csvFilePath, new char[] { '\t' }); // lepsi je rowreader v tomhle pripade
+            var sr = new RecordStreamWordReader(rr, new char[] { '\t' }); // lepsi je rowreader v tomhle pripade
 
             int userMaxIndex = 0;
             int itemMaxIndex = 0;

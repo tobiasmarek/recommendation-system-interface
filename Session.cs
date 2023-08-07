@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Analysis;
-using RecommendationSystem.Interfaces;
+﻿using RecommendationSystem.Interfaces;
 using System.Text.Json;
 
 namespace RecommendationSystem
@@ -9,19 +8,12 @@ namespace RecommendationSystem
         public Viewer Viewer { get; set; }
         public Controller Controller { get; set; }
 
-        private DataFrame dataFrame { get; set; } // nebo jen prostě class která implementuje víc interfaces (do ktery spada DataFrame)
+        private IDisposableLineReader recordReader { get; set; } // nebo něco víc specific?
         private Approach approach { get; set; }
 
         public void GetRecommendations()
         {
-            if (approach is null) { return; }
-
-            approach.Recommend();
-
-            var subsetDF = new DataFrame();
-            subsetDF.Columns.Add(dataFrame["NAME"]);
-            subsetDF.Columns.Add(dataFrame["TfIdf"]);
-            Viewer.View(subsetDF.Head(5));
+            if (approach is not null) { Viewer.View(approach.Recommend()); }
         }
 
         public void SelectApproach(string name = "TfIdf")
@@ -29,28 +21,34 @@ namespace RecommendationSystem
             var preProcessor = new TfIdf();
             var evaluator = new CosineSimilarityEvaluator();
 
-            approach = new NonModelContentBasedApproach
+            approach = new StringSimilarityContentBasedApproach
             {
                 Name = name,
-                dataFrame = dataFrame,
+                RecordReader = recordReader,
                 PreProcessor = preProcessor,
                 Evaluator = evaluator,
-                User = new SisUser() // neměl bych ho dát do Framework?
+                User = new SisUser() // neměl bych ho dát do Session?
             };
         }
 
-        public void LoadCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
+        public void LoadFromCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
         {
-            try { dataFrame = DataFrame.LoadCsv(csvFilePath, separator); }
-            catch (Exception e) { Console.WriteLine("Failed to LoadCsv"); return; }
+            try
+            {
 
-            Viewer.View(dataFrame.Head(5));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to LoadCsv");
+                return;
+            }
+
+            Viewer.View(csvFilePath);
         }
 
-        public void SaveCsv(string csvResultFilePath = "subjects_11310_result.csv", char separator = '|')
+        public void LoadFromDbs()
         {
-            try { DataFrame.SaveCsv(dataFrame, csvResultFilePath, separator); }
-            catch (Exception e) { Console.WriteLine("Failed to SaveCsv"); }
+            throw new NotImplementedException();
         }
 
         public void ShowSessions() // nebo nejak proste jenom view bude handlovat? bez tvorby takovejch funkci tim myslim

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RecommendationSystem.Interfaces
 {
@@ -70,7 +71,7 @@ namespace RecommendationSystem.Interfaces
 
         private readonly StreamReader _sr;
         private readonly char[] _separators;
-        private StringBuilder _sb;
+        private readonly StringBuilder _sb;
         private bool _wordStarted;
 
         public FileStreamWordReader(string path, char[] separators)
@@ -142,27 +143,109 @@ namespace RecommendationSystem.Interfaces
     }
 
 
-    class SqlWordReader : IDisposableWordReader // ale potrebuju taky aby umel EndOfRow
+    class StringStreamWordReader : IDisposableWordReader // tohle je trochu redundant lepsi mozna StreamWordReader a pak dosazovat nejakej TextReader
     {
-        public string? ReadWord()
+        public StringReader Sr { get; set; }
+        public bool EndOfLine; // nedát to do interface?
+
+        private readonly char[] _separators;
+        private readonly StringBuilder _sb;
+        private bool _wordStarted;
+
+        public StringStreamWordReader(char[] separators)
         {
-            throw new NotImplementedException();
+            this.EndOfLine = false;
+            this._separators = separators;
+            this._sb = new StringBuilder();
+            this._wordStarted = false;
         }
 
-        public void Dispose()
+        public string? ReadWord()
         {
-            throw new NotImplementedException();
+            string? word = null;
+            EndOfLine = false;
+
+            try
+            {
+                int chNumber;
+                char ch;
+                while ((chNumber = Sr.Read()) != -1)
+                {
+                    ch = (char)chNumber;
+
+                    if (ch == '\n') { EndOfLine = true; }
+
+                    if (_separators.Contains(ch))
+                    {
+                        if (_wordStarted)
+                        {
+                            word = _sb.ToString();
+                            _wordStarted = false;
+                            _sb.Clear();
+                        }
+                    }
+                    else
+                    {
+                        _sb.Append(ch);
+
+                        _wordStarted = true;
+
+                        if (word is not null) { return word; }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            if (_wordStarted) { return _sb.ToString(); }
+
+            if (word is not null) { return word; }
+
+            return null;
         }
+
+        public void Dispose() { Sr.Dispose(); }
     }
 
 
-    class CsvFileStreamWordReader : FileStreamWordReader // nebo nejakej EndOfRowFileStreamWordReader?
+    class RecordStreamWordReader : StringStreamWordReader // nebo nejakej EndOfRowFileStreamWordReader?
     {
         public bool EndOfRow;
 
-        public CsvWordReader(string path, char[] separators) : base(path, separators)
+        private string? _row;
+        private string? _nextWord = null;
+        private readonly IDisposableLineReader _rr;
+
+        public RecordStreamWordReader(IDisposableLineReader rr, char[] separators) : base(separators)
         {
-            EndOfRow = false;
+            EndOfRow = true;
+            _rr = rr;
+            _row = String.Empty;
+        }
+
+        public new string? ReadWord()
+        {
+            string? word;
+            if (EndOfRow == true)
+            {
+                _row = _rr.ReadLine();
+                if (_row == null) { return null; }
+                Sr = new StringReader(_row);
+                EndOfRow = false;
+            }
+
+            if (_nextWord == null) { word = base.ReadWord(); }
+            else { word = _nextWord; }
+
+            if (word == null) { return ""; }
+
+            _nextWord = base.ReadWord();
+            if (_nextWord == null) { EndOfRow = true; }
+
+            return word;
         }
     }
 }

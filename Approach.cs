@@ -1,17 +1,18 @@
-﻿using Microsoft.Data.Analysis;
-using RecommendationSystem.Interfaces;
+﻿using RecommendationSystem.Interfaces;
 
 namespace RecommendationSystem
 {
     abstract class Approach
     {
-        public string csvFilePath { get; set; } // prostě nějaká adresa nebo funkce ktera gettuje data
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public IDisposableLineReader RecordReader { get; set; }
+        public IPreProcessor PreProcessor { get; set; }
         public ISimilarityEvaluator Evaluator { get; set; }
+        public IPostProcessor PostProcessor { get; set; }
 
-        public abstract void Recommend();
+        public abstract string Recommend();
     }
 
 
@@ -23,14 +24,11 @@ namespace RecommendationSystem
     }
 
 
-    class SimilarityContentBasedApproach : ContentBasedApproach
+    class StringSimilarityContentBasedApproach : ContentBasedApproach
     {
-        public IPreProcessor PreProcessor { get; set; }
-        public IPostProcessor PostProcessor { get; set; }
-
-        public override void Recommend()
+        public override string Recommend()
         {
-            float[][] dataMatrix = PreProcessor.Preprocess(csvFilePath);
+            float[][] dataMatrix = PreProcessor.Preprocess(RecordReader);
 
             float[] userVector = GetUserVector(dataMatrix);
 
@@ -41,15 +39,16 @@ namespace RecommendationSystem
                 similaritiesVector[rowNum] = Evaluator.EvaluateSimilarity(dataMatrix[rowNum], userVector);
             }
 
-            string resultsFilePath = PostProcessor.Postprocess(similaritiesVector);
+            string resultsFilePath = PostProcessor.Postprocess(new float[][] { similaritiesVector }); // tohle jinak
             // DataPostprocessor (sorting, filtering, similarity) z prediktly hodnoceni treba seradim a udelam nejakou filtraci
 
             // Evaluation (precision@K, @) vyhodim prvnich 10 idk a pak najdu podle indexu zaznamy predmetů a ty vyhodim
+            return resultsFilePath;
         }
 
         private float[] GetUserVector(float[][] dataMatrix)
         {
-            float[] userVector = new float[numDataFrame[0].Length];
+            float[] userVector = new float[dataMatrix[0].Length];
 
             if (User is not SisUser sisUser) { return userVector; }
 
@@ -57,7 +56,7 @@ namespace RecommendationSystem
             {
                 for (int j = 0; j < userVector.Length; j++)
                 {
-                    userVector[j] += numDataFrame[index][j];
+                    userVector[j] += dataMatrix[index][j];
                 }
             }
 
@@ -65,7 +64,7 @@ namespace RecommendationSystem
             {
                 for (int j = 0; j < userVector.Length; j++)
                 {
-                    userVector[j] += numDataFrame[index][j];
+                    userVector[j] += dataMatrix[index][j];
                 }
             }
 
@@ -93,13 +92,11 @@ namespace RecommendationSystem
 
     class UserUserCfApproach : CollaborativeFilteringApproach
     {
-        public IPreProcessor PreProcessor { get; set; }
         public IPredictor Predictor { get; set; }
-        public IPostProcessor PostProcessor { get; set; }
 
-        public override void Recommend()
+        public override string Recommend()
         {
-            float[][] userItemMatrix = PreProcessor.Preprocess(csvFilePath);  // vyrobit user-item matici (nebo kdyz uz ji dostanu tak upravim dataframe)
+            float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader);  // vyrobit user-item matici
 
             float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // čtvercová symetric matrix tvořená users
 
@@ -109,7 +106,7 @@ namespace RecommendationSystem
 
                 for (int j = 0; j < i; j++)
                 {
-                    if (i == j) { continue; } // spocitat similarity? kazdyho user - tzn. user-user approach?
+                    if (i == j) { continue; }
                     userSimilarities[i][j] = Evaluator.EvaluateSimilarity(userItemMatrix[i], userItemMatrix[j]);
                 }
             }
@@ -120,18 +117,19 @@ namespace RecommendationSystem
 
             string resultsFilePath = PostProcessor.Postprocess(userItemMatrix); // tzn potrebuju user-history (nebo aspoň jeho nepredicted ratings) a items (jejich popisy)
             // DataPostprocessor (sorting, filtering, similarity) z prediktly hodnoceni treba seradim a udelam nejakou filtraci
+
+            return resultsFilePath;
         }
     }
 
 
     class ItemItemCfApproach : CollaborativeFilteringApproach
     {
-        public IPreProcessor DataPreprocessor { get; set; }
         public IPredictor Predictor { get; set; }
 
-        public override void Recommend()
+        public override string Recommend()
         {
-
+            throw new NotImplementedException();
         }
     }
 
