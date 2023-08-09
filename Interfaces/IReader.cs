@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Text;
 
 namespace RecommendationSystem.Interfaces
 {
@@ -132,7 +127,13 @@ namespace RecommendationSystem.Interfaces
                 throw;
             }
 
-            if (_wordStarted) { return _sb.ToString(); }
+            if (_wordStarted)
+            {
+                word = _sb.ToString();
+                _wordStarted = false;
+                _sb.Clear();
+                return word;
+            }
             
             if (word is not null) { return word; }
 
@@ -200,7 +201,13 @@ namespace RecommendationSystem.Interfaces
                 throw;
             }
 
-            if (_wordStarted) { return _sb.ToString(); }
+            if (_wordStarted)
+            {
+                word = _sb.ToString();
+                _wordStarted = false;
+                _sb.Clear();
+                return word;
+            }
 
             if (word is not null) { return word; }
 
