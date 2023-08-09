@@ -33,15 +33,19 @@ namespace RecommendationSystem
 
         public void LoadFromCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
         {
+            IDisposableLineReader rr;
+
             try
             {
-
+                rr = new FileStreamLineReader(csvFilePath);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed to LoadCsv");
                 return;
             }
+
+            recordReader = rr;
 
             Viewer.View(csvFilePath);
         }

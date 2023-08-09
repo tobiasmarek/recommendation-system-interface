@@ -55,33 +55,30 @@ namespace RecommendationSystem
     {
         public override void TakeInput()
         {
-            Console.WriteLine(@"case ""loadcsv"":
-    Session.LoadCsv();
-    break;
-case ""savecsv"":
-    Session.SaveCsv();
-    break;
-case ""selectapproach"":
-    Session.SelectApproach();
-    break;
-case ""recommend"":
-    Session.GetRecommendations();
-    break;
-case ""savesession"":
-    Session.SaveSession(cmd[1]);
-    break;
-case ""loadsession"":
-    Session = Session.LoadSession(cmd[1]);
-    Session.Controller = this;
-    break;
-case ""showsessions"":
-    Session.ShowSessions();
-    break;
-case ""deletesession"":
-    Session.DeleteSession(cmd[1]);
-    break;
-default:
-    return;");
+            Console.WriteLine(@"            case ""loadfromcsv"":
+                Session.LoadFromCsv();
+                break;
+            case ""loadfromdbs"":
+                Session.LoadFromDbs();
+                break;
+            case ""selectapproach"":
+                Session.SelectApproach();
+                break;
+            case ""recommend"":
+                Session.GetRecommendations();
+                break;
+            case ""savesession"":
+                Session.SaveSession(cmd[1]);
+                break;
+            case ""loadsession"":
+                Session? loadedSession = Session.LoadSession(cmd[1]);
+                if (loadedSession != null) { Session.Controller = this; } // takze bych mel spis ukladat jen approach, user a data, abych nemusel tohle
+                break;
+            case ""showsessions"":
+                Session.ShowSessions();
+                break;
+            case ""deletesession"":
+                Session.DeleteSession(cmd[1]);");
 
             string? line;
             while ((line = Console.ReadLine()) != null)

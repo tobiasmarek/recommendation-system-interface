@@ -2,7 +2,7 @@
 {
     internal interface IPreProcessor
     {
-        float[][] Preprocess(IDisposableLineReader lr);
+        float[][] Preprocess(IDisposableLineReader rr);
     }
 
 
@@ -16,14 +16,14 @@
         private readonly Dictionary<string, int> _wordIndexMap = new();
         private long numOfRows { get; set; } = 0;
 
-        public float[][] Preprocess(IDisposableLineReader lr) // vubec nemusi byt 2D  // pouzit Math.Numerics kde jsou efficient matice
+        public float[][] Preprocess(IDisposableLineReader rr) // vubec nemusi byt 2D  // pouzit Math.Numerics kde jsou efficient matice
         {
             _rowAppearance = new();
             _uniqueWords = new();
 
             string tempTfFilePath = Path.GetTempFileName();
 
-            GetFrequencies(lr, tempTfFilePath);
+            GetFrequencies(rr, tempTfFilePath);
             string tfIdfFilePath = GetTfIdfFile(numOfRows, tempTfFilePath);
 
             File.Delete(tempTfFilePath);
