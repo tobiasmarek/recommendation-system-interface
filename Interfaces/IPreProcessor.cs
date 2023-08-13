@@ -1,4 +1,6 @@
-﻿namespace RecommendationSystem.Interfaces
+﻿using System.Runtime.InteropServices;
+
+namespace RecommendationSystem.Interfaces
 {
     internal interface IPreProcessor
     {
@@ -73,7 +75,7 @@
                 float number = float.Parse(splitPair[1]);
 
                 sw.Write($"{word} {number * (float)Math.Log2(numOfRows / (double)_rowAppearance[word])}"); // base?
-
+                // někdy se float při ToString dá do tvaru 10E-7 or smth ... to prekazit
                 if (sr.EndOfLine != true) { sw.Write(","); }
                 else { sw.Write("\n"); }
             }
@@ -106,6 +108,8 @@
 
                 while ((word = sr.ReadWord()) != null)
                 {
+                    word = word.ToLower(); // abych předešel zmatkům
+
                     if (!rowUniqueWordsCount.ContainsKey(word))
                     {
                         rowUniqueWordsCount[word] = 0;
