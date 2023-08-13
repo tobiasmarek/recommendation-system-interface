@@ -49,12 +49,21 @@ namespace RecommendationSystem.Interfaces
                 numerator += u[i] * v[i];
             }
 
-            float denominator = 0;
+            float square_sum_u = 0;
 
             for (int i = 0; i < u.Length; i++)
             {
-                denominator += u[i] * u[i] * v[i] * v[i];
+                square_sum_u += u[i] * u[i];
             }
+
+            float square_sum_v = 0;
+
+            for (int i = 0; i < v.Length; i++)
+            {
+                square_sum_v += v[i] * v[i];
+            }
+
+            float denominator = square_sum_u * square_sum_v;
 
             if (denominator == 0) { return -1; }
 
