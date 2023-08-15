@@ -17,7 +17,7 @@ namespace RecommendationSystem.Interfaces
         {
             string resultsFilePath = "userItemMatrixResults.csv";
 
-            var sw = new FileStreamWriter(resultsFilePath);
+            var sw = new FileStreamWriter(resultsFilePath, false);
             var sb = new StringBuilder();
 
             int decimalPlace = 1;
@@ -45,7 +45,7 @@ namespace RecommendationSystem.Interfaces
                         sb.Append($"{itemID} {ratingIndex + negativeMin}");
 
                         if (counter != numOfItems) { sb.Append(','); }
-                        else { sb.Append('\n'); }
+                        else { sb.Append('\n'); } // spis nikdy nedavat \n
 
                         counter++;
                     }
