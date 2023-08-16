@@ -38,7 +38,7 @@ namespace RecommendationSystem
             {
                 similaritiesVector[rowNum] = Evaluator.EvaluateSimilarity(dataMatrix[rowNum], userVector);
             }
-            // NEMÁM NASTAVENEJ POSTPROCESSOR
+
             string resultsFilePath = PostProcessor.Postprocess(new float[][] { similaritiesVector }); // tohle jinak
             // DataPostprocessor (sorting, filtering, similarity) z prediktly hodnoceni treba seradim a udelam nejakou filtraci
 
