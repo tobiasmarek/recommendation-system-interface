@@ -13,7 +13,7 @@ namespace RecommendationSystemInterface
 
         public abstract void TakeInput(); // nebo prostě interface dokáže naparsovat přikaz odkudkoliv
 
-        public void TakeCommand(string[] cmd)
+        public void TakeCommand(string[] cmd) // chci mít možnost přidat do switche
         {
 
             switch (cmd[0]) // nebo to nejak jinak zpracovat
@@ -45,7 +45,6 @@ namespace RecommendationSystemInterface
                 break;
             default:
                 return;
-
             }
         }
     }
