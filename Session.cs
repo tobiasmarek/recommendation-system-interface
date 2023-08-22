@@ -16,38 +16,42 @@ namespace RecommendationSystem
             if (approach is not null) { Viewer.View(approach.Recommend()); }
         }
 
-        public void SelectApproach(string name = "TfIdf")
+        public void SelectApproach(string name = "CFilter")
         {
-            var preProcessor = new TfIdf();
+            var preProcessor = new UserItemMatrixPreProcessor(); //TfIdf();
             var evaluator = new CosineSimilarityEvaluator();
+            var predictor = new SimilarityAverageRankingsPredictor();
+            var postProcessor = new UserItemMatrixPostProcessor(); //SimilarityVectorPostProcessor();
 
-            approach = new StringSimilarityContentBasedApproach
+            approach = new UserUserCfApproach() //StringSimilarityContentBasedApproach
             {
                 Name = name,
                 RecordReader = recordReader,
                 PreProcessor = preProcessor,
                 Evaluator = evaluator,
-                User = new SisUser() // neměl bych ho dát do Session?
+                Predictor = predictor,
+                PostProcessor = postProcessor,
+                // User = new SisUser() // neměl bych ho dát do Session?
             };
         }
 
-        public void LoadFromCsv(string csvFilePath = "subjects_11310.csv", char separator = '|')
+        public void LoadFromCsv(string filePath = "u.data")//"subjects_11310.csv", char separator = '|')
         {
             IDisposableLineReader rr;
 
             try
             {
-                rr = new FileStreamLineReader(csvFilePath);
+                rr = new FileStreamLineReader(filePath);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to LoadCsv");
+                Console.WriteLine("Failed to LoadCsv", e);
                 return;
             }
 
             recordReader = rr;
 
-            Viewer.View(csvFilePath);
+            Viewer.View(filePath);
         }
 
         public void LoadFromDbs()
@@ -92,7 +96,7 @@ namespace RecommendationSystem
             }
             catch (Exception e)
             {
-                Console.WriteLine("Loading session failed");
+                Console.WriteLine("Loading session failed", e);
             }
 
             return loadedSession;
@@ -140,6 +144,14 @@ namespace RecommendationSystem
         }
     }
 
+    class ConsoleSubjectSession : ConsoleSession
+    {
+        public void AddFavourite() // tady spis ne, nebo ne?
+        {
+
+        }
+    }
+
 
     class WebSession : Session
     {
@@ -153,13 +165,14 @@ namespace RecommendationSystem
     }
 
 
-
-
-    class ConsoleSubjectSession : ConsoleSession
+    class WinFormsSession : Session
     {
-        public void AddFavourite() // tady spis ne, nebo ne?
+        public WinFormsSession()
         {
+            Controller = new WinFormsController() { Session = this };
+            Viewer = new WinFormsViewer();
 
+            Controller.TakeInput();
         }
-    } 
+    }
 }
