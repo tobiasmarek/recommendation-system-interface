@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
-namespace RecommendationSystem.Interfaces
+namespace RecommendationSystemInterface.Interfaces
 {
     internal interface ILineReader
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecommendationSystem
+namespace RecommendationSystemInterface
 {
     abstract class Parser
     {

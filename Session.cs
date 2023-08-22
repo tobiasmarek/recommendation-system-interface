@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using RecommendationSystem.Interfaces;
+using RecommendationSystemInterface.Interfaces;
 using System.Text.Json;
 
-namespace RecommendationSystem
+namespace RecommendationSystemInterface
 {
-    abstract class Session
+    public abstract class Session
     {
         public Viewer Viewer { get; set; }
         public Controller Controller { get; set; }
@@ -135,7 +135,7 @@ namespace RecommendationSystem
 
 
 
-    class ConsoleSession : Session
+    public class ConsoleSession : Session
     {
         public ConsoleSession()
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RecommendationSystem.Interfaces
+namespace RecommendationSystemInterface.Interfaces
 {
     internal interface IPostProcessor
     {

@@ -1,4 +1,4 @@
-﻿namespace RecommendationSystem.Interfaces
+﻿namespace RecommendationSystemInterface.Interfaces
 {
     internal interface IPredictor
     {

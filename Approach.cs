@@ -1,7 +1,7 @@
-﻿using RecommendationSystem.Interfaces;
+﻿using RecommendationSystemInterface.Interfaces;
 using System;
 
-namespace RecommendationSystem
+namespace RecommendationSystemInterface
 {
     abstract class Approach
     {

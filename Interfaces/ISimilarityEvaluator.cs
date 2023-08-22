@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecommendationSystem.Interfaces
+namespace RecommendationSystemInterface.Interfaces
 {
     interface ISimilarityEvaluator
     {

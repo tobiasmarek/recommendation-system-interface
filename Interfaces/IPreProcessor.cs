@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace RecommendationSystem.Interfaces
+namespace RecommendationSystemInterface.Interfaces
 {
     internal interface IPreProcessor
     {

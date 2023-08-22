@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace RecommendationSystem
+namespace RecommendationSystemInterface
 {
-    abstract class Viewer // neni to přehrocený? nemam jen dát jednu class a předávat kam se to zobrazuje?
+    public abstract class Viewer // neni to přehrocený? nemam jen dát jednu class a předávat kam se to zobrazuje?
                           // nebo předávat interface? nebo dokonce pouze interface?
     {
         public abstract void View(string filePath);

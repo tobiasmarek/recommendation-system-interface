@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecommendationSystem
+namespace RecommendationSystemInterface
 {
-    abstract class Controller // neni to přehrocený? nemam jen dát jednu class a předávat kam se to zobrazuje
+    public abstract class Controller // neni to přehrocený? nemam jen dát jednu class a předávat kam se to zobrazuje
                               // nebo předávat interface? nebo dokonce pouze interface?
     {
         public Session Session { get; set; }
