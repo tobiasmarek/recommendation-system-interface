@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.Data.Analysis;
 
 namespace RecommendationSystem.Interfaces
 {
     internal interface IVectorizer<T>
     {
-        float[] Vectorize(T data, DataFrame dataFrame);
+        float[] Vectorize(T data);
     }
 
 
@@ -22,7 +21,7 @@ namespace RecommendationSystem.Interfaces
 
     interface IUserVectorizer
     {
-        float[] VectorizeUser(User user, DataFrame dataFrame);
+        float[] VectorizeUser(User user);
     }
 
 

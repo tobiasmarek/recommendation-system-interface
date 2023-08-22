@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Analysis;
-using RecommendationSystem.Interfaces;
+﻿using RecommendationSystem.Interfaces;
 
 namespace RecommendationSystem
 {
