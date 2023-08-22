@@ -146,14 +146,6 @@ namespace RecommendationSystemInterface
         }
     }
 
-    class ConsoleSubjectSession : ConsoleSession
-    {
-        public void AddFavourite() // tady spis ne, nebo ne?
-        {
-
-        }
-    }
-
 
     class WebSession : Session
     {
