@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RecommendationSystem.Interfaces
 {
