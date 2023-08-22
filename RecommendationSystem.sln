@@ -5,9 +5,9 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecommendationSystemInterface", "RecommendationSystemInterface.csproj", "{9E8B6097-5D32-44CD-8D05-5E7E4053D5B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRS", "..\ConsoleRS\ConsoleRS.csproj", "{3B8E4421-C255-4603-91E9-9161F241B0B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleRS", "..\ConsoleRS\ConsoleRS.csproj", "{3B8E4421-C255-4603-91E9-9161F241B0B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsRS", "..\WinFormsRS\WinFormsRS.csproj", "{9B15902D-A69E-4811-A244-6B88408FBC0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsRS", "..\WinFormsRS\WinFormsRS.csproj", "{9B15902D-A69E-4811-A244-6B88408FBC0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
