@@ -26,6 +26,22 @@ namespace RecommendationSystem
     }
 
 
+
+
+    class ConsoleViewer : Viewer
+    {
+        public override void View(string filePath)
+        {
+            string[] lines = ReadFirstKLines(filePath, 5);
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine(line);
+            }
+        }
+    }
+
+
     class WebViewer : Viewer
     {
         public override void View(string filePath)
@@ -53,16 +69,12 @@ namespace RecommendationSystem
         }
     }
 
-    class ConsoleViewer : Viewer
+
+    class WinFormsViewer : Viewer
     {
         public override void View(string filePath)
         {
-            string[] lines = ReadFirstKLines(filePath, 5);
-
-            foreach (var line in lines)
-            {
-                Console.WriteLine(line);
-            }
+            throw new NotImplementedException();
         }
     }
 }

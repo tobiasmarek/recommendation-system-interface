@@ -51,6 +51,8 @@ namespace RecommendationSystem
     }
 
 
+
+
     class ConsoleController : Controller
     {
         public override void TakeInput()
@@ -90,6 +92,15 @@ namespace RecommendationSystem
 
 
     class WebController : Controller
+    {
+        public override void TakeInput()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    class WinFormsController : Controller
     {
         public override void TakeInput()
         {
