@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace RecommendationSystemInterface.Interfaces
 {
+    /// <summary>
+    /// Reads a line.
+    /// </summary>
+    /// <returns>Returns null if it reached the end of the input, else the string</returns>
     internal interface ILineReader
     {
         string? ReadLine();
@@ -13,9 +17,15 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
+    /// <summary>
+    /// LineReader that implements Dispose function.
+    /// </summary>
     interface IDisposableLineReader : ILineReader, IDisposable { }
 
 
+    /// <summary>
+    /// Reads line by line from a Stream.
+    /// </summary>
     class FileStreamLineReader : IDisposableLineReader
     {
         private readonly StreamReader _sr;
@@ -52,6 +62,10 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
+    /// <summary>
+    /// Reads a word.
+    /// </summary>
+    /// <returns>Returns null if it reached the end of the input, else the word</returns>
     interface IWordReader
     {
         string? ReadWord();
@@ -60,12 +74,18 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
+    /// <summary>
+    /// WordReader that implements Dispose function.
+    /// </summary>
     interface IDisposableWordReader : IWordReader, IDisposable { }
 
 
+    /// <summary>
+    /// Reads word by word from a Stream.
+    /// </summary>
     class FileStreamWordReader : IDisposableWordReader
     {
-        public bool EndOfLine; // nedát to do interface?
+        public bool EndOfLine; // NEMĚLO BY TO BÝT ROVNOU V INTERFACE?
 
         private readonly StreamReader _sr;
         private readonly char[] _separators;
@@ -147,10 +167,13 @@ namespace RecommendationSystemInterface.Interfaces
     }
 
 
-    class StringStreamWordReader : IDisposableWordReader // tohle je trochu redundant lepsi mozna StreamWordReader a pak dosazovat nejakej TextReader
-    {
+    /// <summary>
+    /// Reads word by word from a StringStream.
+    /// </summary>
+    class StringStreamWordReader : IDisposableWordReader // NENI TO REDUNDANT - CO OBECNEJ STREAMWORDREADER A TAM DODÁVAT DO TextReaderu?
+    { 
         public StringReader Sr { get; set; }
-        public bool EndOfLine; // nedát to do interface?
+        public bool EndOfLine; // DO INTERFACE
 
         private readonly char[] _separators;
         private readonly StringBuilder _sb;
@@ -221,9 +244,13 @@ namespace RecommendationSystemInterface.Interfaces
     }
 
 
-    class RecordStreamWordReader : StringStreamWordReader // nebo nejakej EndOfRowFileStreamWordReader?
+    /// <summary>
+    /// A factory programming pattern.
+    /// Takes input from somewhere, converts it to a string and uses StringStreamWordReader to read word by word.
+    /// </summary>
+    class RecordStreamWordReader : StringStreamWordReader // NEBO NEJAKEJ EndOfRowStringWordReader
     {
-        public bool EndOfRow;
+        public bool EndOfRow; // DO INTERFACE? PROC JE TO TU ZNOVA?
 
         private string? _row;
         private string? _nextWord = null;

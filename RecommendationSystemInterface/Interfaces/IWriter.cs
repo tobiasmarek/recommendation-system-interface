@@ -5,6 +5,9 @@ using System.Text;
 
 namespace RecommendationSystemInterface.Interfaces
 {
+    /// <summary>
+    /// Writes a string.
+    /// </summary>
     internal interface IWriter
     {
         void Write(string value);
@@ -13,9 +16,15 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
+    /// <summary>
+    /// IWriter with Dispose functionality.
+    /// </summary>
     interface IDisposableWriter : IWriter, IDisposable { }
 
 
+    /// <summary>
+    /// Writes a string with StreamWriter with a specified path. 
+    /// </summary>
     class FileStreamWriter : IDisposableWriter
     {
         private readonly StreamWriter _sw;

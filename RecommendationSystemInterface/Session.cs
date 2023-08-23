@@ -5,6 +5,12 @@ using System.Text.Json;
 
 namespace RecommendationSystemInterface
 {
+    /// <summary>
+    /// Implements basic concepts that a Session should have.
+    /// Basically, the model and the glue of the program.
+    /// Is controlled by Controller, commands Viewer.
+    /// Lets us choose and define the basic characteristics of the Approach and save it for later.
+    /// </summary>
     public abstract class Session
     {
         public Viewer Viewer { get; set; }
@@ -135,6 +141,9 @@ namespace RecommendationSystemInterface
 
 
 
+    /// <summary>
+    /// A Session that is controlled and shown in the Console.
+    /// </summary>
     public class ConsoleSession : Session
     {
         public ConsoleSession()
@@ -147,6 +156,9 @@ namespace RecommendationSystemInterface
     }
 
 
+    /// <summary>
+    /// A Session that is controlled and shown in the web.
+    /// </summary>
     class WebSession : Session
     {
         public WebSession()
@@ -159,6 +171,9 @@ namespace RecommendationSystemInterface
     }
 
 
+    /// <summary>
+    /// A Session that is controlled and shown in WinForms application.
+    /// </summary>
     class WinFormsSession : Session
     {
         public WinFormsSession()

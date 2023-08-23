@@ -3,6 +3,10 @@ using System;
 
 namespace RecommendationSystemInterface
 {
+    /// <summary>
+    /// Defining class that contains the commonalities between all recommendation approaches.
+    /// The defining functionality is Recommend function that lets us implement different techniques.
+    /// </summary>
     abstract class Approach
     {
         public string Name { get; set; }
@@ -19,12 +23,19 @@ namespace RecommendationSystemInterface
 
 
 
+    /// <summary>
+    /// Defining characteristics of Content-Based approaches.
+    /// </summary>
     abstract class ContentBasedApproach : Approach
     {
         public User User { get; set; }
     }
 
 
+    /// <summary>
+    /// Content-Based approach centered around string input and the calculation of similarity between strings.
+    /// The results are saved in a file.
+    /// </summary>
     class StringSimilarityContentBasedApproach : ContentBasedApproach
     {
         public override string Recommend()
@@ -40,18 +51,20 @@ namespace RecommendationSystemInterface
                 similaritiesVector[rowNum] = Evaluator.EvaluateSimilarity(dataMatrix[rowNum], userVector);
             }
 
-            string resultsFilePath = PostProcessor.Postprocess(new float[][] { similaritiesVector }); // tohle jinak
-            // DataPostprocessor (sorting, filtering, similarity) z prediktly hodnoceni treba seradim a udelam nejakou filtraci
+            string resultsFilePath = PostProcessor.Postprocess(new float[][] { similaritiesVector }); // JINAK
 
-            // Evaluation (precision@K, @) vyhodim prvnich 10 idk a pak najdu podle indexu zaznamy predmetů a ty vyhodim
             return resultsFilePath;
         }
 
+        /// <summary>
+        /// Takes subjects rated by user and averages them out into a single vector that should
+        /// theoretically revolve around its preferences in the vector space.
+        /// </summary>
         private float[] GetUserVector(float[][] dataMatrix)
         {
             float[] userVector = new float[dataMatrix[0].Length];
 
-            if (User is not SisUser sisUser) { return userVector; }
+            if (User is not SisUser sisUser) { return userVector; } // TOHLE JE HODNĚ SPECIFIC - PŘESUNOU JINAM NEŽ U APPROACH
 
             foreach (int index in sisUser.Favourites)
             {
@@ -85,21 +98,28 @@ namespace RecommendationSystemInterface
 
 
 
+    /// <summary>
+    /// Defining characteristics of Collaborative-Filtering approaches.
+    /// </summary>
     abstract class CollaborativeFilteringApproach : Approach
     {
         public User[] Users { get; set; }
     }
 
 
+    /// <summary>
+    /// Calculates similarities between *users* and makes predictions of missing item ratings in userItemMatrix according to it.
+    /// The results are then saved in a file.
+    /// </summary>
     class UserUserCfApproach : CollaborativeFilteringApproach
     {
         public IPredictor Predictor { get; set; }
 
         public override string Recommend()
         {
-            float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader);  // vyrobit user-item matici
+            float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader); // The creation of userItemMatrix
 
-            float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // čtvercová symetric matrix tvořená users
+            float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // Symmetric matrix of user similarities
 
             for (int i = 0; i < userSimilarities.GetLength(0); i++)
             {
@@ -112,18 +132,20 @@ namespace RecommendationSystemInterface
                 }
             }
 
-            Predictor.Predict(userItemMatrix, userSimilarities); // prediktnout kazdou chybejici value
-            // tady by mělo probíhat i učení modelu tzn. tady by měla být evaluation measure for information retrieval
-            // Evaluation (precision@K, @) vyhodim prvnich 10 idk a pak najdu podle indexu zaznamy predmetů a ty vyhodim
+            Predictor.Predict(userItemMatrix, userSimilarities); // Predicts missing values of userItemMatrix
+            // TADY UČENÍ MODELU A PREDICTIONS TZN TAKY EVALUATION MEASURE FOR INFORMATION RETRIEVAL
 
-            string resultsFilePath = PostProcessor.Postprocess(userItemMatrix); // tzn potrebuju user-history (nebo aspoň jeho nepredicted ratings) a items (jejich popisy)
-            // DataPostprocessor (sorting, filtering, similarity) z prediktly hodnoceni treba seradim a udelam nejakou filtraci
+            string resultsFilePath = PostProcessor.Postprocess(userItemMatrix); // USER-HISTORY NEEDED (NEBO VĚDĚT JAKY RATINGS BYLY NA ZAČATKU) A POPISY ITEMŮ
 
             return resultsFilePath;
         }
     }
 
 
+    /// <summary>
+    /// Calculates similarities between *items* and makes predictions of missing item ratings in userItemMatrix according to it.
+    /// The results are then saved in a file.
+    /// </summary>
     class ItemItemCfApproach : CollaborativeFilteringApproach
     {
         public IPredictor Predictor { get; set; }
@@ -137,6 +159,9 @@ namespace RecommendationSystemInterface
 
 
 
+    /// <summary>
+    /// Defining characteristics of Hybrid approaches.
+    /// </summary>
     abstract class HybridApproach : Approach
     {
         public User[] Users { get; set; }

@@ -4,10 +4,12 @@ using System.IO;
 
 namespace RecommendationSystemInterface
 {
-    public abstract class Viewer // neni to přehrocený? nemam jen dát jednu class a předávat kam se to zobrazuje?
-                          // nebo předávat interface? nebo dokonce pouze interface?
+    /// <summary>
+    /// Views results and all the processes that are running in the current Session.
+    /// </summary>
+    public abstract class Viewer
     {
-        public abstract void View(string filePath);
+        public abstract void View(string filePath); // POKUD NEBUDE MIT NIC VIC NEZ VIEW, MEL BYCH ZVAZIT INTERFACE
 
         public string[] ReadFirstKLines(string filePath, int k)
         {
@@ -30,6 +32,9 @@ namespace RecommendationSystemInterface
 
 
 
+    /// <summary>
+    /// A Viewer which output is directed to the Console.
+    /// </summary>
     class ConsoleViewer : Viewer
     {
         public override void View(string filePath)
@@ -44,6 +49,9 @@ namespace RecommendationSystemInterface
     }
 
 
+    /// <summary>
+    /// A Viewer which output is shown on the web.
+    /// </summary>
     class WebViewer : Viewer
     {
         public override void View(string filePath)
@@ -72,6 +80,9 @@ namespace RecommendationSystemInterface
     }
 
 
+    /// <summary>
+    /// A Viewer which result is shown in Windows Forms app.
+    /// </summary>
     class WinFormsViewer : Viewer
     {
         public override void View(string filePath)

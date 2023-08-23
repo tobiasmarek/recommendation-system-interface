@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RecommendationSystemInterface.Interfaces
 {
+    /// <summary>
+    /// Takes two vectors and evaluates its similarity.
+    /// </summary>
     interface ISimilarityEvaluator
     {
         float EvaluateSimilarity(float[] u, float[] v); // nebo z toho udělat <T>, protože třeba NN může dostat jinej vstup
@@ -16,6 +18,9 @@ namespace RecommendationSystemInterface.Interfaces
     }
 
 
+    /// <summary>
+    /// One divided by the euclidean distance between the two vector.
+    /// </summary>
     class EuclideanSimilarityEvaluator : ISimilarityEvaluator
     {
         public float EvaluateSimilarity(float[] u, float[] v)
@@ -29,15 +34,16 @@ namespace RecommendationSystemInterface.Interfaces
                 sum += (u[i] - v[i]) * (u[i] - v[i]);
             }
 
-            return 1 / (float)Math.Sqrt(sum);
+            return 1 / (float)Math.Sqrt(sum); // MĚL BYCH UDĚLAT UPPER A LOWER LIMIT
         }
     }
 
 
+    /// <summary>
+    /// Cosine of the angle between the two vectors.
+    /// </summary>
     class CosineSimilarityEvaluator : ISimilarityEvaluator
     {
-        private int k = 0;
-
         public float EvaluateSimilarity(float[] u, float[] v)
         {
             if (u.Length != v.Length) { return -1; }
@@ -49,21 +55,19 @@ namespace RecommendationSystemInterface.Interfaces
                 numerator += u[i] * v[i];
             }
 
-            float square_sum_u = 0;
-
+            float squareSumU = 0;
             for (int i = 0; i < u.Length; i++)
             {
-                square_sum_u += u[i] * u[i];
+                squareSumU += u[i] * u[i];
             }
 
-            float square_sum_v = 0;
-
+            float squareSumV = 0;
             for (int i = 0; i < v.Length; i++)
             {
-                square_sum_v += v[i] * v[i];
+                squareSumV += v[i] * v[i];
             }
 
-            float denominator = square_sum_u * square_sum_v;
+            float denominator = squareSumU * squareSumV;
 
             if (denominator == 0) { return -1; }
 
