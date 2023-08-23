@@ -159,14 +159,11 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// A Session that is controlled and shown in the web.
     /// </summary>
-    class WebSession : Session
+    public class WebSession : Session
     {
         public WebSession()
         {
-            Controller = new WebController { Session = this };
-            Viewer = new WebViewer();
-
-            Controller.TakeInput();
+            throw new NotImplementedException();
         }
     }
 
@@ -174,14 +171,11 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// A Session that is controlled and shown in WinForms application.
     /// </summary>
-    class WinFormsSession : Session
+    public class WinFormsSession : Session
     {
         public WinFormsSession()
         {
-            Controller = new WinFormsController() { Session = this };
-            Viewer = new WinFormsViewer();
-
-            Controller.TakeInput();
+            throw new NotImplementedException();
         }
     }
 }

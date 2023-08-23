@@ -20,7 +20,8 @@ namespace RecommendationSystemInterface
             switch (cmd[0]) // NEBO ZPRACOVAVAT VZDY V INTERFACU?
             {
             case "loadfromcsv":
-                Session.LoadFromCsv();
+                if (cmd.Length == 2) {Session.LoadFromCsv(cmd[1]);}
+                else {Session.LoadFromCsv();}
                 break;
             case "loadfromdbs":
                 Session.LoadFromDbs();
@@ -86,7 +87,7 @@ namespace RecommendationSystemInterface
                 Session.DeleteSession(cmd[1]);");
 
             string? line;
-            while ((line = Console.ReadLine()) != null)
+            while ((line = Console.ReadLine()) != "")
             {
                 TakeCommand(line.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
             }

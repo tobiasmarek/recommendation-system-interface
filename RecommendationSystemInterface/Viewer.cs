@@ -56,26 +56,7 @@ namespace RecommendationSystemInterface
     {
         public override void View(string filePath)
         {
-            try
-            {
-                // Read all lines from the file
-                string[] lines = ReadFirstKLines(filePath, 5);
-
-                // Prepare the content with paragraph tags
-                string content = string.Join("\n", lines);
-                content = "<html><head></head><body><p>" + content.Replace("\n", "</p><p>") + "</p></body></html>";
-
-                // Save the content to a temporary HTML file
-                string tempHtmlFilePath = Path.GetTempFileName() + ".html";
-                File.WriteAllText(tempHtmlFilePath, content);
-
-                // Open the default web browser to display the content
-                Process.Start(tempHtmlFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
+            throw new NotImplementedException();
         }
     }
 
