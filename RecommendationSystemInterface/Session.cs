@@ -22,7 +22,7 @@ namespace RecommendationSystemInterface
         {
             var preProcessor = new UserItemMatrixPreProcessor(); //TfIdf();
             var evaluator = new CosineSimilarityEvaluator();
-            var predictor = new SimilarityAverageRankingsPredictor();
+            var predictor = new SimilarityAverageRatingsPredictor();
             var postProcessor = new UserItemMatrixPostProcessor(); //SimilarityVectorPostProcessor();
 
             approach = new UserUserCfApproach() //StringSimilarityContentBasedApproach
