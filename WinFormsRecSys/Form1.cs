@@ -9,7 +9,7 @@ namespace WinFormsRecSys
         public Form1()
         {
             InitializeComponent();
-            this.session = new WinFormsSession(this.OutputLabel);
+            this.session = new WinFormsSession(this.OutputTextBox);
         }
 
         private void RecBtn_Click(object sender, System.EventArgs e)
@@ -20,7 +20,7 @@ namespace WinFormsRecSys
         private void button1_Click(object sender, EventArgs e)
         {
             session.Controller.TakeCommand(new string[] {"loadfromcsv", "u.data" });
-
+            // tady davat timer kterej dìlaáá waiting iluzi ... 
             session.Controller.TakeCommand(new string[] {"selectapproach"});
         }
 
@@ -37,10 +37,10 @@ namespace WinFormsRecSys
 
     public class WinFormsSession : Session
     {
-        public WinFormsSession(Label outputLabel)
+        public WinFormsSession(TextBox outputTextBox)
         {
             Controller = new WinFormsController {Session = this};
-            Viewer = new WinFormsViewer {OutputLabel = outputLabel};
+            Viewer = new WinFormsViewer {OutputTextBox = outputTextBox};
         }
     }
 
@@ -54,11 +54,11 @@ namespace WinFormsRecSys
 
     class WinFormsViewer : Viewer
     {
-        public Label OutputLabel { get; set; }
+        public TextBox OutputTextBox { get; set; }
 
         public override void View(string filePath)
         {
-            OutputLabel.Text = string.Join('\n', ReadFirstKLines(filePath, 10));
+            OutputTextBox.Text = string.Join('\n', ReadFirstKLines(filePath, 10));
         }
     }
 }

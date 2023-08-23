@@ -41,7 +41,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.OutputLabel = new System.Windows.Forms.Label();
+            this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.OutputSignLbl = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -176,20 +176,25 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSize = true;
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.panel2.Controls.Add(this.OutputLabel);
+            this.panel2.Controls.Add(this.OutputTextBox);
             this.panel2.Controls.Add(this.OutputSignLbl);
             this.panel2.Location = new System.Drawing.Point(431, 21);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(466, 463);
             this.panel2.TabIndex = 10;
             // 
-            // OutputLabel
+            // OutputTextBox
             // 
-            this.OutputLabel.Location = new System.Drawing.Point(49, 50);
-            this.OutputLabel.Name = "OutputLabel";
-            this.OutputLabel.Size = new System.Drawing.Size(370, 370);
-            this.OutputLabel.TabIndex = 1;
-            this.OutputLabel.Text = "...";
+            this.OutputTextBox.AcceptsTab = true;
+            this.OutputTextBox.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.OutputTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.OutputTextBox.Location = new System.Drawing.Point(56, 54);
+            this.OutputTextBox.Multiline = true;
+            this.OutputTextBox.Name = "OutputTextBox";
+            this.OutputTextBox.ReadOnly = true;
+            this.OutputTextBox.Size = new System.Drawing.Size(360, 360);
+            this.OutputTextBox.TabIndex = 2;
             // 
             // OutputSignLbl
             // 
@@ -238,6 +243,6 @@
         private Label OutputSignLbl;
         private Button button2;
         private Button button1;
-        private Label OutputLabel;
+        private TextBox OutputTextBox;
     }
 }
