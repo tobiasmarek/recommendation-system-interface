@@ -174,7 +174,6 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.AutoSize = true;
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.panel2.Controls.Add(this.OutputTextBox);
             this.panel2.Controls.Add(this.OutputSignLbl);
@@ -187,14 +186,19 @@
             // 
             this.OutputTextBox.AcceptsTab = true;
             this.OutputTextBox.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.OutputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputTextBox.BackColor = System.Drawing.Color.LightGray;
             this.OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.OutputTextBox.Location = new System.Drawing.Point(56, 54);
+            this.OutputTextBox.Enabled = false;
+            this.OutputTextBox.Location = new System.Drawing.Point(57, 54);
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
             this.OutputTextBox.ReadOnly = true;
             this.OutputTextBox.Size = new System.Drawing.Size(360, 360);
             this.OutputTextBox.TabIndex = 2;
+            this.OutputTextBox.TabStop = false;
             // 
             // OutputSignLbl
             // 
@@ -216,6 +220,7 @@
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Roboto Medium", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(48)))));
+            this.MinimumSize = new System.Drawing.Size(936, 551);
             this.Name = "Form1";
             this.Text = "Recommendation System";
             this.panel1.ResumeLayout(false);
@@ -223,7 +228,6 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
