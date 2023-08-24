@@ -9,7 +9,9 @@ namespace RecommendationSystemInterface
     /// </summary>
     public abstract class Viewer
     {
-        public abstract void View(string filePath); // POKUD NEBUDE MIT NIC VIC NEZ VIEW, MEL BYCH ZVAZIT INTERFACE
+        public abstract void ViewFile(string filePath); // POKUD NEBUDE MIT NIC VIC NEZ VIEW, MEL BYCH ZVAZIT INTERFACE
+
+        public abstract void ViewString(string str);
 
         public string[] ReadFirstKLines(string filePath, int k)
         {
@@ -37,14 +39,14 @@ namespace RecommendationSystemInterface
     /// </summary>
     class ConsoleViewer : Viewer
     {
-        public override void View(string filePath)
+        public override void ViewFile(string filePath)
         {
-            string[] lines = ReadFirstKLines(filePath, 5);
+            throw new NotImplementedException();
+        }
 
-            foreach (var line in lines)
-            {
-                Console.WriteLine(line);
-            }
+        public override void ViewString(string str)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -54,7 +56,12 @@ namespace RecommendationSystemInterface
     /// </summary>
     class WebViewer : Viewer
     {
-        public override void View(string filePath)
+        public override void ViewFile(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ViewString(string str)
         {
             throw new NotImplementedException();
         }
@@ -66,7 +73,12 @@ namespace RecommendationSystemInterface
     /// </summary>
     class WinFormsViewer : Viewer
     {
-        public override void View(string filePath)
+        public override void ViewFile(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ViewString(string str)
         {
             throw new NotImplementedException();
         }
