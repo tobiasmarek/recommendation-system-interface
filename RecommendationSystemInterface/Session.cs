@@ -14,27 +14,30 @@ namespace RecommendationSystemInterface
     public abstract class Session
     {
         public Viewer Viewer { get; set; }
-        public Controller Controller { get; set; }
+        public Controller Controller { get; set; } // possibly odstranit
 
-        private IDisposableLineReader recordReader { get; set; } // nebo něco víc specific?
-        private Approach approach { get; set; }
+        private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific?
+        private Approach? Approach { get; set; }
+
 
         public void GetRecommendations()
         {
-            if (approach is not null) { Viewer.View(approach.Recommend()); }
+            if (Approach is not null) { Viewer.ViewFile(Approach.Recommend()); }
         }
 
         public void SelectApproach(string name = "CFilter")
         {
+            if (RecordReader is null) {return;}
+
             var preProcessor = new UserItemMatrixPreProcessor(); //TfIdf();
             var evaluator = new CosineSimilarityEvaluator();
             var predictor = new SimilarityAverageRatingsPredictor();
             var postProcessor = new UserItemMatrixPostProcessor(); //SimilarityVectorPostProcessor();
 
-            approach = new UserUserCfApproach() //StringSimilarityContentBasedApproach
+            Approach = new UserUserCfApproach() //StringSimilarityContentBasedApproach
             {
                 Name = name,
-                RecordReader = recordReader,
+                RecordReader = RecordReader,
                 PreProcessor = preProcessor,
                 Evaluator = evaluator,
                 Predictor = predictor,
@@ -53,13 +56,13 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to LoadCsv", e);
+                Viewer.ViewString($"Failed to load csv file. {e}");
                 return;
             }
 
-            recordReader = rr;
+            RecordReader = rr;
 
-            Viewer.View(filePath);
+            Viewer.ViewFile(filePath);
         }
 
         public void LoadFromDbs()
@@ -67,7 +70,7 @@ namespace RecommendationSystemInterface
             throw new NotImplementedException();
         }
 
-        public void ShowSessions() // nebo nejak proste jenom view bude handlovat? bez tvorby takovejch funkci tim myslim
+        public void ShowSessions()
         {
             string[] metadataFiles = Directory.GetFiles(".", "*_metadata");
 
@@ -79,23 +82,48 @@ namespace RecommendationSystemInterface
                 string? line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    //Viewer.View(line);
-                    Console.WriteLine(line);
+                    Viewer.ViewString(line);
                 }
 
-                sr.Dispose(); // lip nez porad disposovat
+                sr.Dispose();
             }
         }
 
         public void DeleteSession(string filename)
         {
+            if (!File.Exists($"{filename}_metadata"))
+            {
+                Console.WriteLine("Nothing to be deleted.");
+                return;
+            }
+
             File.Delete(filename);
             File.Delete($"{filename}_metadata");
         }
 
-        public Session? LoadSession(string filename)
+        public void SaveSession(string filename)
         {
-            Session? loadedSession = null;
+            try
+            {
+                using (var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write))
+                {
+                    JsonSerializer.SerializeAsync(fileStream, this, new JsonSerializerOptions { WriteIndented = false });
+                }
+
+                using (StreamWriter sw = new StreamWriter($"{filename}_metadata"))
+                {
+                    sw.WriteLine($"Name: {filename}, Saved at: {DateTime.Now}");
+                }
+            }
+            catch (Exception e)
+            {
+                Viewer.ViewString($"Failed to SaveSession. {e}");
+            }
+        }
+
+        public void LoadSession(string filename)
+        {
+            Session? loadedSession;
 
             try
             {
@@ -104,31 +132,16 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                Console.WriteLine("Loading session failed", e);
+                Viewer.ViewString($"Loading session failed. {e}");
+                return;
             }
 
-            return loadedSession;
-        }
+            if (loadedSession is null) {return;}
 
-        public void SaveSession(string filename)
-        {
-            try
-            {
-                using (var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write)) // udelat binary?
-                {
-                    JsonSerializer.SerializeAsync(fileStream, this, new JsonSerializerOptions { WriteIndented = false });
-                }
+            Approach = loadedSession.Approach;
+            RecordReader = loadedSession.RecordReader; // DAT BACHA AT TO NENI NECO OD FILU KTEREJ UZ NEEXISTUJE
 
-                using (StreamWriter sw = new StreamWriter($"{filename}_metadata")) // svuj
-                {
-                    sw.WriteLine($"Name: {filename}, Saved at: {DateTime.Now}");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.WriteLine("Failed to SaveSession");
-            }
+            Viewer.ViewString("Loaded successfully!"); // dobry by bylo zobrazit vysledky jeste predchozi session
         }
 
         public void Parse()
@@ -148,10 +161,7 @@ namespace RecommendationSystemInterface
     {
         public ConsoleSession()
         {
-            Controller = new ConsoleController { Session = this };
-            Viewer = new ConsoleViewer();
-
-            Controller.TakeInput();
+            throw new NotImplementedException();
         }
     }
 
