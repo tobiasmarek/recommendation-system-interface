@@ -10,13 +10,4 @@ namespace ConsoleRecSys
             var session = new ConsoleSession();
         }
     }
-
-
-    class ConsoleSubjectSession : ConsoleSession
-    {
-        public void AddFavourite() // tady spis ne, nebo ne?
-        {
-
-        }
-    }
 }
