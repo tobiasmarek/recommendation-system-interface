@@ -2,41 +2,45 @@ using RecommendationSystemInterface;
 
 namespace WinFormsRecSys
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form // tady spis nejakej interface, kterej mi pomuze doplnit property "Session"
     {
-        private Session session { get; set; }
+        private Session Session;
 
         public Form1()
         {
             InitializeComponent();
-            this.session = new WinFormsSession(this.OutputTextBox);
+
+            var viewer = new WinFormsViewer(this.OutputTextBox);
+            var session = new WinFormsSession(viewer);
+            this.Session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
         }
 
         private void RecBtn_Click(object sender, System.EventArgs e)
         {
-            session.GetRecommendations();
+            Session.GetRecommendations();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            session.LoadFromCsv("u.data");
+            Session.LoadFromCsv("u.data");
 
             // tady davat timer kterej dìlaáá waiting iluzi ...
 
-            session.SelectApproach();
+            Session.SelectApproach();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            session.LoadFromCsv("subjects_11310.csv");
+            Session.LoadFromCsv("subjects_11310.csv");
 
-            session.SelectApproach();
+            Session.SelectApproach();
         }
     }
 
+    // tohle je tady plonkový
     class WinFormsController : Controller
     {
-        public override void TakeInput()
+        public WinFormsController(Session session) : base(session)
         {
             throw new NotImplementedException();
         }

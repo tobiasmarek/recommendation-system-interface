@@ -9,10 +9,9 @@ namespace WinFormsRecSys
 {
     public class WinFormsSession : Session
     {
-        public WinFormsSession(TextBox outputTextBox)
+        public WinFormsSession(Viewer viewer) : base(viewer)
         {
-            Controller = new WinFormsController { Session = this };
-            Viewer = new WinFormsViewer { OutputTextBox = outputTextBox };
+
         }
     }
 }
