@@ -13,19 +13,19 @@ namespace RecommendationSystemInterface
     /// </summary>
     public class Session
     {
-        private Viewer Viewer; // readonly?
+        private readonly Viewer _viewer;
         private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific?
         private Approach? Approach { get; set; }
 
         protected Session(Viewer viewer)
         {
-            Viewer = viewer;
+            _viewer = viewer;
         }
 
 
         public void GetRecommendations()
         {
-            if (Approach is not null) { Viewer.ViewFile(Approach.Recommend()); }
+            if (Approach is not null) { _viewer.ViewFile(Approach.Recommend()); }
         }
 
         public void SelectApproach(string name = "CFilter")
@@ -49,7 +49,7 @@ namespace RecommendationSystemInterface
             };
         }
 
-        public void LoadFromCsv(string filePath = "u.data")//"subjects_11310.csv", char separator = '|')
+        public void LoadFromCsv(string filePath) //, char separator = '|')
         {
             IDisposableLineReader rr;
 
@@ -59,13 +59,13 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                Viewer.ViewString($"Failed to load csv file. {e}");
+                _viewer.ViewString($"Failed to load csv file. {e}");
                 return;
             }
 
             RecordReader = rr;
 
-            Viewer.ViewFile(filePath);
+            _viewer.ViewFile(filePath);
         }
 
         public void LoadFromDbs()
@@ -85,7 +85,7 @@ namespace RecommendationSystemInterface
                 string? line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    Viewer.ViewString(line);
+                    _viewer.ViewString(line);
                 }
 
                 sr.Dispose();
@@ -120,7 +120,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                Viewer.ViewString($"Failed to SaveSession. {e}");
+                _viewer.ViewString($"Failed to SaveSession. {e}");
             }
         }
 
@@ -135,7 +135,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                Viewer.ViewString($"Loading session failed. {e}");
+                _viewer.ViewString($"Loading session failed. {e}");
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace RecommendationSystemInterface
             Approach = loadedSession.Approach;
             RecordReader = loadedSession.RecordReader; // DAT BACHA AT TO NENI NECO OD FILU KTEREJ UZ NEEXISTUJE
 
-            Viewer.ViewString("Loaded successfully!"); // dobry by bylo zobrazit vysledky jeste predchozi session
+            _viewer.ViewString("Loaded successfully!"); // dobry by bylo zobrazit vysledky jeste predchozi session
         }
 
         public void Parse()
