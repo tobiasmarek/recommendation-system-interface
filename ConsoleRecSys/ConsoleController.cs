@@ -39,8 +39,8 @@ namespace ConsoleRecSys
             switch (cmd[0]) // NEBO ZPRACOVAVAT VZDY V INTERFACU?
             {
                 case "loadfromcsv":
-                    if (cmd.Length == 2) { Session.LoadFromCsv(cmd[1]); break; }
-                    Session.LoadFromCsv();
+                    if (cmd.Length != 2) { break; }
+                    Session.LoadFromCsv(cmd[1]);
                     break;
                 case "loadfromdbs":
                     Session.LoadFromDbs();
