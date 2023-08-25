@@ -7,7 +7,9 @@ namespace ConsoleRecSys
     {
         static void Main(string[] args)
         {
-            var session = new ConsoleSession();
+            var viewer = new ConsoleViewer();
+            var session = new ConsoleSession(viewer);
+            var controller = new ConsoleController(session);
         }
     }
 }

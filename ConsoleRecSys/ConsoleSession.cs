@@ -4,17 +4,19 @@ namespace ConsoleRecSys
 {
     public class ConsoleSession : Session
     {
-        public ConsoleSession()
+        public ConsoleSession(Viewer viewer) : base(viewer)
         {
-            Controller = new ConsoleController { Session = this };
-            Viewer = new ConsoleViewer();
 
-            Controller.TakeInput();
         }
     }
 
     class ConsoleSubjectSession : ConsoleSession
     {
+        public ConsoleSubjectSession(Viewer viewer) : base(viewer)
+        {
+
+        }
+
         public void AddFavourite() // tady spis ne, nebo ne?
         {
 
