@@ -4,7 +4,7 @@ namespace WinFormsRecSys
 {
     public partial class Form1 : Form // tady spis nejakej interface, kterej mi pomuze doplnit property "Session"
     {
-        private Session Session;
+        private readonly Session _session;
 
         public Form1()
         {
@@ -12,28 +12,28 @@ namespace WinFormsRecSys
 
             var viewer = new WinFormsViewer(this.OutputTextBox);
             var session = new WinFormsSession(viewer);
-            Session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
+            _session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
         }
 
         private void RecBtn_Click(object sender, System.EventArgs e)
         {
-            Session.GetRecommendations();
+            _session.GetRecommendations();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Session.LoadFromCsv("u.data");
+            _session.LoadFromCsv("u.data");
 
             // tady davat timer kterej dìlaáá waiting iluzi ...
 
-            Session.SelectApproach();
+            _session.SelectApproach();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Session.LoadFromCsv("subjects_11310.csv");
+            _session.LoadFromCsv("subjects_11310.csv");
 
-            Session.SelectApproach();
+            _session.SelectApproach();
         }
     }
 
