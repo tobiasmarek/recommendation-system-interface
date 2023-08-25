@@ -12,7 +12,7 @@ namespace WinFormsRecSys
 
             var viewer = new WinFormsViewer(this.OutputTextBox);
             var session = new WinFormsSession(viewer);
-            this.Session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
+            Session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
         }
 
         private void RecBtn_Click(object sender, System.EventArgs e)
