@@ -11,9 +11,14 @@ namespace RecommendationSystemInterface
     /// </summary>
     public abstract class Controller
     {
-        public Session Session { get; set; } // The Session it controls
+        protected Session Session; // The Session it controls
 
-        public abstract void TakeInput(); // NEBO MISTO TOHO JEN INTERFACE KTEREJ TakeInput IMPLEMENTUJE A PARSUJE ODKUDKOLIV
+        protected Controller(Session session)
+        {
+            Session = session;
+        }
+
+        // NEBO MISTO TOHO JEN INTERFACE KTEREJ TakeInput IMPLEMENTUJE A PARSUJE ODKUDKOLIV
     }
 
 
@@ -24,7 +29,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     class ConsoleController : Controller
     {
-        public override void TakeInput()
+        public ConsoleController(Session session) : base(session)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +41,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     class WebController : Controller
     {
-        public override void TakeInput()
+        public WebController(Session session) : base(session)
         {
             throw new NotImplementedException();
         }
@@ -48,7 +53,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     class WinFormsController : Controller
     {
-        public override void TakeInput()
+        public WinFormsController(Session session) : base(session)
         {
             throw new NotImplementedException();
         }

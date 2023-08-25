@@ -11,13 +11,16 @@ namespace RecommendationSystemInterface
     /// Is controlled by Controller, commands Viewer.
     /// Lets us choose and define the basic characteristics of the Approach and save it for later.
     /// </summary>
-    public abstract class Session
+    public class Session
     {
-        public Viewer Viewer { get; set; }
-        public Controller Controller { get; set; } // possibly odstranit
-
+        private Viewer Viewer; // readonly?
         private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific?
         private Approach? Approach { get; set; }
+
+        protected Session(Viewer viewer)
+        {
+            Viewer = viewer;
+        }
 
 
         public void GetRecommendations()
@@ -127,7 +130,7 @@ namespace RecommendationSystemInterface
 
             try
             {
-                string jsonString = File.ReadAllText(filename); // tohle je abominace
+                string jsonString = File.ReadAllText(filename);
                 loadedSession = JsonSerializer.Deserialize<Session>(jsonString);
             }
             catch (Exception e)
@@ -157,9 +160,9 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// A Session that is controlled and shown in the Console.
     /// </summary>
-    public class ConsoleSession : Session
+    sealed class ConsoleSession : Session
     {
-        public ConsoleSession()
+        public ConsoleSession(Viewer viewer) : base(viewer)
         {
             throw new NotImplementedException();
         }
@@ -169,9 +172,9 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// A Session that is controlled and shown in the web.
     /// </summary>
-    public class WebSession : Session
+    sealed class WebSession : Session
     {
-        public WebSession()
+        public WebSession(Viewer viewer) : base(viewer)
         {
             throw new NotImplementedException();
         }
@@ -181,9 +184,9 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// A Session that is controlled and shown in WinForms application.
     /// </summary>
-    public class WinFormsSession : Session
+    sealed class WinFormsSession : Session
     {
-        public WinFormsSession()
+        public WinFormsSession(Viewer viewer) : base(viewer)
         {
             throw new NotImplementedException();
         }
