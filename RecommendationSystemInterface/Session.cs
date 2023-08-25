@@ -55,7 +55,10 @@ namespace RecommendationSystemInterface
             IDisposableLineReader rr;
 
             string dataPath;
-            if (File.Exists(filename)) { dataPath = filename; }
+            if (File.Exists(filename))
+            {
+                dataPath = filename;
+            }
             else
             {
                 dataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename));
