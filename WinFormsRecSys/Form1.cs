@@ -1,8 +1,9 @@
 using RecommendationSystemInterface;
+using System.Windows.Forms;
 
 namespace WinFormsRecSys
 {
-    public partial class Form1 : Form // tady spis nejakej interface, kterej mi pomuze doplnit property "Session"
+    public partial class Form1 : Form // tady spis nejakej interface, kterej mi pomuze doplnit property "Session" a melo by byt : Controller
     {
         private readonly Session _session;
 
@@ -17,14 +18,14 @@ namespace WinFormsRecSys
 
         private void RecBtn_Click(object sender, System.EventArgs e)
         {
+            // tady davat timer kterej dìlaáá waiting iluzi ...
+
             _session.GetRecommendations();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             _session.LoadFromCsv("u.data");
-
-            // tady davat timer kterej dìlaáá waiting iluzi ...
 
             _session.SelectApproach();
         }
@@ -35,14 +36,30 @@ namespace WinFormsRecSys
 
             _session.SelectApproach();
         }
-    }
 
-    // tohle je tady plonkový
-    class WinFormsController : Controller
-    {
-        public WinFormsController(Session session) : base(session)
+        private void MagGlassBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Title = "Select a CSV file";
+            openFileDialog.InitialDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data"));
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _session.LoadFromCsv(openFileDialog.FileName);
+
+                FileTextBox.Text = Path.GetFileName(openFileDialog.FileName);
+            }
+        }
+
+        private void FileTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                _session.LoadFromCsv(((TextBox)sender).Text);
+
+                FileTextBox.Text = Path.GetFileName(((TextBox)sender).Text);
+            }
         }
     }
 }
