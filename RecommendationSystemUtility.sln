@@ -5,9 +5,9 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecommendationSystemInterface", "RecommendationSystemInterface\RecommendationSystemInterface.csproj", "{577D2088-5B32-4012-909F-32FB592D6063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRecSys", "ConsoleRecSys\ConsoleRecSys.csproj", "{531D27B2-8193-40AB-B0AD-84191C1048E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleRecSys", "ConsoleRecSys\ConsoleRecSys.csproj", "{531D27B2-8193-40AB-B0AD-84191C1048E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsRecSys", "WinFormsRecSys\WinFormsRecSys.csproj", "{8B55D844-35FD-416F-BE92-86B9E0C4C8A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsRecSys", "WinFormsRecSys\WinFormsRecSys.csproj", "{8B55D844-35FD-416F-BE92-86B9E0C4C8A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2BC45ED0-AE55-4FAE-9B3A-1B69A55054A4}"
 	ProjectSection(SolutionItems) = preProject
