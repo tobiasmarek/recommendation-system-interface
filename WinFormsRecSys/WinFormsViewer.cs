@@ -4,21 +4,21 @@ namespace WinFormsRecSys
 {
     class WinFormsViewer : Viewer
     {
-        public TextBox OutputTextBox;
+        private readonly TextBox _outputTextBox;
 
         public WinFormsViewer(TextBox outputTextBox)
         {
-            OutputTextBox = outputTextBox;
+            _outputTextBox = outputTextBox;
         }
 
         public override void ViewFile(string filePath)
         {
-            OutputTextBox.Text = string.Join(Environment.NewLine, ReadFirstKLines(filePath, 10));
+            _outputTextBox.Text = string.Join(Environment.NewLine, ReadFirstKLines(filePath, 10));
         }
 
         public override void ViewString(string str)
         {
-            throw new NotImplementedException();
+            _outputTextBox.Text = str;
         }
     }
 }
