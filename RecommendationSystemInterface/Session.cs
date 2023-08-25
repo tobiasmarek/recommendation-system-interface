@@ -14,6 +14,7 @@ namespace RecommendationSystemInterface
     public class Session
     {
         private readonly Viewer _viewer;
+
         private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific?
         private Approach? Approach { get; set; }
 
@@ -49,23 +50,30 @@ namespace RecommendationSystemInterface
             };
         }
 
-        public void LoadFromCsv(string filePath) //, char separator = '|')
+        public void LoadFromCsv(string filename)
         {
             IDisposableLineReader rr;
 
+            string dataPath;
+            if (File.Exists(filename)) { dataPath = filename; }
+            else
+            {
+                dataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename));
+            }
+
             try
             {
-                rr = new FileStreamLineReader(filePath);
+                rr = new FileStreamLineReader(dataPath);
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Failed to load csv file. {e}");
+                _viewer.ViewString($"Failed to load csv file.\n\n{e}");
                 return;
             }
 
             RecordReader = rr;
 
-            _viewer.ViewFile(filePath);
+            _viewer.ViewFile(dataPath);
         }
 
         public void LoadFromDbs()
@@ -141,10 +149,10 @@ namespace RecommendationSystemInterface
 
             if (loadedSession is null) {return;}
 
-            Approach = loadedSession.Approach;
-            RecordReader = loadedSession.RecordReader; // DAT BACHA AT TO NENI NECO OD FILU KTEREJ UZ NEEXISTUJE
+            Approach = loadedSession.Approach; // ZOBRAZIT CO JE VYBRANO
+            RecordReader = loadedSession.RecordReader;
 
-            _viewer.ViewString("Loaded successfully!"); // dobry by bylo zobrazit vysledky jeste predchozi session
+            _viewer.ViewString("Loaded successfully!");
         }
 
         public void Parse()
