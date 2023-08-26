@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using RecommendationSystemInterface.Interfaces;
 using System.Text.Json;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace RecommendationSystemInterface
 {
@@ -38,7 +43,9 @@ namespace RecommendationSystemInterface
             var predictor = new SimilarityAverageRatingsPredictor();
             var postProcessor = new UserItemMatrixPostProcessor(); //SimilarityVectorPostProcessor();
 
-            Approach = new UserUserCfApproach() //StringSimilarityContentBasedApproach
+            // (Approach)Activator.CreateInstance();
+
+            Approach = new UserUserCfApproach(RecordReader, preProcessor, evaluator, postProcessor, predictor) //StringSimilarityContentBasedApproach
             {
                 Name = name,
                 RecordReader = RecordReader,
@@ -48,6 +55,96 @@ namespace RecommendationSystemInterface
                 PostProcessor = postProcessor,
                 // User = new SisUser() // neměl bych ho dát do Session?
             };
+        }
+
+        public string[] GetAvailableApproaches()
+        {
+            var wantedAssembly = Assembly.GetAssembly(typeof(Approach)); // co kdyz to neni v tomhle assembly
+            if (wantedAssembly is null) return new[] { "" };
+
+            var names = wantedAssembly
+                .GetTypes()
+                .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Approach)))
+                .Select(type => type.FullName)
+                .ToArray();
+
+            if (names.Contains(null)) return new[] { "" };
+
+            string[] resultingNames = new string[names.Length];
+            for (int i = 0; i < names.Length; i++)
+            {
+                resultingNames[i] = (names[i]!.Split('.'))[^1];
+            }
+
+            return resultingNames;
+        }
+
+        public string[] GetClassesImplementing(string interfaceName) // udělat obecnější - ne jen interfaces
+        {
+            List<string> classNames = new List<string>();
+
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type foundType in assembly.GetTypes())
+                {
+                    if (foundType.IsClass && !foundType.IsAbstract && foundType.GetInterface(interfaceName) != null)
+                    {
+                        classNames.Add(foundType.Name);
+                    }
+                }
+            }
+
+            return classNames.ToArray();
+        }
+
+        public string[] GetConstructorParameterTypes(string className)
+        {
+            Type? type = Type.GetType(className);
+
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                bool isFound = false;
+
+                foreach (Type foundType in assembly.GetTypes())
+                {
+                    if (foundType.Name == className)
+                    {
+                        type = foundType;
+                        isFound = true;
+                        break;
+                    }
+                }
+
+                if (isFound) { break; }
+            }
+
+            if (type == null)
+            {
+                _viewer.ViewString("Failed!");
+                return new[] { "" };
+            }
+
+            ConstructorInfo[] constructors = type.GetConstructors();
+
+            int numOfParameters = 0;
+            foreach (var constructor in constructors) { numOfParameters += constructor.GetParameters().Length; }
+
+            string[] parameterTypes = new string[numOfParameters];
+
+            ParameterInfo[] parameters;
+            int index = 0;
+            foreach (var constructor in constructors)
+            {
+                parameters = constructor.GetParameters();
+
+                foreach (var parameter in parameters)
+                {
+                    parameterTypes[index] = parameter.ParameterType.ToString();
+                    index++;
+                }
+            }
+
+            return parameterTypes;
         }
 
         public void LoadFromCsv(string filename)
