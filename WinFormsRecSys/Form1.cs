@@ -11,16 +11,22 @@ namespace WinFormsRecSys
         {
             InitializeComponent();
 
-            var viewer = new WinFormsViewer(this.OutputTextBox);
+            var viewer = new WinFormsViewer(this.OutputTextBox); // je k necemu to rozdelovat?
             var session = new WinFormsSession(viewer);
             _session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
+
+            loadFromComboBox.SelectedIndex = 0;
+            approachComboBox.Items.AddRange(_session.GetAvailableApproaches());
         }
 
-        private void RecBtn_Click(object sender, System.EventArgs e)
+        private async void RecBtn_Click(object sender, System.EventArgs e)
         {
-            // tady davat timer kterej dìlaáá waiting iluzi ...
+            waitingTimer.Start();
 
-            _session.GetRecommendations();
+            await Task.Run(() => _session.GetRecommendations());
+
+            waitingTimer.Stop();
+            waitingLbl.Text = "";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -60,6 +66,20 @@ namespace WinFormsRecSys
 
                 FileTextBox.Text = Path.GetFileName(((TextBox)sender).Text);
             }
+        }
+
+        private void approachComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // (Approach)Activator.CreateInstance();
+            var selectedApproach = (((ComboBox)sender).SelectedItem).ToString();
+
+            // fetchnout corresponding requirements
+            // vytvoøit combo boxy a dát je tam
+        }
+
+        private void waitingTimer_Tick(object sender, EventArgs e)
+        {
+            waitingLbl.Text = "".PadLeft((waitingLbl.Text.Length + 1) % 4, '.');
         }
     }
 }

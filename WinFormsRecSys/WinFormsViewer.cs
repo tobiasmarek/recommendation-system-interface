@@ -1,4 +1,5 @@
 ﻿using RecommendationSystemInterface;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WinFormsRecSys
 {
@@ -13,12 +14,26 @@ namespace WinFormsRecSys
 
         public override void ViewFile(string filePath)
         {
-            _outputTextBox.Text = string.Join(Environment.NewLine, ReadFirstKLines(filePath, 10));
+            if (_outputTextBox.InvokeRequired)
+            {
+                _outputTextBox.Invoke(new Action<string>(ViewFile), filePath);
+            }
+            else
+            {
+                _outputTextBox.Text = string.Join(Environment.NewLine, ReadFirstKLines(filePath, 10));
+            }
         }
 
         public override void ViewString(string str)
         {
-            _outputTextBox.Text = str;
+            if (_outputTextBox.InvokeRequired)
+            {
+                _outputTextBox.Invoke(new Action<string>(ViewString), str);
+            }
+            else
+            {
+                _outputTextBox.Text = str;
+            }
         }
     }
 }
