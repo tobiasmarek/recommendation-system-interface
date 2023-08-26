@@ -1,5 +1,6 @@
 ﻿using RecommendationSystemInterface.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace RecommendationSystemInterface
 {
@@ -9,13 +10,21 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class Approach
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
 
         public IDisposableLineReader RecordReader { get; set; }
         public IPreProcessor PreProcessor { get; set; }
         public ISimilarityEvaluator Evaluator { get; set; }
         public IPostProcessor PostProcessor { get; set; }
+
+        protected Approach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor)
+        {
+            RecordReader = recordReader;
+            PreProcessor = preProcessor;
+            Evaluator = evaluator;
+            PostProcessor = postProcessor;
+        }
 
         public abstract string Recommend();
     }
@@ -28,7 +37,11 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class ContentBasedApproach : Approach
     {
-        public User User { get; set; }
+        public User? User { get; set; }
+
+        protected ContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+        }
     }
 
 
@@ -38,6 +51,10 @@ namespace RecommendationSystemInterface
     /// </summary>
     class StringSimilarityContentBasedApproach : ContentBasedApproach
     {
+        public StringSimilarityContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+        }
+
         public override string Recommend()
         {
             float[][] dataMatrix = PreProcessor.Preprocess(RecordReader);
@@ -103,7 +120,11 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class CollaborativeFilteringApproach : Approach
     {
-        public User[] Users { get; set; }
+        public User[]? Users { get; set; }
+
+        protected CollaborativeFilteringApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+        }
     }
 
 
@@ -114,6 +135,11 @@ namespace RecommendationSystemInterface
     class UserUserCfApproach : CollaborativeFilteringApproach
     {
         public IPredictor Predictor { get; set; }
+
+        public UserUserCfApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor, IPredictor predictor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+            Predictor = predictor;
+        }
 
         public override string Recommend()
         {
@@ -150,6 +176,11 @@ namespace RecommendationSystemInterface
     {
         public IPredictor Predictor { get; set; }
 
+        public ItemItemCfApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor, IPredictor predictor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+            Predictor = predictor;
+        }
+
         public override string Recommend()
         {
             throw new NotImplementedException();
@@ -164,6 +195,10 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class HybridApproach : Approach
     {
-        public User[] Users { get; set; }
+        public User[]? Users { get; set; }
+
+        protected HybridApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
+        {
+        }
     }
 }
