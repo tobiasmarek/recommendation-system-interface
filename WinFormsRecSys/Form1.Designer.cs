@@ -32,11 +32,8 @@
             this.RecBtn = new System.Windows.Forms.Button();
             this.loadFromComboBox = new System.Windows.Forms.ComboBox();
             this.LoadFromLbl = new System.Windows.Forms.Label();
-            this.PreProcLbl = new System.Windows.Forms.Label();
-            this.EvalLbl = new System.Windows.Forms.Label();
-            this.PostProcLbl = new System.Windows.Forms.Label();
-            this.preprocessorComboBox = new System.Windows.Forms.ComboBox();
-            this.evaluatorComboBox = new System.Windows.Forms.ComboBox();
+            this.TemplatePropertyLabel = new System.Windows.Forms.Label();
+            this.templateComboBox = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.loadParametersPnl = new System.Windows.Forms.Panel();
             this.MagGlassBtn = new System.Windows.Forms.Button();
@@ -47,7 +44,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.approachComboBox = new System.Windows.Forms.ComboBox();
             this.approachParametersPnl = new System.Windows.Forms.Panel();
-            this.postprocessorComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.waitingLbl = new System.Windows.Forms.Label();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
@@ -95,57 +91,30 @@
             this.LoadFromLbl.TabIndex = 2;
             this.LoadFromLbl.Text = "Load from:";
             // 
-            // PreProcLbl
+            // TemplatePropertyLabel
             // 
-            this.PreProcLbl.AutoSize = true;
-            this.PreProcLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.PreProcLbl.Location = new System.Drawing.Point(5, 11);
-            this.PreProcLbl.Name = "PreProcLbl";
-            this.PreProcLbl.Size = new System.Drawing.Size(86, 14);
-            this.PreProcLbl.TabIndex = 3;
-            this.PreProcLbl.Text = "Pre-Processor:";
+            this.TemplatePropertyLabel.AutoSize = true;
+            this.TemplatePropertyLabel.Enabled = false;
+            this.TemplatePropertyLabel.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TemplatePropertyLabel.Location = new System.Drawing.Point(5, 11);
+            this.TemplatePropertyLabel.Name = "TemplatePropertyLabel";
+            this.TemplatePropertyLabel.Size = new System.Drawing.Size(54, 14);
+            this.TemplatePropertyLabel.TabIndex = 3;
+            this.TemplatePropertyLabel.Text = "template";
+            this.TemplatePropertyLabel.Visible = false;
             // 
-            // EvalLbl
+            // templateComboBox
             // 
-            this.EvalLbl.AutoSize = true;
-            this.EvalLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.EvalLbl.Location = new System.Drawing.Point(5, 39);
-            this.EvalLbl.Name = "EvalLbl";
-            this.EvalLbl.Size = new System.Drawing.Size(62, 14);
-            this.EvalLbl.TabIndex = 4;
-            this.EvalLbl.Text = "Evaluator:";
-            // 
-            // PostProcLbl
-            // 
-            this.PostProcLbl.AutoSize = true;
-            this.PostProcLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.PostProcLbl.Location = new System.Drawing.Point(5, 67);
-            this.PostProcLbl.Name = "PostProcLbl";
-            this.PostProcLbl.Size = new System.Drawing.Size(93, 14);
-            this.PostProcLbl.TabIndex = 5;
-            this.PostProcLbl.Text = "Post-Processor:";
-            // 
-            // preprocessorComboBox
-            // 
-            this.preprocessorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.preprocessorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.preprocessorComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.preprocessorComboBox.FormattingEnabled = true;
-            this.preprocessorComboBox.Location = new System.Drawing.Point(171, 8);
-            this.preprocessorComboBox.Name = "preprocessorComboBox";
-            this.preprocessorComboBox.Size = new System.Drawing.Size(159, 22);
-            this.preprocessorComboBox.TabIndex = 7;
-            // 
-            // evaluatorComboBox
-            // 
-            this.evaluatorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.evaluatorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.evaluatorComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.evaluatorComboBox.FormattingEnabled = true;
-            this.evaluatorComboBox.Location = new System.Drawing.Point(171, 36);
-            this.evaluatorComboBox.Name = "evaluatorComboBox";
-            this.evaluatorComboBox.Size = new System.Drawing.Size(159, 22);
-            this.evaluatorComboBox.TabIndex = 8;
+            this.templateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.templateComboBox.Enabled = false;
+            this.templateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.templateComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.templateComboBox.FormattingEnabled = true;
+            this.templateComboBox.Location = new System.Drawing.Point(171, 8);
+            this.templateComboBox.Name = "templateComboBox";
+            this.templateComboBox.Size = new System.Drawing.Size(159, 22);
+            this.templateComboBox.TabIndex = 7;
+            this.templateComboBox.Visible = false;
             // 
             // panel1
             // 
@@ -163,7 +132,7 @@
             this.panel1.Controls.Add(this.approachParametersPnl);
             this.panel1.Location = new System.Drawing.Point(21, 21);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(387, 463);
+            this.panel1.Size = new System.Drawing.Size(387, 602);
             this.panel1.TabIndex = 9;
             // 
             // loadParametersPnl
@@ -220,8 +189,9 @@
             // 
             // button2
             // 
+            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(237, 385);
+            this.button2.Location = new System.Drawing.Point(237, 524);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(94, 29);
             this.button2.TabIndex = 10;
@@ -231,8 +201,9 @@
             // 
             // button1
             // 
+            this.button1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(61, 385);
+            this.button1.Location = new System.Drawing.Point(61, 524);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(94, 29);
             this.button1.TabIndex = 9;
@@ -254,27 +225,12 @@
             // approachParametersPnl
             // 
             this.approachParametersPnl.BackColor = System.Drawing.Color.Lavender;
-            this.approachParametersPnl.Controls.Add(this.postprocessorComboBox);
-            this.approachParametersPnl.Controls.Add(this.PreProcLbl);
-            this.approachParametersPnl.Controls.Add(this.EvalLbl);
-            this.approachParametersPnl.Controls.Add(this.PostProcLbl);
-            this.approachParametersPnl.Controls.Add(this.preprocessorComboBox);
-            this.approachParametersPnl.Controls.Add(this.evaluatorComboBox);
+            this.approachParametersPnl.Controls.Add(this.TemplatePropertyLabel);
+            this.approachParametersPnl.Controls.Add(this.templateComboBox);
             this.approachParametersPnl.Location = new System.Drawing.Point(37, 213);
             this.approachParametersPnl.Name = "approachParametersPnl";
-            this.approachParametersPnl.Size = new System.Drawing.Size(335, 93);
+            this.approachParametersPnl.Size = new System.Drawing.Size(335, 39);
             this.approachParametersPnl.TabIndex = 16;
-            // 
-            // postprocessorComboBox
-            // 
-            this.postprocessorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.postprocessorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.postprocessorComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.postprocessorComboBox.FormattingEnabled = true;
-            this.postprocessorComboBox.Location = new System.Drawing.Point(171, 64);
-            this.postprocessorComboBox.Name = "postprocessorComboBox";
-            this.postprocessorComboBox.Size = new System.Drawing.Size(159, 22);
-            this.postprocessorComboBox.TabIndex = 15;
             // 
             // panel2
             // 
@@ -287,7 +243,7 @@
             this.panel2.Controls.Add(this.OutputSignLbl);
             this.panel2.Location = new System.Drawing.Point(431, 21);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(466, 463);
+            this.panel2.Size = new System.Drawing.Size(602, 602);
             this.panel2.TabIndex = 10;
             // 
             // waitingLbl
@@ -312,7 +268,7 @@
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
             this.OutputTextBox.ReadOnly = true;
-            this.OutputTextBox.Size = new System.Drawing.Size(360, 360);
+            this.OutputTextBox.Size = new System.Drawing.Size(496, 499);
             this.OutputTextBox.TabIndex = 2;
             this.OutputTextBox.TabStop = false;
             // 
@@ -336,12 +292,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(918, 504);
+            this.ClientSize = new System.Drawing.Size(1054, 643);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Roboto Medium", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(48)))));
-            this.MinimumSize = new System.Drawing.Size(936, 551);
+            this.MinimumSize = new System.Drawing.Size(1072, 690);
             this.Name = "Form1";
             this.Text = "Recommendation System";
             this.panel1.ResumeLayout(false);
@@ -361,11 +317,8 @@
         private System.Windows.Forms.Button RecBtn;
         private System.Windows.Forms.ComboBox loadFromComboBox;
         private System.Windows.Forms.Label LoadFromLbl;
-        private System.Windows.Forms.Label PreProcLbl;
-        private System.Windows.Forms.Label EvalLbl;
-        private System.Windows.Forms.Label PostProcLbl;
-        private System.Windows.Forms.ComboBox preprocessorComboBox;
-        private System.Windows.Forms.ComboBox evaluatorComboBox;
+        private System.Windows.Forms.Label TemplatePropertyLabel;
+        private System.Windows.Forms.ComboBox templateComboBox;
         private Panel panel1;
         private Panel panel2;
         private Label OutputSignLbl;
@@ -377,7 +330,6 @@
         private TextBox FileTextBox;
         private Button MagGlassBtn;
         private Label SelectApproachLbl;
-        private ComboBox postprocessorComboBox;
         private System.Windows.Forms.Timer waitingTimer;
         private Label waitingLbl;
         private Panel approachParametersPnl;

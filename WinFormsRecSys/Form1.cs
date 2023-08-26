@@ -70,16 +70,56 @@ namespace WinFormsRecSys
 
         private void approachComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            // (Approach)Activator.CreateInstance();
             var selectedApproach = (((ComboBox)sender).SelectedItem).ToString();
 
-            // fetchnout corresponding requirements
-            // vytvoøit combo boxy a dát je tam
+            if (selectedApproach is null) { return; }
+
+            CreateApproachDialog(_session.GetConstructorParameterTypes(selectedApproach));
         }
 
         private void waitingTimer_Tick(object sender, EventArgs e)
         {
             waitingLbl.Text = "".PadLeft((waitingLbl.Text.Length + 1) % 4, '.');
+        }
+
+        // Helper functions
+        private void CreateApproachDialog(string[] constructorParameters)
+        {
+            foreach (Control control in approachParametersPnl.Controls)
+            {
+                if (control.Name == "templateComboBox" || control.Name == "TemplatePropertyLabel") { continue; }
+
+                approachParametersPnl.Controls.Remove(control);
+            }
+
+            int heightShift = templateComboBox.Size.Height + 20;
+            approachParametersPnl.Size = new Size(approachParametersPnl.Size.Width, constructorParameters.Length * heightShift);
+
+            for (int i = 0; i < constructorParameters.Length; i++)
+            {
+                Label newLabel = new Label();
+                approachParametersPnl.Controls.Add(newLabel);
+                ComboBox newCombo = new ComboBox();
+                approachParametersPnl.Controls.Add(newCombo);
+
+                newLabel.AutoSize = TemplatePropertyLabel.AutoSize;
+                newLabel.BackColor = TemplatePropertyLabel.BackColor;
+                newLabel.Font = TemplatePropertyLabel.Font;
+                newLabel.ForeColor = TemplatePropertyLabel.ForeColor;
+
+                newCombo.DropDownStyle = templateComboBox.DropDownStyle;
+                newCombo.FlatStyle = templateComboBox.FlatStyle;
+                newCombo.Font = templateComboBox.Font;
+                newCombo.Size = new Size(templateComboBox.Size.Width, templateComboBox.Size.Height);
+                newCombo.FormattingEnabled = templateComboBox.FormattingEnabled;
+
+                newLabel.Text = (constructorParameters[i].Split('.'))[^1];
+                newLabel.Location = new Point(TemplatePropertyLabel.Location.X, TemplatePropertyLabel.Location.Y + heightShift * i);
+
+
+                newCombo.Location = new Point(templateComboBox.Location.X, templateComboBox.Location.Y + heightShift * i);
+                newCombo.Items.AddRange(_session.GetClassesImplementing(constructorParameters[i]));
+            }
         }
     }
 }
