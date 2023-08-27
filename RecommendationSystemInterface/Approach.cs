@@ -51,9 +51,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     class StringSimilarityContentBasedApproach : ContentBasedApproach
     {
-        public StringSimilarityContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
-        {
-        }
+        public StringSimilarityContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
 
         public override string Recommend()
         {
@@ -122,9 +120,7 @@ namespace RecommendationSystemInterface
     {
         public User[]? Users { get; set; }
 
-        protected CollaborativeFilteringApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
-        {
-        }
+        protected CollaborativeFilteringApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
 
 
@@ -197,8 +193,6 @@ namespace RecommendationSystemInterface
     {
         public User[]? Users { get; set; }
 
-        protected HybridApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
-        {
-        }
+        protected HybridApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
 }
