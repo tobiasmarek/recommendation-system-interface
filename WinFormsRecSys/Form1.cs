@@ -22,6 +22,7 @@ namespace WinFormsRecSys
         private async void RecBtn_Click(object sender, System.EventArgs e)
         {
             waitingTimer.Start();
+            _session.SelectApproach(GetSelectedApproachParams());
 
             await Task.Run(() => _session.GetRecommendations());
 
@@ -33,14 +34,35 @@ namespace WinFormsRecSys
         {
             _session.LoadFromCsv("u.data");
 
-            _session.SelectApproach();
+            FileTextBox.Text = "u.data";
+            approachComboBox.SelectedItem = "UserUserCfApproach";
+
+            string[] approachParams = new[] {
+                "FileStreamLineReader",
+                "UserItemMatrixPreProcessor",
+                "CosineSimilarityEvaluator",
+                "UserItemMatrixPostProcessor",
+                "SimilarityAverageRatingsPredictor",
+            };
+
+            FillBoxesInApproachPanel(approachParams);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             _session.LoadFromCsv("subjects_11310.csv");
 
-            _session.SelectApproach();
+            FileTextBox.Text = "subjects_11310.csv";
+            approachComboBox.SelectedItem = "StringSimilarityContentBasedApproach";
+
+            string[] approachParams = new[] {
+                "FileStreamLineReader",
+                "TfIdf",
+                "CosineSimilarityEvaluator",
+                "SimilarityVectorPostProcessor",
+            };
+
+            FillBoxesInApproachPanel(approachParams);
         }
 
         private void MagGlassBtn_Click(object sender, EventArgs e)
@@ -70,11 +92,12 @@ namespace WinFormsRecSys
 
         private void approachComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            var selectedApproach = (((ComboBox)sender).SelectedItem).ToString();
+            string? selectedApproach = ((ComboBox)sender).SelectedItem.ToString();
 
-            if (selectedApproach is null) { return; }
-
-            CreateApproachDialog(_session.GetConstructorParameterTypes(selectedApproach));
+            if (selectedApproach is not null)
+            {
+                CreateApproachDialog(_session.GetConstructorParameterTypes(selectedApproach));
+            }
         }
 
         private void waitingTimer_Tick(object sender, EventArgs e)
@@ -82,13 +105,23 @@ namespace WinFormsRecSys
             waitingLbl.Text = "".PadLeft((waitingLbl.Text.Length + 1) % 4, '.');
         }
 
-        // Helper functions
+
+        // Helper methods
+
         private void CreateApproachDialog(string[] constructorParameters)
         {
+            List<Control> controlsToRemove = new List<Control>();
+
             foreach (Control control in approachParametersPnl.Controls)
             {
-                if (control.Name == "templateComboBox" || control.Name == "TemplatePropertyLabel") { continue; }
+                if (control.Name != "templateComboBox" && control.Name != "TemplatePropertyLabel")
+                {
+                    controlsToRemove.Add(control);
+                }
+            }
 
+            foreach (Control control in controlsToRemove)
+            {
                 approachParametersPnl.Controls.Remove(control);
             }
 
@@ -101,6 +134,7 @@ namespace WinFormsRecSys
                 approachParametersPnl.Controls.Add(newLabel);
                 ComboBox newCombo = new ComboBox();
                 approachParametersPnl.Controls.Add(newCombo);
+                approachParametersPnl.Controls.SetChildIndex(newCombo, i); // So that they appear first when looping through Controls
 
                 newLabel.AutoSize = TemplatePropertyLabel.AutoSize;
                 newLabel.BackColor = TemplatePropertyLabel.BackColor;
@@ -119,6 +153,41 @@ namespace WinFormsRecSys
 
                 newCombo.Location = new Point(templateComboBox.Location.X, templateComboBox.Location.Y + heightShift * i);
                 newCombo.Items.AddRange(_session.GetClassesImplementing(constructorParameters[i]));
+            }
+        }
+
+        private string[] GetSelectedApproachParams()
+        {
+            Queue<string> selectedApproachParams = new();
+
+            foreach (Control control in approachParametersPnl.Controls)
+            {
+                if (control.Visible && control is ComboBox combo)
+                {
+                    if (combo.SelectedItem is null) { continue; }
+                    string? selectedName = combo.SelectedItem.ToString();
+
+                    if (selectedName is not null)
+                    {
+                        selectedApproachParams.Enqueue(selectedName);
+                    }
+                }
+            }
+
+            return selectedApproachParams.ToArray();
+        }
+
+        private void FillBoxesInApproachPanel(string[] approachParams)
+        {
+            int index = 0;
+            foreach (Control control in approachParametersPnl.Controls)
+            {
+                if (control is ComboBox combo && control.Enabled)
+                {
+                    if (index >= approachParams.Length) {break;}
+                    combo.SelectedItem = approachParams[index];
+                    index++;
+                }
             }
         }
     }

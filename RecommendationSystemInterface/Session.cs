@@ -7,6 +7,8 @@ using RecommendationSystemInterface.Interfaces;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection.Metadata;
 
 namespace RecommendationSystemInterface
 {
@@ -20,8 +22,13 @@ namespace RecommendationSystemInterface
     {
         private readonly Viewer _viewer;
 
-        private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific?
+        private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific? .. plonkový?
         private Approach? Approach { get; set; }
+
+        private Type? ApproachType { get; set; }
+        private ParameterInfo[]? ApproachParams { get; set; } // plonkový?
+
+        private string DataPath { get; set; }
 
         protected Session(Viewer viewer)
         {
@@ -31,30 +38,37 @@ namespace RecommendationSystemInterface
 
         public void GetRecommendations()
         {
+            var newLine = Environment.NewLine;
+            //_viewer.ViewString($"{Approach}{newLine}{newLine}RR: {Approach.RecordReader}{newLine}EVAL: {Approach.Evaluator}{newLine}PREPROC: {Approach.PreProcessor}{newLine}POSTPROC: {Approach.PostProcessor}");
             if (Approach is not null) { _viewer.ViewFile(Approach.Recommend()); }
         }
 
-        public void SelectApproach(string name = "CFilter")
+        public void SelectApproach(string[] parameters)
         {
-            if (RecordReader is null) {return;}
+            if (ApproachType == null || ApproachParams == null) { _viewer.ViewString("Fill in all information!"); return; }
 
-            var preProcessor = new UserItemMatrixPreProcessor(); //TfIdf();
-            var evaluator = new CosineSimilarityEvaluator();
-            var predictor = new SimilarityAverageRatingsPredictor();
-            var postProcessor = new UserItemMatrixPostProcessor(); //SimilarityVectorPostProcessor();
+            object[] constructorParameters = new object[parameters.Length];
 
-            // (Approach)Activator.CreateInstance();
+            if (ApproachParams.Length != parameters.Length) { _viewer.ViewString("Insufficient number of parameters."); return; }
 
-            Approach = new UserUserCfApproach(RecordReader, preProcessor, evaluator, postProcessor, predictor) //StringSimilarityContentBasedApproach
+            Type? readerType = GetClassType(parameters[0]);
+            if (readerType is null) { _viewer.ViewString("Loading reader has failed"); return; }
+
+            constructorParameters[0] = Activator.CreateInstance(readerType, new object[] { DataPath });
+
+            for (int i = 1; i < parameters.Length; i++)
             {
-                Name = name,
-                RecordReader = RecordReader,
-                PreProcessor = preProcessor,
-                Evaluator = evaluator,
-                Predictor = predictor,
-                PostProcessor = postProcessor,
-                // User = new SisUser() // neměl bych ho dát do Session?
-            };
+                Type? parameterType = GetClassType(parameters[i]);
+                if (parameterType is null) { _viewer.ViewString("Loading parameter type has failed"); return; }
+
+                constructorParameters[i] = Activator.CreateInstance(parameterType);
+            }
+
+            var resultingApproach = (Approach?)Activator.CreateInstance(ApproachType, constructorParameters);
+
+            if (resultingApproach is null) { _viewer.ViewString("Creating approach failed!"); return; }
+
+            Approach = resultingApproach;
         }
 
         public string[] GetAvailableApproaches()
@@ -99,71 +113,37 @@ namespace RecommendationSystemInterface
 
         public string[] GetConstructorParameterTypes(string className)
         {
-            Type? type = Type.GetType(className);
+            Type? classType = GetClassType(className);
 
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            if (classType is null) { _viewer.ViewString("Getting ctor parameters has failed!"); return new[] { "" }; }
+
+            ApproachParams = (classType.GetConstructors())[0].GetParameters(); // Get the first ctor params
+            ApproachType = classType;
+
+            string[] parameterTypeNames = new string[ApproachParams.Length];
+
+            for (int i = 0; i < ApproachParams.Length; i++)
             {
-                bool isFound = false;
-
-                foreach (Type foundType in assembly.GetTypes())
-                {
-                    if (foundType.Name == className)
-                    {
-                        type = foundType;
-                        isFound = true;
-                        break;
-                    }
-                }
-
-                if (isFound) { break; }
+                parameterTypeNames[i] = ApproachParams[i].ParameterType.ToString();
             }
 
-            if (type == null)
-            {
-                _viewer.ViewString("Failed!");
-                return new[] { "" };
-            }
-
-            ConstructorInfo[] constructors = type.GetConstructors();
-
-            int numOfParameters = 0;
-            foreach (var constructor in constructors) { numOfParameters += constructor.GetParameters().Length; }
-
-            string[] parameterTypes = new string[numOfParameters];
-
-            ParameterInfo[] parameters;
-            int index = 0;
-            foreach (var constructor in constructors)
-            {
-                parameters = constructor.GetParameters();
-
-                foreach (var parameter in parameters)
-                {
-                    parameterTypes[index] = parameter.ParameterType.ToString();
-                    index++;
-                }
-            }
-
-            return parameterTypes;
+            return parameterTypeNames;
         }
 
         public void LoadFromCsv(string filename)
         {
-            IDisposableLineReader rr;
-
-            string dataPath;
             if (File.Exists(filename))
             {
-                dataPath = filename;
+                DataPath = filename;
             }
             else
             {
-                dataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename));
+                DataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename));
             }
 
             try
             {
-                rr = new FileStreamLineReader(dataPath);
+                IDisposableLineReader rr = new FileStreamLineReader(DataPath);
             }
             catch (Exception e)
             {
@@ -171,9 +151,7 @@ namespace RecommendationSystemInterface
                 return;
             }
 
-            RecordReader = rr;
-
-            _viewer.ViewFile(dataPath);
+            _viewer.ViewFile(DataPath);
         }
 
         public void LoadFromDbs()
@@ -260,6 +238,26 @@ namespace RecommendationSystemInterface
             // var parser = new SisSubjectParser { Url = sis.cuni.uk };
             // parser.Parse();
         }
+
+
+        // Helper methods
+        
+        private Type? GetClassType(string className)
+        {
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type foundType in assembly.GetTypes())
+                {
+                    if (foundType.Name == className)
+                    {
+                        return foundType;
+                    }
+                }
+            }
+
+            return null;
+        }
+
     }
 
 
