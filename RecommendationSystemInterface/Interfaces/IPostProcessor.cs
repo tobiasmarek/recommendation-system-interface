@@ -105,7 +105,7 @@ namespace RecommendationSystemInterface.Interfaces
             string resultsFilePath = "userItemSimilarityResults.csv";
 
             float[] similaritiesVector = userItemMatrix[0];
-            var sw = new FileStreamWriter(resultsFilePath);
+            var sw = new FileStreamWriter(resultsFilePath, false);
 
             // PARAMETRIZOVAT
             int decimalPlace = 2; // Number of decimal places taken into consideration for count sort
@@ -117,13 +117,16 @@ namespace RecommendationSystemInterface.Interfaces
             if (min < 0) { negativeMinShift = -min * conversion; } // Shift needed for count sort to start from 0
 
             bool[,] countSortedSimilarities = GetCountSortedSimilaritiesVector(similaritiesVector, min, max, conversion, negativeMinShift);
-            
+
             // Iterates from the best similarity to the worst and writes a line with all the item indices that have the same similarity value
             for (int similarityIndex = countSortedSimilarities.GetLength(0) - 1; similarityIndex >= 0; similarityIndex--)
             {
                 for (int itemIndex = 0; itemIndex < similaritiesVector.Length; itemIndex++)
                 {
-                    if (countSortedSimilarities[similarityIndex, itemIndex]) { sw.Write($"{itemIndex} {similarityIndex - negativeMinShift}\n"); }
+                    if (countSortedSimilarities[similarityIndex, itemIndex])
+                    {
+                        sw.Write($"{itemIndex} {similarityIndex - negativeMinShift}\n");
+                    }
                 }
             }
 
