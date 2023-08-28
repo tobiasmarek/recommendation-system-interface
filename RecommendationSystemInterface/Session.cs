@@ -22,13 +22,14 @@ namespace RecommendationSystemInterface
     {
         private readonly Viewer _viewer;
 
-        private IDisposableLineReader? RecordReader { get; set; } // nebo něco víc specific? .. plonkový?
+        private IDisposableLineReader? RecordReader { get; set; }
         private Approach? Approach { get; set; }
 
-        private Type? ApproachType { get; set; }
-        private ParameterInfo[]? ApproachParams { get; set; } // plonkový?
+        private Type? ApproachType { get; set; } 
+        private ParameterInfo[]? ApproachParams { get; set; }
 
         private string DataPath { get; set; }
+        private User? User { get; set; }
 
         protected Session(Viewer viewer)
         {
@@ -38,9 +39,12 @@ namespace RecommendationSystemInterface
 
         public void GetRecommendations()
         {
-            var newLine = Environment.NewLine;
-            //_viewer.ViewString($"{Approach}{newLine}{newLine}RR: {Approach.RecordReader}{newLine}EVAL: {Approach.Evaluator}{newLine}PREPROC: {Approach.PreProcessor}{newLine}POSTPROC: {Approach.PostProcessor}");
-            if (Approach is not null) { _viewer.ViewFile(Approach.Recommend()); }
+            if (Approach is null) {_viewer.ViewString("Approach is null!"); return;}
+            if (User is null) {_viewer.ViewString("User is null!"); return;}
+
+            Approach.User = User;
+
+            _viewer.ViewFile(Approach.Recommend());
         }
 
         public void SelectApproach(string[] parameters)
@@ -71,15 +75,34 @@ namespace RecommendationSystemInterface
             Approach = resultingApproach;
         }
 
-        public string[] GetAvailableApproaches()
+        public Type? GetClassType(string className)
         {
-            var wantedAssembly = Assembly.GetAssembly(typeof(Approach)); // co kdyz to neni v tomhle assembly
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type foundType in assembly.GetTypes())
+                {
+                    if (foundType.Name == className)
+                    {
+                        return foundType;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public string[] GetAvailableClassesOfAType(string className)
+        {
+            Type? classType = GetClassType(className);
+            if (classType is null) { _viewer.ViewString("Class type not found!"); return new []{""}; }
+
+            var wantedAssembly = Assembly.GetAssembly(classType); // co kdyz to neni v tomhle assembly
             if (wantedAssembly is null) return new[] { "" };
 
             var names = wantedAssembly
                 .GetTypes()
-                .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Approach)))
-                .Select(type => type.FullName)
+                .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(classType))
+                .Select(type => type.FullName) // type.Name jenom abych nemusel [^1]
                 .ToArray();
 
             if (names.Contains(null)) return new[] { "" };
@@ -114,7 +137,6 @@ namespace RecommendationSystemInterface
         public string[] GetConstructorParameterTypes(string className)
         {
             Type? classType = GetClassType(className);
-
             if (classType is null) { _viewer.ViewString("Getting ctor parameters has failed!"); return new[] { "" }; }
 
             ApproachParams = (classType.GetConstructors())[0].GetParameters(); // Get the first ctor params
@@ -128,6 +150,14 @@ namespace RecommendationSystemInterface
             }
 
             return parameterTypeNames;
+        }
+
+        public void CreateUser(string className, string parameters)
+        {
+            Type? classType = GetClassType(className);
+            if (classType is null) { _viewer.ViewString("User type not found!"); return; }
+            
+            User = (User)Activator.CreateInstance(classType, new object[] { parameters });
         }
 
         public void LoadFromCsv(string filename)
@@ -238,26 +268,6 @@ namespace RecommendationSystemInterface
             // var parser = new SisSubjectParser { Url = sis.cuni.uk };
             // parser.Parse();
         }
-
-
-        // Helper methods
-        
-        private Type? GetClassType(string className)
-        {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type foundType in assembly.GetTypes())
-                {
-                    if (foundType.Name == className)
-                    {
-                        return foundType;
-                    }
-                }
-            }
-
-            return null;
-        }
-
     }
 
 

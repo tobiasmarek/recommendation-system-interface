@@ -1,5 +1,6 @@
 using RecommendationSystemInterface;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace WinFormsRecSys
 {
@@ -16,18 +17,22 @@ namespace WinFormsRecSys
             _session = session; // tohle by mìlo být nìkde jinde (mám v podstatì všechno v Controlleru (Form1 je Controller))
 
             loadFromComboBox.SelectedIndex = 0;
-            approachComboBox.Items.AddRange(_session.GetAvailableApproaches());
+            approachComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("Approach"));
+            userComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User"));
         }
 
         private async void RecBtn_Click(object sender, System.EventArgs e)
         {
             waitingTimer.Start();
             _session.SelectApproach(GetSelectedApproachParams());
+            leftSidePnl.Enabled = false;
+            _session.CreateUser(userComboBox.SelectedItem.ToString(), userDefinitionTextBox.Text);
 
             await Task.Run(() => _session.GetRecommendations());
 
             waitingTimer.Stop();
             waitingLbl.Text = "";
+            leftSidePnl.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -46,6 +51,9 @@ namespace WinFormsRecSys
             };
 
             FillBoxesInApproachPanel(approachParams);
+            SetUserDefinition("MovieDbsUser");
+
+            userComboBox.SelectedItem = "MovieDbsUser";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -63,6 +71,9 @@ namespace WinFormsRecSys
             };
 
             FillBoxesInApproachPanel(approachParams);
+            SetUserDefinition("SisUser");
+
+            userComboBox.SelectedItem = "SisUser";
         }
 
         private void MagGlassBtn_Click(object sender, EventArgs e)
@@ -105,6 +116,15 @@ namespace WinFormsRecSys
             waitingLbl.Text = "".PadLeft((waitingLbl.Text.Length + 1) % 4, '.');
         }
 
+        private void userComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string? selectedUser = ((ComboBox)sender).SelectedItem.ToString();
+
+            if (selectedUser is not null)
+            {
+                SetUserDefinition(selectedUser);
+            }
+        }
 
         // Helper methods
 
@@ -184,10 +204,22 @@ namespace WinFormsRecSys
             {
                 if (control is ComboBox combo && control.Enabled)
                 {
-                    if (index >= approachParams.Length) {break;}
+                    if (index >= approachParams.Length) { break; }
                     combo.SelectedItem = approachParams[index];
                     index++;
                 }
+            }
+        }
+
+        private void SetUserDefinition(string selectedUser)
+        {
+            Type? classType = _session.GetClassType(selectedUser);
+
+            var userExampleObj = (RecommendationSystemInterface.User)Activator.CreateInstance(classType, new object[] { " " });
+
+            if (userExampleObj is not null)
+            {
+                userDefinitionTextBox.Text = userExampleObj.ShowExampleParamString();
             }
         }
     }

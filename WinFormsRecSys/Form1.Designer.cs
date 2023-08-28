@@ -34,7 +34,7 @@
             this.LoadFromLbl = new System.Windows.Forms.Label();
             this.TemplatePropertyLabel = new System.Windows.Forms.Label();
             this.templateComboBox = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.leftSidePnl = new System.Windows.Forms.Panel();
             this.loadParametersPnl = new System.Windows.Forms.Panel();
             this.MagGlassBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -44,15 +44,20 @@
             this.button1 = new System.Windows.Forms.Button();
             this.approachComboBox = new System.Windows.Forms.ComboBox();
             this.approachParametersPnl = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.rightSidePnl = new System.Windows.Forms.Panel();
+            this.userDefinitionTextBox = new System.Windows.Forms.TextBox();
+            this.userPnl = new System.Windows.Forms.Panel();
+            this.userComboBox = new System.Windows.Forms.ComboBox();
             this.waitingLbl = new System.Windows.Forms.Label();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.OutputSignLbl = new System.Windows.Forms.Label();
             this.waitingTimer = new System.Windows.Forms.Timer(this.components);
-            this.panel1.SuspendLayout();
+            this.userTypeLbl = new System.Windows.Forms.Label();
+            this.leftSidePnl.SuspendLayout();
             this.loadParametersPnl.SuspendLayout();
             this.approachParametersPnl.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.rightSidePnl.SuspendLayout();
+            this.userPnl.SuspendLayout();
             this.SuspendLayout();
             // 
             // RecBtn
@@ -116,24 +121,24 @@
             this.templateComboBox.TabIndex = 7;
             this.templateComboBox.Visible = false;
             // 
-            // panel1
+            // leftSidePnl
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.leftSidePnl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel1.BackColor = System.Drawing.Color.AliceBlue;
-            this.panel1.Controls.Add(this.loadParametersPnl);
-            this.panel1.Controls.Add(this.SelectApproachLbl);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.RecBtn);
-            this.panel1.Controls.Add(this.loadFromComboBox);
-            this.panel1.Controls.Add(this.LoadFromLbl);
-            this.panel1.Controls.Add(this.approachComboBox);
-            this.panel1.Controls.Add(this.approachParametersPnl);
-            this.panel1.Location = new System.Drawing.Point(21, 21);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(387, 602);
-            this.panel1.TabIndex = 9;
+            this.leftSidePnl.BackColor = System.Drawing.Color.AliceBlue;
+            this.leftSidePnl.Controls.Add(this.loadParametersPnl);
+            this.leftSidePnl.Controls.Add(this.SelectApproachLbl);
+            this.leftSidePnl.Controls.Add(this.button2);
+            this.leftSidePnl.Controls.Add(this.button1);
+            this.leftSidePnl.Controls.Add(this.RecBtn);
+            this.leftSidePnl.Controls.Add(this.loadFromComboBox);
+            this.leftSidePnl.Controls.Add(this.LoadFromLbl);
+            this.leftSidePnl.Controls.Add(this.approachComboBox);
+            this.leftSidePnl.Controls.Add(this.approachParametersPnl);
+            this.leftSidePnl.Location = new System.Drawing.Point(21, 21);
+            this.leftSidePnl.Name = "leftSidePnl";
+            this.leftSidePnl.Size = new System.Drawing.Size(387, 602);
+            this.leftSidePnl.TabIndex = 9;
             // 
             // loadParametersPnl
             // 
@@ -232,19 +237,63 @@
             this.approachParametersPnl.Size = new System.Drawing.Size(335, 39);
             this.approachParametersPnl.TabIndex = 16;
             // 
-            // panel2
+            // rightSidePnl
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.rightSidePnl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.panel2.Controls.Add(this.waitingLbl);
-            this.panel2.Controls.Add(this.OutputTextBox);
-            this.panel2.Controls.Add(this.OutputSignLbl);
-            this.panel2.Location = new System.Drawing.Point(431, 21);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(602, 602);
-            this.panel2.TabIndex = 10;
+            this.rightSidePnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.rightSidePnl.Controls.Add(this.userDefinitionTextBox);
+            this.rightSidePnl.Controls.Add(this.userPnl);
+            this.rightSidePnl.Controls.Add(this.waitingLbl);
+            this.rightSidePnl.Controls.Add(this.OutputTextBox);
+            this.rightSidePnl.Controls.Add(this.OutputSignLbl);
+            this.rightSidePnl.Location = new System.Drawing.Point(431, 21);
+            this.rightSidePnl.Name = "rightSidePnl";
+            this.rightSidePnl.Size = new System.Drawing.Size(602, 602);
+            this.rightSidePnl.TabIndex = 10;
+            // 
+            // userDefinitionTextBox
+            // 
+            this.userDefinitionTextBox.AcceptsTab = true;
+            this.userDefinitionTextBox.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.userDefinitionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.userDefinitionTextBox.BackColor = System.Drawing.Color.Silver;
+            this.userDefinitionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.userDefinitionTextBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.userDefinitionTextBox.Location = new System.Drawing.Point(72, 487);
+            this.userDefinitionTextBox.Multiline = true;
+            this.userDefinitionTextBox.Name = "userDefinitionTextBox";
+            this.userDefinitionTextBox.Size = new System.Drawing.Size(464, 50);
+            this.userDefinitionTextBox.TabIndex = 4;
+            this.userDefinitionTextBox.TabStop = false;
+            // 
+            // userPnl
+            // 
+            this.userPnl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.userPnl.BackColor = System.Drawing.Color.Silver;
+            this.userPnl.Controls.Add(this.userTypeLbl);
+            this.userPnl.Controls.Add(this.userComboBox);
+            this.userPnl.Location = new System.Drawing.Point(57, 450);
+            this.userPnl.Name = "userPnl";
+            this.userPnl.Size = new System.Drawing.Size(496, 103);
+            this.userPnl.TabIndex = 5;
+            // 
+            // userComboBox
+            // 
+            this.userComboBox.BackColor = System.Drawing.Color.Silver;
+            this.userComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.userComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.userComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.userComboBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.userComboBox.FormattingEnabled = true;
+            this.userComboBox.Location = new System.Drawing.Point(333, 9);
+            this.userComboBox.Name = "userComboBox";
+            this.userComboBox.Size = new System.Drawing.Size(151, 22);
+            this.userComboBox.TabIndex = 1;
+            this.userComboBox.SelectedValueChanged += new System.EventHandler(this.userComboBox_SelectedValueChanged);
             // 
             // waitingLbl
             // 
@@ -287,27 +336,40 @@
             this.waitingTimer.Interval = 800;
             this.waitingTimer.Tick += new System.EventHandler(this.waitingTimer_Tick);
             // 
+            // userTypeLbl
+            // 
+            this.userTypeLbl.AutoSize = true;
+            this.userTypeLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.userTypeLbl.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.userTypeLbl.Location = new System.Drawing.Point(15, 12);
+            this.userTypeLbl.Name = "userTypeLbl";
+            this.userTypeLbl.Size = new System.Drawing.Size(99, 14);
+            this.userTypeLbl.TabIndex = 2;
+            this.userTypeLbl.Text = "Pick a User Type:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1054, 643);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.rightSidePnl);
+            this.Controls.Add(this.leftSidePnl);
             this.Font = new System.Drawing.Font("Roboto Medium", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(48)))));
             this.MinimumSize = new System.Drawing.Size(1072, 690);
             this.Name = "Form1";
             this.Text = "Recommendation System";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.leftSidePnl.ResumeLayout(false);
+            this.leftSidePnl.PerformLayout();
             this.loadParametersPnl.ResumeLayout(false);
             this.loadParametersPnl.PerformLayout();
             this.approachParametersPnl.ResumeLayout(false);
             this.approachParametersPnl.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.rightSidePnl.ResumeLayout(false);
+            this.rightSidePnl.PerformLayout();
+            this.userPnl.ResumeLayout(false);
+            this.userPnl.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -319,8 +381,8 @@
         private System.Windows.Forms.Label LoadFromLbl;
         private System.Windows.Forms.Label TemplatePropertyLabel;
         private System.Windows.Forms.ComboBox templateComboBox;
-        private Panel panel1;
-        private Panel panel2;
+        private Panel leftSidePnl;
+        private Panel rightSidePnl;
         private Label OutputSignLbl;
         private Button button2;
         private Button button1;
@@ -334,5 +396,9 @@
         private Label waitingLbl;
         private Panel approachParametersPnl;
         private Panel loadParametersPnl;
+        private TextBox userDefinitionTextBox;
+        private Panel userPnl;
+        private ComboBox userComboBox;
+        private Label userTypeLbl;
     }
 }
