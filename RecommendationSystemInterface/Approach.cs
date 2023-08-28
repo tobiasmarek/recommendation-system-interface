@@ -10,8 +10,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class Approach
     {
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public User? User { get; set; }
 
         public IDisposableLineReader RecordReader { get; set; }
         public IPreProcessor PreProcessor { get; set; }
@@ -37,11 +36,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class ContentBasedApproach : Approach
     {
-        public User? User { get; set; }
-
-        protected ContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor)
-        {
-        }
+        protected ContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
 
 
@@ -57,7 +52,7 @@ namespace RecommendationSystemInterface
         {
             float[][] dataMatrix = PreProcessor.Preprocess(RecordReader);
 
-            float[] userVector = GetUserVector(dataMatrix);
+            float[] userVector = User.UserVectorizer.VectorizeUser(User, dataMatrix);
 
             float[] similaritiesVector = new float[dataMatrix.GetLongLength(0)];
 
@@ -70,44 +65,6 @@ namespace RecommendationSystemInterface
 
             return resultsFilePath;
         }
-
-        /// <summary>
-        /// Takes subjects rated by user and averages them out into a single vector that should
-        /// theoretically revolve around its preferences in the vector space.
-        /// </summary>
-        private float[] GetUserVector(float[][] dataMatrix)
-        {
-            float[] userVector = new float[dataMatrix[0].Length];
-
-            if (User is not SisUser sisUser) { return userVector; } // TOHLE JE HODNĚ SPECIFIC - PŘESUNOU JINAM NEŽ U APPROACH
-
-            foreach (int index in sisUser.Favourites)
-            {
-                for (int j = 0; j < userVector.Length; j++)
-                {
-                    userVector[j] += dataMatrix[index][j];
-                }
-            }
-
-            foreach (int index in sisUser.WishList)
-            {
-                for (int j = 0; j < userVector.Length; j++)
-                {
-                    userVector[j] += dataMatrix[index][j];
-                }
-            }
-
-            int numOfRankedItems = sisUser.Favourites.Length + sisUser.WishList.Length;
-
-            if (numOfRankedItems == 0) { return userVector; }
-
-            for (int i = 0; i < userVector.Length; i++)
-            {
-                userVector[i] /= numOfRankedItems;
-            }
-
-            return userVector;
-        }
     }
 
 
@@ -118,8 +75,6 @@ namespace RecommendationSystemInterface
     /// </summary>
     abstract class CollaborativeFilteringApproach : Approach
     {
-        public User[]? Users { get; set; }
-
         protected CollaborativeFilteringApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
 
@@ -140,6 +95,9 @@ namespace RecommendationSystemInterface
         public override string Recommend()
         {
             float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader); // The creation of userItemMatrix
+
+            float[] userVector = User.UserVectorizer.VectorizeUser(User, userItemMatrix);
+            userItemMatrix[0] = userVector; // Change the user with index 0 to our userVector
 
             float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // Symmetric matrix of user similarities
 
