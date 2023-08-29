@@ -8,7 +8,7 @@ namespace RecommendationSystemInterface
     /// Defining class that contains the commonalities between all recommendation approaches.
     /// The defining functionality is Recommend function that lets us implement different techniques.
     /// </summary>
-    abstract class Approach
+    public abstract class Approach
     {
         public User? User { get; set; }
 
@@ -34,7 +34,7 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// Defining characteristics of Content-Based approaches.
     /// </summary>
-    abstract class ContentBasedApproach : Approach
+    public abstract class ContentBasedApproach : Approach
     {
         protected ContentBasedApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
@@ -73,7 +73,7 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// Defining characteristics of Collaborative-Filtering approaches.
     /// </summary>
-    abstract class CollaborativeFilteringApproach : Approach
+    public abstract class CollaborativeFilteringApproach : Approach
     {
         protected CollaborativeFilteringApproach(IDisposableLineReader recordReader, IPreProcessor preProcessor, ISimilarityEvaluator evaluator, IPostProcessor postProcessor) : base(recordReader, preProcessor, evaluator, postProcessor) { }
     }
@@ -147,7 +147,7 @@ namespace RecommendationSystemInterface
     /// <summary>
     /// Defining characteristics of Hybrid approaches.
     /// </summary>
-    abstract class HybridApproach : Approach
+    public abstract class HybridApproach : Approach
     {
         public User[]? Users { get; set; }
 
