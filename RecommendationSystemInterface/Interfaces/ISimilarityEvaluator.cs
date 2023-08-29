@@ -8,7 +8,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// Takes two vectors and evaluates its similarity.
     /// </summary>
-    interface ISimilarityEvaluator
+    public interface ISimilarityEvaluator
     {
         float EvaluateSimilarity(float[] u, float[] v); // nebo z toho udělat <T>, protože třeba NN může dostat jinej vstup
         // protože NN může mít svoje převádění na vektorovou reprezentaci, nebo ne?

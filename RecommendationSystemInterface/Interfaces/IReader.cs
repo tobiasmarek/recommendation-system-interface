@@ -20,7 +20,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// LineReader that implements Dispose function.
     /// </summary>
-    interface IDisposableLineReader : ILineReader, IDisposable { }
+    public interface IDisposableLineReader : ILineReader, IDisposable { }
 
 
     /// <summary>

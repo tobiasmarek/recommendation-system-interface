@@ -8,7 +8,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// Final processing of userItemMatrix.
     /// Results are stored in a file with the returned path.
     /// </summary>
-    internal interface IPostProcessor
+    public interface IPostProcessor
     {
         string Postprocess(float[][] userItemMatrix);
     }

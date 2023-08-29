@@ -8,7 +8,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// The first processing of incoming data.
     /// Converts or transforms the input into its processed vector form.
     /// </summary>
-    internal interface IPreProcessor
+    public interface IPreProcessor
     {
         float[][] Preprocess(IDisposableLineReader rr);
     }
