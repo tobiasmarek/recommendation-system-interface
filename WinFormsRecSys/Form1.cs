@@ -217,9 +217,9 @@ namespace WinFormsRecSys
 
         private void SetUserDefinition(string selectedUser)
         {
-            Type? classType = _session.GetClassType(selectedUser);
+            Type? classType = _session.GetClassType($"WinForms{selectedUser}");
 
-            var userExampleObj = (RecommendationSystemInterface.User)Activator.CreateInstance(classType, new object[] { " " });
+            var userExampleObj = (IWinFormsUserUtil)Activator.CreateInstance(classType, new object[] { " " });
 
             if (userExampleObj is not null)
             {
