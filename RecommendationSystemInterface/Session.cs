@@ -156,8 +156,19 @@ namespace RecommendationSystemInterface
         {
             Type? classType = GetClassType(className);
             if (classType is null) { _viewer.ViewString("User type not found!"); return; }
-            
-            User = (User)Activator.CreateInstance(classType, new object[] { parameters });
+
+            try
+            {
+                User = (User)Activator.CreateInstance(classType, new object[] { parameters });
+            }
+            catch (System.MissingMethodException e)
+            {
+                _viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!\n\n{e}");
+            }
+            catch (Exception e)
+            {
+                _viewer.ViewString($"Something went wrong!\n\n{e}");
+            }
         }
 
         public void LoadFromCsv(string filename)

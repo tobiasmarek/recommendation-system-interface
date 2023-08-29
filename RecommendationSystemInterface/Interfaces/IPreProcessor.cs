@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace RecommendationSystemInterface.Interfaces
 {
@@ -114,7 +115,7 @@ namespace RecommendationSystemInterface.Interfaces
                 '!', '"', '#', '$', '%', '&', '\'', '(', ')', // Punctuation marks
                 '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{',
                 '|', '}', '~' // Symbols
-            }); // INTERFACE DEFINOVATELNA ZVENKU
+            });
             
             var sw = new FileStreamWriter(tempTfFilePath, true);
 
@@ -150,7 +151,7 @@ namespace RecommendationSystemInterface.Interfaces
                     rowUniqueWordsCount[word]++;
                     rowWordCount++;
 
-                    if (sr.EndOfRow) { break; }
+                    if (sr.EndOfLine) { break; }
                 }
 
                 int keyCounter = 1;
@@ -176,51 +177,20 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// Creates a userItemMatrix out of singular recordings of rating.
     /// </summary>
-    class UserItemMatrixPreProcessor : IPreProcessor
+    class UserItemMatrixRatingsPreProcessor : IPreProcessor
     {
         public float[][] Preprocess(IDisposableLineReader rr)
         {
-            Dictionary<int, Dictionary<int, int>> userRatings = new();
-            var sr = new RecordStreamWordReader(rr, new char[] { '\t' }); // TADY LEPSI ROW-READER - ALSO MELO BY TO BYT ZVENKU DEFINABLE
+            var sr = new RecordStreamWordReader(rr, new char[] { '\t' }); // MELO BY TO BYT ZVENKU DEFINABLE
+            var rf = new RatingsFiller(sr, new int[] { 0, 1, 2 });
 
-            int userMaxIndex = 0; // To keep track of how big the resulting matrix has to be
-            int itemMaxIndex = 0;
+            Dictionary<int, Dictionary<int, int>> userRatings = rf.FillRatings();
 
-            string? word = "";
-            while (word is not null) // TOHLE BY MĚL BÝT ZASE NĚJAKEJ SAMOSTATNEJ READER KTEREJ TO DĚLÁ U SEBE (NE VŽDY BUDOU 3 PRVKY A NA STEJNYM MISTE)
-            {
-                bool failedToParse = false;
-                int k = 0;
-                int[] userItemRating = new int[3]; 
-
-                while ((word = sr.ReadWord()) != null)
-                {
-                    if (sr.EndOfRow) { break; }
-
-                    if (!int.TryParse(word, out userItemRating[k])) { break; }
-
-                    k++;
-                }
-
-                if (failedToParse == false)
-                {
-                    if (!userRatings.ContainsKey(userItemRating[0]))
-                    {
-                        userRatings[userItemRating[0]] = new Dictionary<int, int>();
-                    }
-
-                    if (userItemRating[0] > userMaxIndex) { userMaxIndex = userItemRating[0]; }
-                    if (userItemRating[1] > itemMaxIndex) { itemMaxIndex = userItemRating[1]; }
-
-                    userRatings[userItemRating[0]].Add(userItemRating[1], userItemRating[2]);
-                }
-            }
-
-            float[][] userItemMatrix = new float[userMaxIndex + 1][];
+            float[][] userItemMatrix = new float[rf.UserMaxIndex + 1][];
 
             foreach (var userIndex in userRatings.Keys)
             {
-                userItemMatrix[userIndex] = new float[itemMaxIndex + 1];
+                userItemMatrix[userIndex] = new float[rf.ItemMaxIndex + 1];
 
                 foreach (var keyValPair in userRatings[userIndex])
                 {
@@ -231,4 +201,92 @@ namespace RecommendationSystemInterface.Interfaces
             return userItemMatrix;
         }
     }
+
+    class RatingsFiller
+    {
+        public int UserMaxIndex; // To keep track of how big the resulting matrix has to be
+        public int ItemMaxIndex;
+
+        private readonly RecordStreamWordReader _sr;
+        private readonly Dictionary<int, Dictionary<int, int>> _userRatings;
+        private readonly int[] _userItemRatingIndex;
+
+        public RatingsFiller(RecordStreamWordReader sr, int[] userItemRatingIndex)
+        {
+            _sr = sr;
+            _userItemRatingIndex = userItemRatingIndex;
+            _userRatings = new Dictionary<int, Dictionary<int, int>>();
+            UserMaxIndex = 0;
+            ItemMaxIndex = 0;
+        }
+
+        public Dictionary<int, Dictionary<int, int>> FillRatings()
+        {
+            if (_userItemRatingIndex.Length != 3) { return _userRatings; }
+
+            int[] sortedIndices = GetSortedIndicesByValue();
+
+            string? word = "";
+            while (word is not null)
+            {
+                bool failedToParse = false;
+                int k = 0;
+                int[] userItemRating = new int[3];
+
+                while ((word = _sr.ReadWord()) != null)
+                {
+                    if (_sr.EndOfLine) { break; }
+
+                    if (_userItemRatingIndex.Contains(k))
+                    {
+                        if (!int.TryParse(word, out userItemRating[k])) { failedToParse = true; break; }
+                    }
+
+                    k++;
+                }
+
+                if (failedToParse) { continue; }
+
+                if (!_userRatings.ContainsKey(userItemRating[0]))
+                {
+                    _userRatings[userItemRating[0]] = new Dictionary<int, int>();
+                }
+
+                if (userItemRating[0] > UserMaxIndex) { UserMaxIndex = userItemRating[0]; }
+                if (userItemRating[1] > ItemMaxIndex) { ItemMaxIndex = userItemRating[1]; }
+
+                _userRatings[userItemRating[0]].Add(userItemRating[1], userItemRating[2]);
+            }
+
+            return _userRatings;
+        }
+
+        private int[] GetSortedIndicesByValue()
+        { // CAN BE FASTER
+            int[] result = new int[3];
+
+            foreach (var index in _userItemRatingIndex)
+            {
+                if (index < 0) { return result; }
+            }
+
+            int first = _userItemRatingIndex.Min();
+            result[0] = Array.IndexOf(_userItemRatingIndex, first);
+
+            int third = _userItemRatingIndex.Max();
+            result[2] = Array.IndexOf(_userItemRatingIndex, third);
+
+            for (int i = 0; i < _userItemRatingIndex.Length; i++)
+            {
+                if (_userItemRatingIndex[i] > first && _userItemRatingIndex[i] < third)
+                {
+                    result[1] = i;
+                    break;
+                }
+            }
+
+            return result;
+        }
+    }
+
 }

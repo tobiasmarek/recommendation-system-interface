@@ -27,7 +27,7 @@ namespace WinFormsRecSys
             waitingTimer.Start();
             _session.SelectApproach(GetSelectedApproachParams());
             leftSidePnl.Enabled = false;
-            _session.CreateUser(userComboBox.SelectedItem.ToString(), userDefinitionTextBox.Text);
+            _session.CreateUser($"WinForms{userComboBox.SelectedItem}", userDefinitionTextBox.Text);
             userPnl.Enabled = false;
             userDefinitionTextBox.Enabled = false;
 
@@ -49,7 +49,7 @@ namespace WinFormsRecSys
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
-                "UserItemMatrixPreProcessor",
+                "UserItemMatrixRatingsPreProcessor",
                 "CosineSimilarityEvaluator",
                 "UserItemMatrixPostProcessor",
                 "SimilarityAverageRatingsPredictor",

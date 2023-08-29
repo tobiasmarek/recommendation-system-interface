@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -77,7 +78,10 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// WordReader that implements Dispose function.
     /// </summary>
-    interface IDisposableWordReader : IWordReader, IDisposable { }
+    interface IDisposableWordReader : IWordReader, IDisposable
+    {
+        public bool EndOfLine { get; set; }
+    }
 
 
     /// <summary>
@@ -85,7 +89,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class FileStreamWordReader : IDisposableWordReader
     {
-        public bool EndOfLine; // NEMĚLO BY TO BÝT ROVNOU V INTERFACE?
+        public bool EndOfLine { get; set; }
 
         private readonly StreamReader _sr;
         private readonly char[] _separators;
@@ -173,7 +177,7 @@ namespace RecommendationSystemInterface.Interfaces
     class StringStreamWordReader : IDisposableWordReader // NENI TO REDUNDANT - CO OBECNEJ STREAMWORDREADER A TAM DODÁVAT DO TextReaderu?
     { 
         public StringReader Sr { get; set; }
-        public bool EndOfLine; // DO INTERFACE
+        public bool EndOfLine { get; set; }
 
         private readonly char[] _separators;
         private readonly StringBuilder _sb;
@@ -250,15 +254,13 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class RecordStreamWordReader : StringStreamWordReader // NEBO NEJAKEJ EndOfRowStringWordReader
     {
-        public bool EndOfRow; // DO INTERFACE? PROC JE TO TU ZNOVA?
-
         private string? _row;
         private string? _nextWord = null;
         private readonly IDisposableLineReader _rr;
 
         public RecordStreamWordReader(IDisposableLineReader rr, char[] separators) : base(separators)
         {
-            EndOfRow = true;
+            EndOfLine = true;
             _rr = rr;
             _row = String.Empty;
         }
@@ -266,12 +268,12 @@ namespace RecommendationSystemInterface.Interfaces
         public new string? ReadWord()
         {
             string? word;
-            if (EndOfRow == true)
+            if (EndOfLine == true)
             {
                 _row = _rr.ReadLine();
-                if (_row == null) { return null; }
+                if (_row == null) { _rr.Dispose(); return null; }
                 Sr = new StringReader(_row);
-                EndOfRow = false;
+                EndOfLine = false;
             }
 
             if (_nextWord == null) { word = base.ReadWord(); }
@@ -280,7 +282,7 @@ namespace RecommendationSystemInterface.Interfaces
             if (word == null) { return ""; }
 
             _nextWord = base.ReadWord();
-            if (_nextWord == null) { EndOfRow = true; }
+            if (_nextWord == null) { EndOfLine = true; }
 
             return word;
         }
