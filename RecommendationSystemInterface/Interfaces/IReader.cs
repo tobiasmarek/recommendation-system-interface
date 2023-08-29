@@ -9,7 +9,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// Reads a line.
     /// </summary>
     /// <returns>Returns null if it reached the end of the input, else the string</returns>
-    internal interface ILineReader
+    public interface ILineReader
     {
         string? ReadLine();
     }
