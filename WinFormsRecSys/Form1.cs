@@ -27,12 +27,16 @@ namespace WinFormsRecSys
             _session.SelectApproach(GetSelectedApproachParams());
             leftSidePnl.Enabled = false;
             _session.CreateUser(userComboBox.SelectedItem.ToString(), userDefinitionTextBox.Text);
+            userPnl.Enabled = false;
+            userDefinitionTextBox.Enabled = false;
 
             await Task.Run(() => _session.GetRecommendations());
 
             waitingTimer.Stop();
             waitingLbl.Text = "";
             leftSidePnl.Enabled = true;
+            userPnl.Enabled = true;
+            userDefinitionTextBox.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -47,12 +47,12 @@
             this.rightSidePnl = new System.Windows.Forms.Panel();
             this.userDefinitionTextBox = new System.Windows.Forms.TextBox();
             this.userPnl = new System.Windows.Forms.Panel();
+            this.userTypeLbl = new System.Windows.Forms.Label();
             this.userComboBox = new System.Windows.Forms.ComboBox();
             this.waitingLbl = new System.Windows.Forms.Label();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.OutputSignLbl = new System.Windows.Forms.Label();
             this.waitingTimer = new System.Windows.Forms.Timer(this.components);
-            this.userTypeLbl = new System.Windows.Forms.Label();
             this.leftSidePnl.SuspendLayout();
             this.loadParametersPnl.SuspendLayout();
             this.approachParametersPnl.SuspendLayout();
@@ -281,8 +281,20 @@
             this.userPnl.Size = new System.Drawing.Size(496, 103);
             this.userPnl.TabIndex = 5;
             // 
+            // userTypeLbl
+            // 
+            this.userTypeLbl.AutoSize = true;
+            this.userTypeLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.userTypeLbl.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.userTypeLbl.Location = new System.Drawing.Point(15, 12);
+            this.userTypeLbl.Name = "userTypeLbl";
+            this.userTypeLbl.Size = new System.Drawing.Size(99, 14);
+            this.userTypeLbl.TabIndex = 2;
+            this.userTypeLbl.Text = "Pick a User Type:";
+            // 
             // userComboBox
             // 
+            this.userComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.userComboBox.BackColor = System.Drawing.Color.Silver;
             this.userComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.userComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -335,17 +347,6 @@
             // 
             this.waitingTimer.Interval = 800;
             this.waitingTimer.Tick += new System.EventHandler(this.waitingTimer_Tick);
-            // 
-            // userTypeLbl
-            // 
-            this.userTypeLbl.AutoSize = true;
-            this.userTypeLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.userTypeLbl.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.userTypeLbl.Location = new System.Drawing.Point(15, 12);
-            this.userTypeLbl.Name = "userTypeLbl";
-            this.userTypeLbl.Size = new System.Drawing.Size(99, 14);
-            this.userTypeLbl.TabIndex = 2;
-            this.userTypeLbl.Text = "Pick a User Type:";
             // 
             // Form1
             // 
