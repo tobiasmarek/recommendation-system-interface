@@ -1,6 +1,7 @@
 using RecommendationSystemInterface;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.ApplicationServices;
+using WinFormsRecSys.Interfaces;
 
 namespace WinFormsRecSys
 {
