@@ -42,7 +42,7 @@ namespace RecommendationSystemInterface
         public sealed override void GetValuesFrom(string parameters)
         {
             string[] twoParameters = parameters.Split(Environment.NewLine);
-            if (twoParameters.Length != 2) { return; }
+            if (twoParameters.Length != 2) { GetValuesFrom(ShowExampleParamString()); return; }
 
             int[]? favResult = GetParamOutOfLine(twoParameters[0]);
             if (favResult is null) { GetValuesFrom(ShowExampleParamString()); return; }
@@ -96,12 +96,35 @@ Wish-list: 1, 10, 12";
 
         public sealed override void GetValuesFrom(string parameters)
         {
+            var userItemRatingsResult = GetParamOutOfLine(parameters);
+            if (userItemRatingsResult is null) { GetValuesFrom(ShowExampleParamString()); return; }
 
+            userItemRatings = userItemRatingsResult;
         }
 
         public override string ShowExampleParamString()
         {
             return "User-Item rating (1-5): 22 4, 11 5, 30 2, 11 1, 3 5, 4 5";
+        }
+
+        private Dictionary<int, int>? GetParamOutOfLine(string line)
+        {
+            string[] lineParams = line.Split(":");
+            if (lineParams.Length != 2) return null;
+
+            lineParams = lineParams[1].Split(",");
+
+            int index; int rating;
+            Dictionary<int, int> result = new();
+            foreach (var pairStr in lineParams)
+            {
+                string[] pair = pairStr.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                if (pair.Length != 2 || !int.TryParse(pair[0], out index) || !int.TryParse(pair[1], out rating)) return null;
+
+                result[index] = rating;
+            }
+
+            return result;
         }
     }
 }
