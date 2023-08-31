@@ -20,7 +20,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     public class Session
     {
-        private readonly Viewer _viewer;
+        protected readonly Viewer Viewer;
 
         private IDisposableLineReader? RecordReader { get; set; }
         private Approach? Approach { get; set; }
@@ -33,51 +33,55 @@ namespace RecommendationSystemInterface
 
         protected Session(Viewer viewer)
         {
-            _viewer = viewer;
+            Viewer = viewer;
         }
 
 
         public void GetRecommendations()
         {
-            if (DataPath is null) { _viewer.ViewString("Data file not selected!"); return; }
-            if (Approach is null) {_viewer.ViewString("Approach is null!"); return;}
-            if (User is null) {_viewer.ViewString("User is null!"); return;}
+            if (DataPath is null) { Viewer.ViewString("Data file not selected!"); return; }
+            if (Approach is null) {Viewer.ViewString("Approach is null!"); return;}
+            if (User is null) {Viewer.ViewString("User is null!"); return;}
 
             Approach.User = User;
 
-            _viewer.ViewFile(Approach.Recommend());
+            Viewer.ViewFile(Approach.Recommend());
         }
 
         public void SelectApproach(string[] parameters)
         {
-            if (ApproachType == null || ApproachParams == null) { _viewer.ViewString("Fill in all information!"); return; }
+            if (ApproachType == null || ApproachParams == null) { Viewer.ViewString("Fill in all information!"); return; }
 
             object[] constructorParameters = new object[parameters.Length];
 
-            if (ApproachParams.Length != parameters.Length) { _viewer.ViewString("Insufficient number of parameters."); return; }
+            if (ApproachParams.Length != parameters.Length) { Viewer.ViewString("Insufficient number of parameters."); return; }
+
+            if (DataPath is null) { Viewer.ViewString("Before selecting an approach, a source of content needs to be known. Load a csv file for example."); return; }
 
             Type? readerType = GetClassType(parameters[0]);
-            if (readerType is null) { _viewer.ViewString("Loading reader has failed"); return; }
+            if (readerType is null) { Viewer.ViewString("Loading reader has failed"); return; }
 
             constructorParameters[0] = Activator.CreateInstance(readerType, new object[] { DataPath });
 
             for (int i = 1; i < parameters.Length; i++)
             {
                 Type? parameterType = GetClassType(parameters[i]);
-                if (parameterType is null) { _viewer.ViewString("Loading parameter type has failed"); return; }
+                if (parameterType is null) { Viewer.ViewString("Loading parameter type has failed"); return; }
 
                 constructorParameters[i] = Activator.CreateInstance(parameterType);
             }
 
             var resultingApproach = (Approach?)Activator.CreateInstance(ApproachType, constructorParameters);
 
-            if (resultingApproach is null) { _viewer.ViewString("Creating approach failed!"); return; }
+            if (resultingApproach is null) { Viewer.ViewString("Creating approach failed!"); return; }
 
             Approach = resultingApproach;
         }
 
         public Type? GetClassType(string className)
         {
+            className = className.Split('.')[^1];
+
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (Type foundType in assembly.GetTypes())
@@ -95,7 +99,7 @@ namespace RecommendationSystemInterface
         public string[] GetAvailableClassesOfAType(string className)
         {
             Type? classType = GetClassType(className);
-            if (classType is null) { _viewer.ViewString("Class type not found!"); return new []{""}; }
+            if (classType is null) { Viewer.ViewString("Class type not found!"); return new []{""}; }
 
             var wantedAssembly = Assembly.GetAssembly(classType); // co kdyz to neni v tomhle assembly
             if (wantedAssembly is null) return new[] { "" };
@@ -117,7 +121,7 @@ namespace RecommendationSystemInterface
             return resultingNames;
         }
 
-        public string[] GetClassesImplementing(string interfaceName) // udělat obecnější - ne jen interfaces
+        public string[] GetClassesImplementingInterface(string interfaceName)
         {
             List<string> classNames = new List<string>();
 
@@ -135,10 +139,10 @@ namespace RecommendationSystemInterface
             return classNames.ToArray();
         }
 
-        public string[] GetConstructorParameterTypes(string className)
+        public string[] GetApproachCtorParameterTypes(string className)
         {
             Type? classType = GetClassType(className);
-            if (classType is null) { _viewer.ViewString("Getting ctor parameters has failed!"); return new[] { "" }; }
+            if (classType is null) { Viewer.ViewString("Getting ctor parameters has failed!"); return new[] { "" }; }
 
             ApproachParams = (classType.GetConstructors())[0].GetParameters(); // Get the first ctor params
             ApproachType = classType;
@@ -156,7 +160,7 @@ namespace RecommendationSystemInterface
         public void CreateUser(string className, string parameters)
         {
             Type? classType = GetClassType(className);
-            if (classType is null) { _viewer.ViewString("User type not found!"); return; }
+            if (classType is null) { Viewer.ViewString("User type not found!"); return; }
 
             try
             {
@@ -164,11 +168,11 @@ namespace RecommendationSystemInterface
             }
             catch (System.MissingMethodException e)
             {
-                _viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!{Environment.NewLine}{e}");
+                Viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!{Environment.NewLine}{e}");
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Something went wrong!{Environment.NewLine}{e}");
+                Viewer.ViewString($"Something went wrong!{Environment.NewLine}{e}");
             }
         }
 
@@ -189,16 +193,16 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Failed to load csv file.{Environment.NewLine}{e}");
+                Viewer.ViewString($"Failed to load csv file.{Environment.NewLine}{e}");
                 return;
             }
 
-            _viewer.ViewFile(DataPath);
+            Viewer.ViewFile(DataPath);
         }
 
         public void LoadFromDbs()
         {
-            throw new NotImplementedException();
+            Viewer.ViewString("Not implemented yet!");
         }
 
         public void ShowSessions()
@@ -213,7 +217,7 @@ namespace RecommendationSystemInterface
                 string? line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    _viewer.ViewString(line);
+                    Viewer.ViewString(line);
                 }
 
                 sr.Dispose();
@@ -236,7 +240,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Failed to SaveSession.{Environment.NewLine}{e}");
+                Viewer.ViewString($"Failed to SaveSession.{Environment.NewLine}{e}");
             }
         }
 
@@ -251,7 +255,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Loading session failed.{Environment.NewLine}{e}");
+                Viewer.ViewString($"Loading session failed.{Environment.NewLine}{e}");
                 return;
             }
 
@@ -260,7 +264,7 @@ namespace RecommendationSystemInterface
             Approach = loadedSession.Approach; // ZOBRAZIT CO JE VYBRANO
             DataPath = loadedSession.DataPath;
 
-            _viewer.ViewString("Loaded successfully!");
+            Viewer.ViewString("Loaded successfully!");
         }
 
         public void DeleteSession(string filename)

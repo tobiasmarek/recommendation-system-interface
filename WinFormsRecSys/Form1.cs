@@ -112,7 +112,7 @@ namespace WinFormsRecSys
 
             if (selectedApproach is not null)
             {
-                CreateApproachDialog(_session.GetConstructorParameterTypes(selectedApproach));
+                CreateApproachDialog(_session.GetApproachCtorParameterTypes(selectedApproach));
             }
         }
 
@@ -177,7 +177,7 @@ namespace WinFormsRecSys
 
 
                 newCombo.Location = new Point(templateComboBox.Location.X, templateComboBox.Location.Y + heightShift * i);
-                newCombo.Items.AddRange(_session.GetClassesImplementing(constructorParameters[i]));
+                newCombo.Items.AddRange(_session.GetClassesImplementingInterface(constructorParameters[i]));
             }
         }
 
