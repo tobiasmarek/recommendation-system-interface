@@ -28,7 +28,7 @@ namespace RecommendationSystemInterface
         private Type? ApproachType { get; set; } 
         private ParameterInfo[]? ApproachParams { get; set; }
 
-        private string DataPath { get; set; }
+        private string? DataPath { get; set; }
         private User? User { get; set; }
 
         protected Session(Viewer viewer)
@@ -39,6 +39,7 @@ namespace RecommendationSystemInterface
 
         public void GetRecommendations()
         {
+            if (DataPath is null) { _viewer.ViewString("Data file not selected!"); return; }
             if (Approach is null) {_viewer.ViewString("Approach is null!"); return;}
             if (User is null) {_viewer.ViewString("User is null!"); return;}
 
@@ -163,11 +164,11 @@ namespace RecommendationSystemInterface
             }
             catch (System.MissingMethodException e)
             {
-                _viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!\n\n{e}");
+                _viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!{Environment.NewLine}{e}");
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Something went wrong!\n\n{e}");
+                _viewer.ViewString($"Something went wrong!{Environment.NewLine}{e}");
             }
         }
 
@@ -188,7 +189,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Failed to load csv file.\n\n{e}");
+                _viewer.ViewString($"Failed to load csv file.{Environment.NewLine}{e}");
                 return;
             }
 
@@ -219,18 +220,6 @@ namespace RecommendationSystemInterface
             }
         }
 
-        public void DeleteSession(string filename)
-        {
-            if (!File.Exists($"{filename}_metadata"))
-            {
-                Console.WriteLine("Nothing to be deleted.");
-                return;
-            }
-
-            File.Delete(filename);
-            File.Delete($"{filename}_metadata");
-        }
-
         public void SaveSession(string filename)
         {
             try
@@ -247,7 +236,7 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Failed to SaveSession. {e}");
+                _viewer.ViewString($"Failed to SaveSession.{Environment.NewLine}{e}");
             }
         }
 
@@ -262,22 +251,28 @@ namespace RecommendationSystemInterface
             }
             catch (Exception e)
             {
-                _viewer.ViewString($"Loading session failed. {e}");
+                _viewer.ViewString($"Loading session failed.{Environment.NewLine}{e}");
                 return;
             }
 
             if (loadedSession is null) {return;}
 
             Approach = loadedSession.Approach; // ZOBRAZIT CO JE VYBRANO
-            RecordReader = loadedSession.RecordReader;
+            DataPath = loadedSession.DataPath;
 
             _viewer.ViewString("Loaded successfully!");
         }
 
-        public void Parse()
+        public void DeleteSession(string filename)
         {
-            // var parser = new SisSubjectParser { Url = sis.cuni.uk };
-            // parser.Parse();
+            if (!File.Exists($"{filename}_metadata"))
+            {
+                Console.WriteLine("Nothing to be deleted.");
+                return;
+            }
+
+            File.Delete(filename);
+            File.Delete($"{filename}_metadata");
         }
     }
 

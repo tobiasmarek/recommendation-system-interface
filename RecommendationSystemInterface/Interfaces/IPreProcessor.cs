@@ -224,7 +224,7 @@ namespace RecommendationSystemInterface.Interfaces
         {
             if (_userItemRatingIndex.Length != 3) { return _userRatings; }
 
-            int[] sortedIndices = GetSortedIndicesByValue();
+            int[] sortedIndices = GetIndicesBySortedValue();
 
             string? word = "";
             while (word is not null)
@@ -261,7 +261,7 @@ namespace RecommendationSystemInterface.Interfaces
             return _userRatings;
         }
 
-        private int[] GetSortedIndicesByValue()
+        private int[] GetIndicesBySortedValue()
         { // CAN BE FASTER
             int[] result = new int[3];
 
@@ -275,6 +275,7 @@ namespace RecommendationSystemInterface.Interfaces
 
             int third = _userItemRatingIndex.Max();
             result[2] = Array.IndexOf(_userItemRatingIndex, third);
+
 
             for (int i = 0; i < _userItemRatingIndex.Length; i++)
             {
