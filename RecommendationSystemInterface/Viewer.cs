@@ -24,7 +24,14 @@ namespace RecommendationSystemInterface
 
                     if (line == null) { break; }
 
-                    lines[i] = line;
+                    if (line.Length > 300)
+                    {
+                        lines[i] = $"{line.Substring(0, 300)}...";
+                    }
+                    else
+                    {
+                        lines[i] = line;
+                    }
                 }
             }
             return lines;
