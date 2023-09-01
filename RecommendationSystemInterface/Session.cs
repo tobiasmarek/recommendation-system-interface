@@ -21,15 +21,16 @@ namespace RecommendationSystemInterface
     public class Session
     {
         protected readonly Viewer Viewer;
+        protected User? User { get; set; }
+        protected Approach? Approach { get; set; }
 
-        private IDisposableLineReader? RecordReader { get; set; }
-        private Approach? Approach { get; set; }
-
-        private Type? ApproachType { get; set; } 
+        private Type? ApproachType { get; set; }
         private ParameterInfo[]? ApproachParams { get; set; }
 
-        private string? DataPath { get; set; }
-        private User? User { get; set; }
+        protected string? DataPath { get; set; }
+
+        private IDisposableLineReader? RecordReader { get; set; }
+
 
         protected Session(Viewer viewer)
         {
