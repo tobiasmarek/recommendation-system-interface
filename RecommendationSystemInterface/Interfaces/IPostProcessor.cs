@@ -52,15 +52,13 @@ namespace RecommendationSystemInterface.Interfaces
 
                     foreach (var itemID in sortedItemRatings[ratingIndex])
                     {
-                        sb.Append($"{itemID} {ratingIndex - negativeMinShift}");
-
-                        if (counter != numOfItems) { sb.Append(','); }
-                        else { sb.Append('\n'); } // SPIS NIKDY NEDAVAT \n
+                        sb.Append($"{itemID} {ratingIndex - negativeMinShift},");
 
                         counter++;
                     }
                 }
 
+                sb.Append('\n');
                 sw.Write(sb.ToString());
             }
 
@@ -125,7 +123,7 @@ namespace RecommendationSystemInterface.Interfaces
                 {
                     if (countSortedSimilarities[similarityIndex, itemIndex])
                     {
-                        sw.Write($"{itemIndex} {similarityIndex - negativeMinShift}\n");
+                        sw.Write($"{itemIndex} {similarityIndex - negativeMinShift},");
                     }
                 }
             }
