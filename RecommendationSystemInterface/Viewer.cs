@@ -9,7 +9,7 @@ namespace RecommendationSystemInterface
     /// </summary>
     public abstract class Viewer
     {
-        public abstract void ViewFile(string filePath); // POKUD NEBUDE MIT NIC VIC NEZ VIEW, MEL BYCH ZVAZIT INTERFACE
+        public abstract void ViewFile(string filePath);
 
         public abstract void ViewString(string str);
 
