@@ -51,12 +51,23 @@ namespace RecommendationSystemInterface
             Approach.User = User;
             Approach.RecordReader.Reset();
 
-            string resultFile = Approach.Recommend();
+            try
+            {
+                string resultFile = Approach.Recommend();
+                Viewer.ViewFile(resultFile);
 
-            Viewer.ViewFile(resultFile);
-
-            if (RecordReader is FileStreamLineReader && TemplateDataPath is not null) { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
-            else { Convertor = null; }
+                if (Approach.RecordReader is FileStreamLineReader && TemplateDataPath is not null) { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
+                else { Convertor = null; }
+            }
+            catch (CustomException e)
+            {
+                Viewer.ViewString($"Error!{Environment.NewLine}{Environment.NewLine}{e}");
+            }
+            catch (Exception e)
+            {
+                Viewer.ViewString(
+                    $"Something went wrong! Check your User and if it works with the logic of your Approach{Environment.NewLine}{Environment.NewLine}{e}");
+            }
 
             GetNextConvertedResultPage();
         }

@@ -47,10 +47,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 return _sr.ReadLine();
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when reading a line in FileStreamLineReader");
             }
         }
 
@@ -66,10 +65,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 sr = new StreamReader(_path);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when creating StreamReader in FileStreamLineReader");
             }
 
             return sr;
@@ -118,10 +116,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 this._sr = new StreamReader(path);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when creating FileStreamWordReader");
             }
 
             this.EndOfLine = false;
@@ -164,10 +161,9 @@ namespace RecommendationSystemInterface.Interfaces
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when trying to read in FileStreamWordReader");
             }
 
             if (_wordStarted)
@@ -241,10 +237,9 @@ namespace RecommendationSystemInterface.Interfaces
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when trying to read in StringStreamWordReader");
             }
 
             if (_wordStarted)
