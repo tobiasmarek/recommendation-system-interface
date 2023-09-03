@@ -20,6 +20,7 @@ namespace RecommendationSystemInterface.Interfaces
 
     /// <summary>
     /// One divided by the euclidean distance between the two vector.
+    /// If the result is higher than 1, returns 1 (the highest possible similarity)
     /// </summary>
     class EuclideanSimilarityEvaluator : ISimilarityEvaluator
     {
@@ -34,7 +35,14 @@ namespace RecommendationSystemInterface.Interfaces
                 sum += (u[i] - v[i]) * (u[i] - v[i]);
             }
 
-            return 1 / (float)Math.Sqrt(sum); // MĚL BYCH UDĚLAT UPPER A LOWER LIMIT
+            float distance = (float)Math.Sqrt(sum);
+
+            if (distance < 1)
+            {
+                return 1;
+            }
+
+            return 1 / distance;
         }
     }
 
