@@ -20,23 +20,17 @@ namespace RecommendationSystemInterface
             {
                 for (int i = 0; i < k; i++)
                 {
-                    try
-                    {
-                        string? line = reader.ReadLine();
-                        if (line == null) { break; }
+                    string? line = reader.ReadLine();
 
-                        if (line.Length > 300)
-                        {
-                            lines[i] = $"{line.Substring(0, 300)}...";
-                        }
-                        else
-                        {
-                            lines[i] = line;
-                        }
-                    }
-                    catch
+                    if (line == null) { break; }
+
+                    if (line.Length > 300)
                     {
-                        throw new CustomException("Problem when trying to read a line in Viewer's StreamReader!");
+                        lines[i] = $"{line.Substring(0, 300)}...";
+                    }
+                    else
+                    {
+                        lines[i] = line;
                     }
                 }
             }

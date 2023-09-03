@@ -30,9 +30,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 ResultReader = new FileStreamWordReader(resultFilePath, new[] {','});
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader in FileConvertor");
+                Console.WriteLine(e);
+                throw;
             }
 
             _templateFilePath = templateFilePath;
@@ -108,23 +109,16 @@ namespace RecommendationSystemInterface.Interfaces
                 int lineNumber = 0;
                 int index = 0;
 
-                try
+                string? line;
+                while ((line = templateReader.ReadLine()) is not null && index < sortedLineIndices.Length)
                 {
-                    string? line;
-                    while ((line = templateReader.ReadLine()) is not null && index < sortedLineIndices.Length)
+                    if (lineNumber == sortedLineIndices[index])
                     {
-                        if (lineNumber == sortedLineIndices[index])
-                        {
-                            foundLines.Add(sortedLineIndices[index], line);
-                            index++;
-                        }
-
-                        lineNumber++;
+                        foundLines.Add(sortedLineIndices[index], line);
+                        index++;
                     }
-                }
-                catch
-                {
-                    throw new CustomException("Problem when trying to read in templateReader of Convertor!");
+
+                    lineNumber++;
                 }
             }
 
@@ -145,9 +139,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 ResultReader = new FileStreamWordReader(resultFilePath, new[] {','});
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader in DBS Convertor");
+                Console.WriteLine(e);
+                throw;
             }
         }
 

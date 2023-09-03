@@ -47,9 +47,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 return _sr.ReadLine();
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when reading a line in FileStreamLineReader");
+                Console.WriteLine(e);
+                throw;
             }
         }
 
@@ -65,9 +66,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 sr = new StreamReader(_path);
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when creating StreamReader in FileStreamLineReader");
+                Console.WriteLine(e);
+                throw;
             }
 
             return sr;
@@ -116,9 +118,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 this._sr = new StreamReader(path);
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader");
+                Console.WriteLine(e);
+                throw;
             }
 
             this.EndOfLine = false;
@@ -161,9 +164,10 @@ namespace RecommendationSystemInterface.Interfaces
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when trying to read in FileStreamWordReader");
+                Console.WriteLine(e);
+                throw;
             }
 
             if (_wordStarted)
@@ -237,9 +241,10 @@ namespace RecommendationSystemInterface.Interfaces
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw new CustomException("Problem has occurred when trying to read in StringStreamWordReader");
+                Console.WriteLine(e);
+                throw;
             }
 
             if (_wordStarted)
