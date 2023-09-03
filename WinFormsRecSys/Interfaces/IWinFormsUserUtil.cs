@@ -43,7 +43,7 @@ namespace WinFormsRecSys.Interfaces
 
         public string ShowExampleParamString()
         {
-            return @"Favourites: 0, 5, 14, 11, 13, 21
+            return @"Favourites: 2, 5, 14, 11, 13, 21
 Wish-list: 1, 10, 12";
         }
 
@@ -85,7 +85,7 @@ Wish-list: 1, 10, 12";
 
         public string ShowExampleParamString()
         {
-            return "User-Item rating (1-5): 22 4, 11 5, 30 2, 11 1, 3 5, 4 5";
+            return "User-Item rating (1-5): 227 5, 228 4, 229 5, 230 3";
         }
 
         private Dictionary<int, int>? GetParamOutOfLine(string line)
