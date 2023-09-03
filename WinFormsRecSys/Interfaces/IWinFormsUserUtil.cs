@@ -7,15 +7,23 @@ using System.Threading.Tasks;
 
 namespace WinFormsRecSys.Interfaces
 {
+    /// <summary>
+    /// Session specific utility for users defined through Windows Forms.
+    /// Implements a function that retrieves an example of how the user should look in string format
+    /// so that the original User class would be derivable from it.
+    /// </summary>
     interface IWinFormsUserUtil
     {
-        string ShowExampleParamString();
-        void GetValuesFrom(string parameters);
+        string ShowExampleParamString(); // Shows user demo in a string
+        void GetValuesFrom(string parameters); // Derives original User from a string
     }
 
 
 
 
+    /// <summary>
+    /// Windows Forms specific SIS User.
+    /// </summary>
     class WinFormsSisUser : SisUser, IWinFormsUserUtil
     {
         public WinFormsSisUser(int[] favourites, int[] wishList) : base(favourites, wishList) { }
@@ -66,6 +74,10 @@ Wish-list: 1, 10, 12";
         }
     }
 
+
+    /// <summary>
+    /// Windows Forms specific Movie DBS User.
+    /// </summary>
     class WinFormsMovieDbsUser : MovieDbsUser, IWinFormsUserUtil
     {
         public WinFormsMovieDbsUser(Dictionary<int, int> userItemRatings) : base(userItemRatings) { }

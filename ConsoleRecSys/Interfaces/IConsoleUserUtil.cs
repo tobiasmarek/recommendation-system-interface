@@ -7,24 +7,30 @@ using System.Threading.Tasks;
 
 namespace ConsoleRecSys.Interfaces
 {
+    /// <summary>
+    /// Session specific utility for users defined through Console.
+    /// Capable of deriving original User class through it, showing which items the user contains so far.
+    /// And a demo user is defined.
+    /// </summary>
     public interface IConsoleUserUtil
     {
-        void InitializeUser();
-        void Clear();
-        string Show();
-        void Demo();
-        bool TryAdd(int index, string what);
+        void InitializeUser(); // Recreates original User class from the object implementing this interface
+        void Clear(); // Clears so far constructed fields / properties
+        string Show(); // Shows what do those fields / properties contain
+        void Demo(); // Defines or fills fields / properties that will define the original User
+        bool TryAdd(int index, string what); // Adds an item to an index-specified field or a property
     }
 
 
 
 
+    /// <summary>
+    /// Console specific SIS User.
+    /// </summary>
     class ConsoleSisUser : SisUser, IConsoleUserUtil
     {
         private List<int> _favouritesList;
         private List<int> _wishList;
-
-        public ConsoleSisUser(int[] favourites, int[] wishList) : base(favourites, wishList) { }
 
         public ConsoleSisUser() : base(new int[0], new int[0])
         {
@@ -88,6 +94,10 @@ namespace ConsoleRecSys.Interfaces
         }
     }
 
+
+    /// <summary>
+    /// Console specific Movie DBS User.
+    /// </summary>
     class ConsoleMovieDbsUser : MovieDbsUser, IConsoleUserUtil
     {
         public ConsoleMovieDbsUser() : base(new Dictionary<int, int>()) { }
