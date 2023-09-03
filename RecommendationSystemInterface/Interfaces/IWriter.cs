@@ -35,10 +35,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 _sw = new StreamWriter(path, appending);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when creating FileStreamWriter");
             }
         }
 
@@ -48,10 +47,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 _sw.Write(value);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when trying to write in FileStreamWriter");
             }
         }
 

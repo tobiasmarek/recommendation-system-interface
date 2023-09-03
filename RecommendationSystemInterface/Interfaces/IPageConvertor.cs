@@ -30,10 +30,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 ResultReader = new FileStreamWordReader(resultFilePath, new[] {','});
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when creating FileStreamWordReader in FileConvertor");
             }
 
             _templateFilePath = templateFilePath;
@@ -109,16 +108,23 @@ namespace RecommendationSystemInterface.Interfaces
                 int lineNumber = 0;
                 int index = 0;
 
-                string? line;
-                while ((line = templateReader.ReadLine()) is not null && index < sortedLineIndices.Length)
+                try
                 {
-                    if (lineNumber == sortedLineIndices[index])
+                    string? line;
+                    while ((line = templateReader.ReadLine()) is not null && index < sortedLineIndices.Length)
                     {
-                        foundLines.Add(sortedLineIndices[index], line);
-                        index++;
-                    }
+                        if (lineNumber == sortedLineIndices[index])
+                        {
+                            foundLines.Add(sortedLineIndices[index], line);
+                            index++;
+                        }
 
-                    lineNumber++;
+                        lineNumber++;
+                    }
+                }
+                catch
+                {
+                    throw new CustomException("Problem when trying to read in templateReader of Convertor!");
                 }
             }
 
@@ -139,10 +145,9 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 ResultReader = new FileStreamWordReader(resultFilePath, new[] {','});
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                throw new CustomException("Problem has occurred when creating FileStreamWordReader in DBS Convertor");
             }
         }
 
