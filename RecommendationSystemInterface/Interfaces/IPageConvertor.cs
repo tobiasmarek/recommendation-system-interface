@@ -56,7 +56,7 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 if (foundLines.ContainsKey(index))
                 {
-                    _sb.Append($"Rating: {lineIndicesAndRatings[index]}; Item: {index}; ");
+                    _sb.Append($"Index: {index}; Rating: **{lineIndicesAndRatings[index]}**; ");
 
                     if (foundLines[index].Length > 300)
                     {
