@@ -21,7 +21,10 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// LineReader that implements Dispose function.
     /// </summary>
-    public interface IDisposableLineReader : ILineReader, IDisposable { }
+    public interface IDisposableLineReader : ILineReader, IDisposable
+    {
+        void Reset();
+    }
 
 
     /// <summary>
@@ -29,19 +32,13 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class FileStreamLineReader : IDisposableLineReader
     {
-        private readonly StreamReader _sr;
+        private StreamReader _sr;
+        private readonly string _path;
 
         public FileStreamLineReader(string path)
         {
-            try
-            {
-                _sr = new StreamReader(path);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            _path = path;
+            _sr = InitStream();
         }
 
         public string? ReadLine()
@@ -57,7 +54,26 @@ namespace RecommendationSystemInterface.Interfaces
             }
         }
 
+        public void Reset() { _sr = InitStream(); }
+
         public void Dispose() { _sr.Dispose(); }
+
+        private StreamReader InitStream()
+        {
+            StreamReader sr;
+
+            try
+            {
+                sr = new StreamReader(_path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return sr;
+        }
     }
 
 
@@ -87,7 +103,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// Reads word by word from a Stream.
     /// </summary>
-    class FileStreamWordReader : IDisposableWordReader
+    public class FileStreamWordReader : IDisposableWordReader
     {
         public bool EndOfLine { get; set; }
 
@@ -252,7 +268,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// A factory programming pattern.
     /// Takes input from somewhere, converts it to a string and uses StringStreamWordReader to read word by word.
     /// </summary>
-    class RecordStreamWordReader : StringStreamWordReader // NEBO NEJAKEJ EndOfRowStringWordReader
+    class RecordStreamWordReader : StringStreamWordReader
     {
         private string? _row;
         private string? _nextWord = null;

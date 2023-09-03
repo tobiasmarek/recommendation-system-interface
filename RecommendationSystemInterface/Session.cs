@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection.Metadata;
+using System.Threading;
 
 namespace RecommendationSystemInterface
 {
@@ -28,7 +29,9 @@ namespace RecommendationSystemInterface
         private ParameterInfo[]? ApproachParams { get; set; }
 
         protected string? DataPath { get; set; }
+        protected string? TemplateDataPath { get; set; }
 
+        private IPageConvertor? Convertor { get; set; }
         private IDisposableLineReader? RecordReader { get; set; }
 
 
@@ -40,13 +43,22 @@ namespace RecommendationSystemInterface
 
         public void GetRecommendations()
         {
-            if (DataPath is null) { Viewer.ViewString("Data file not selected!"); return; }
+            if (DataPath is null) { Viewer.ViewString("Source not selected!"); return; }
             if (Approach is null) {Viewer.ViewString("Approach is null!"); return;}
             if (User is null) {Viewer.ViewString("User is null!"); return;}
+            if (Convertor is not null) { Convertor.ResultReader.Dispose(); }
 
             Approach.User = User;
+            Approach.RecordReader.Reset();
 
-            Viewer.ViewFile(Approach.Recommend());
+            string resultFile = Approach.Recommend();
+
+            Viewer.ViewFile(resultFile);
+
+            if (RecordReader is FileStreamLineReader && TemplateDataPath is not null) { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
+            else { Convertor = null; }
+
+            GetNextConvertedResultPage();
         }
 
         public void SelectApproach(string[] parameters)
@@ -77,6 +89,11 @@ namespace RecommendationSystemInterface
             if (resultingApproach is null) { Viewer.ViewString("Creating approach failed!"); return; }
 
             Approach = resultingApproach;
+        }
+
+        public void GetNextConvertedResultPage()
+        {
+            if (Convertor is not null) { Viewer.ViewString(Convertor.ConvertPage()); }
         }
 
         public Type? GetClassType(string className)
