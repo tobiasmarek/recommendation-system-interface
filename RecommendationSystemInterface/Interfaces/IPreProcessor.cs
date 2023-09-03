@@ -23,14 +23,14 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class TfIdf : IPreProcessor
     {
-        private Dictionary<string, long> _rowAppearance { get; set; } // In how many rows has the word appeared
-        private Dictionary<string, bool> _uniqueWords { get; set; }  // How many unique words are there
-
-        private readonly Dictionary<string, int> _wordIndexMap = new(); // For fast and stable indexation of present words
-        private long numOfRows { get; set; } = 0;
+        private Dictionary<string, long> _rowAppearance = new(); // In how many rows has the word appeared
+        private Dictionary<string, bool> _uniqueWords = new();  // How many unique words are there
+        private Dictionary<string, int> _wordIndexMap = new(); // For fast and stable indexation of present words
+        private long numOfRows = 0;
 
         public float[][] Preprocess(IDisposableLineReader rr) // NEMUSI BYT 2D  // POUZIT Math.Numerics EFFICIENT MATICE ?
         {
+            ReassignValues();
             _rowAppearance = new();
             _uniqueWords = new();
 
@@ -92,8 +92,8 @@ namespace RecommendationSystemInterface.Interfaces
                 string word = splitPair[0];
                 float number = float.Parse(splitPair[1]);
 
-                sw.Write($"{word} {number * (float)Math.Log2(numOfRows / (double)_rowAppearance[word])}"); // WHICH BASE?
-                // STOP ABY SE ToString() UKLADALO JAKO 10e-7 NEBO NECO TAKOVYHO
+                sw.Write($"{word} {number * (float)Math.Log2(numOfRows / (double)_rowAppearance[word])}");
+
                 if (sr.EndOfLine != true) { sw.Write(","); }
                 else { sw.Write("\n"); }
             }
@@ -170,6 +170,14 @@ namespace RecommendationSystemInterface.Interfaces
             }
 
             sw.Dispose();
+        }
+
+        private void ReassignValues()
+        {
+            _rowAppearance = new();
+            _uniqueWords = new();
+            _wordIndexMap = new();
+            numOfRows = 0;
         }
     }
 
