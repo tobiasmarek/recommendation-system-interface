@@ -30,7 +30,7 @@ namespace ConsoleRecSys.Interfaces
         private List<int> _favouritesList;
         private List<int> _wishList;
 
-        public ConsoleSisUser() : base(new int[0], new int[0])
+        public ConsoleSisUser() : base(Array.Empty<int>(), Array.Empty<int>())
         {
             _favouritesList = new List<int>();
             _wishList = new List<int>();
@@ -104,7 +104,7 @@ namespace ConsoleRecSys.Interfaces
 
         public void Clear()
         {
-            userItemRatings.Clear();
+            UserItemRatings.Clear();
         }
 
         public string Show()
@@ -113,7 +113,7 @@ namespace ConsoleRecSys.Interfaces
 
             bool first = true;
             sb.Append("Item rating (from 1 to 5; [itemId-rating]): ");
-            foreach (var userItemRating in userItemRatings)
+            foreach (var userItemRating in UserItemRatings)
             {
                 if (first)
                 {
@@ -130,7 +130,7 @@ namespace ConsoleRecSys.Interfaces
 
         public void Demo()
         {
-            userItemRatings = new Dictionary<int, int>() { {8, 4}, {10, 3}, {11, 5}, {20, 2} };
+            UserItemRatings = new Dictionary<int, int>() { {8, 4}, {10, 3}, {11, 5}, {20, 2} };
         }
 
         public bool TryAdd(int index, string what)
@@ -144,7 +144,7 @@ namespace ConsoleRecSys.Interfaces
 
             if (itemIndex < 0 || rating < 1 || rating > 5) { return false; }
 
-            userItemRatings[itemIndex] = rating;
+            UserItemRatings[itemIndex] = rating;
 
             return true;
         }

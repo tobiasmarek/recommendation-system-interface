@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace RecommendationSystemInterface.Interfaces
+﻿namespace RecommendationSystemInterface.Interfaces
 {
     internal interface IVectorizer<T>
     {
@@ -31,7 +24,7 @@ namespace RecommendationSystemInterface.Interfaces
         {
             float[] userVector = new float[dataMatrix[0].Length];
 
-            if (user is not RecommendationSystemInterface.SisUser sisUser) { return userVector; }
+            if (user is not SisUser sisUser) { return userVector; }
 
             foreach (int index in sisUser.Favourites)
             {
@@ -67,15 +60,18 @@ namespace RecommendationSystemInterface.Interfaces
     }
 
 
+    /// <summary>
+    /// Creates a vector as long as there is known items and fills in the user's ratings.
+    /// </summary>
     class MovieDbsUserVectorizer : IUserVectorizer
     {
         public float[] VectorizeUser(User user, float[][] dataMatrix)
         {
             float[] userVector = new float[dataMatrix[0].Length];
 
-            if (user is not RecommendationSystemInterface.MovieDbsUser movieUser) { return userVector; }
+            if (user is not MovieDbsUser movieUser) { return userVector; }
 
-            foreach (var itemAndRating in movieUser.userItemRatings)
+            foreach (var itemAndRating in movieUser.UserItemRatings)
             {
                 userVector[itemAndRating.Key] = itemAndRating.Value;
             }

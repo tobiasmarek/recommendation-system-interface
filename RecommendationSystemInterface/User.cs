@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RecommendationSystemInterface.Interfaces;
 
 namespace RecommendationSystemInterface
 {
     public abstract class User
     {
-        public IUserVectorizer? UserVectorizer { get; set; }
+        public IUserVectorizer UserVectorizer { get; set; }
 
         protected User(IUserVectorizer vectorizer)
         {
@@ -34,11 +30,11 @@ namespace RecommendationSystemInterface
 
     public class MovieDbsUser : User
     {
-        public Dictionary<int, int> userItemRatings { get; set; }
+        public Dictionary<int, int> UserItemRatings { get; set; }
 
         public MovieDbsUser(Dictionary<int, int> userItemRatings) : base(new MovieDbsUserVectorizer())
         {
-            this.userItemRatings = userItemRatings;
+            UserItemRatings = userItemRatings;
         }
     }
 }

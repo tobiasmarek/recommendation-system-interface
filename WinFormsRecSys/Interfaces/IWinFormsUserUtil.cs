@@ -23,7 +23,7 @@ namespace WinFormsRecSys.Interfaces
     {
         public WinFormsSisUser(int[] favourites, int[] wishList) : base(favourites, wishList) { }
 
-        public WinFormsSisUser(string parameters) : base(new int[0], new int[0])
+        public WinFormsSisUser(string parameters) : base(Array.Empty<int>(), Array.Empty<int>())
         {
             GetValuesFrom(parameters);
         }
@@ -87,7 +87,7 @@ Wish-list: 1, 10, 12";
             var userItemRatingsResult = GetParamOutOfLine(parameters);
             if (userItemRatingsResult is null) { GetValuesFrom(ShowExampleParamString()); return; }
 
-            userItemRatings = userItemRatingsResult;
+            UserItemRatings = userItemRatingsResult;
         }
 
         public string ShowExampleParamString()
