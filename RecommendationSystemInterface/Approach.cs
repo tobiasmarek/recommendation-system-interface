@@ -1,6 +1,4 @@
 ﻿using RecommendationSystemInterface.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace RecommendationSystemInterface
 {
@@ -52,7 +50,11 @@ namespace RecommendationSystemInterface
         {
             float[][] dataMatrix = PreProcessor.Preprocess(RecordReader);
 
-            float[] userVector = User.UserVectorizer.VectorizeUser(User, dataMatrix);
+            float[] userVector = new float[dataMatrix[0].Length];
+            if (User is not null)
+            {
+                userVector = User.UserVectorizer.VectorizeUser(User, dataMatrix);
+            }
 
             float[] similaritiesVector = new float[dataMatrix.GetLongLength(0)];
 
@@ -61,9 +63,7 @@ namespace RecommendationSystemInterface
                 similaritiesVector[rowNum] = Evaluator.EvaluateSimilarity(dataMatrix[rowNum], userVector);
             }
 
-            string resultsFilePath = PostProcessor.Postprocess(new float[][] { similaritiesVector }); // JINAK
-
-            return resultsFilePath;
+            return PostProcessor.Postprocess(new float[][] { similaritiesVector });
         }
     }
 
@@ -96,7 +96,12 @@ namespace RecommendationSystemInterface
         {
             float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader); // The creation of userItemMatrix
 
-            float[] userVector = User.UserVectorizer.VectorizeUser(User, userItemMatrix);
+            float[] userVector = new float[userItemMatrix[0].Length];
+            if (User is not null)
+            {
+                userVector = User.UserVectorizer.VectorizeUser(User, userItemMatrix);
+            }
+            
             userItemMatrix[0] = userVector; // Change the user with index 0 to our userVector
 
             float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // Symmetric matrix of user similarities
@@ -113,11 +118,8 @@ namespace RecommendationSystemInterface
             }
 
             Predictor.Predict(userItemMatrix, userSimilarities); // Predicts missing values of userItemMatrix
-            // TADY UČENÍ MODELU A PREDICTIONS TZN TAKY EVALUATION MEASURE FOR INFORMATION RETRIEVAL
 
-            string resultsFilePath = PostProcessor.Postprocess(userItemMatrix); // USER-HISTORY NEEDED (NEBO VĚDĚT JAKY RATINGS BYLY NA ZAČATKU) A POPISY ITEMŮ
-
-            return resultsFilePath;
+            return PostProcessor.Postprocess(userItemMatrix);
         }
     }
 
@@ -137,7 +139,7 @@ namespace RecommendationSystemInterface
 
         public override string Recommend()
         {
-            throw new NotImplementedException();
+            throw new LoggerException("ItemItemCfApproach is not implemented yet");
         }
     }
 

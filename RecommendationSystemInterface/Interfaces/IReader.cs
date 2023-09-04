@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -49,7 +48,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when reading a line in FileStreamLineReader");
+                throw new LoggerException("Problem has occurred when reading a line in FileStreamLineReader");
             }
         }
 
@@ -67,7 +66,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when creating StreamReader in FileStreamLineReader");
+                throw new LoggerException("Problem has occurred when creating StreamReader in FileStreamLineReader");
             }
 
             return sr;
@@ -118,7 +117,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader");
+                throw new LoggerException("Problem has occurred when creating FileStreamWordReader");
             }
 
             this.EndOfLine = false;
@@ -163,7 +162,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when trying to read in FileStreamWordReader");
+                throw new LoggerException("Problem has occurred when trying to read in FileStreamWordReader");
             }
 
             if (_wordStarted)
@@ -186,9 +185,9 @@ namespace RecommendationSystemInterface.Interfaces
     /// <summary>
     /// Reads word by word from a StringStream.
     /// </summary>
-    class StringStreamWordReader : IDisposableWordReader // NENI TO REDUNDANT - CO OBECNEJ STREAMWORDREADER A TAM DODÁVAT DO TextReaderu?
+    class StringStreamWordReader : IDisposableWordReader
     { 
-        public StringReader Sr { get; set; }
+        public StringReader? Sr { get; set; }
         public bool EndOfLine { get; set; }
 
         private readonly char[] _separators;
@@ -205,6 +204,7 @@ namespace RecommendationSystemInterface.Interfaces
 
         public string? ReadWord()
         {
+            if (Sr is null) { return null; }
             string? word = null;
             EndOfLine = false;
 
@@ -239,7 +239,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when trying to read in StringStreamWordReader");
+                throw new LoggerException("Problem has occurred when trying to read in StringStreamWordReader");
             }
 
             if (_wordStarted)
@@ -255,7 +255,10 @@ namespace RecommendationSystemInterface.Interfaces
             return null;
         }
 
-        public void Dispose() { Sr.Dispose(); }
+        public void Dispose()
+        {
+            if (Sr is not null) {Sr.Dispose();}
+        }
     }
 
 

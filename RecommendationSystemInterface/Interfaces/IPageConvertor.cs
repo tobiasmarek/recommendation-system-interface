@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RecommendationSystemInterface.Interfaces
 {
+    /// <summary>
+    /// Should take the result file that contains indexed results and convert them to human readable form.
+    /// Should use a paging method. With each ConvertPage call, it should return, page after page, the whole result file.
+    /// </summary>
     public interface IPageConvertor
     {
         FileStreamWordReader ResultReader { get; init; }
@@ -15,7 +18,11 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
-
+    /// <summary>
+    /// Takes a result file and, according to its template file, convert it to human readable form.
+    /// The form that the result file should have is a CSV file where every line is a user and every index is rated like this "[index] [rating]"
+    /// Retrieves lines from the given template document. Indices are specified in the result file.
+    /// </summary>
     class FileConvertor : IPageConvertor
     {
         public FileStreamWordReader ResultReader { get; init; }
@@ -24,7 +31,7 @@ namespace RecommendationSystemInterface.Interfaces
         private readonly StringBuilder _sb;
         private readonly int _chunkSize;
 
-        public FileConvertor(string resultFilePath, string templateFilePath, int chunkSize = 10)
+        public FileConvertor(string resultFilePath, string templateFilePath, int chunkSize = 20)
         {
             try
             {
@@ -32,7 +39,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader in FileConvertor");
+                throw new LoggerException("Problem has occurred when creating FileStreamWordReader in FileConvertor");
             }
 
             _templateFilePath = templateFilePath;
@@ -47,6 +54,7 @@ namespace RecommendationSystemInterface.Interfaces
             var lineIndicesAndRatings = GetNextLineIndicesAndRatings();
 
             var sortedLineIndicesList = lineIndicesAndRatings.Keys.ToList();
+            // Sorts it so that the resulting lines are presented in descending order of their rating (from best to worst)
             sortedLineIndicesList.Sort((a, b) => lineIndicesAndRatings[b].CompareTo(lineIndicesAndRatings[a]));
 
             var foundLines = GetLines(lineIndicesAndRatings);
@@ -59,7 +67,7 @@ namespace RecommendationSystemInterface.Interfaces
 
                     if (foundLines[index].Length > 300)
                     {
-                        _sb.Append($"{foundLines[index].Substring(0, 300)}...");
+                        _sb.Append($"{foundLines[index][..300]}...");
                     }
                     else
                     {
@@ -77,6 +85,10 @@ namespace RecommendationSystemInterface.Interfaces
             return _sb.ToString();
         }
 
+        /// <summary>
+        /// Gets a chunk of the result's file pairs and sorts it according to indices
+        /// so that we can retrieve lines just by reading through the template file without returning.
+        /// </summary>
         private SortedDictionary<int, int> GetNextLineIndicesAndRatings()
         {
             var resultDictionary = new SortedDictionary<int, int>();
@@ -92,24 +104,29 @@ namespace RecommendationSystemInterface.Interfaces
                 {
                     resultDictionary.Add(itemIndex, itemValue);
                 }
+
+                wordCounter++;
             }
 
             return resultDictionary;
         }
 
+        /// <summary>
+        /// Retrieves lines with specified index from the template document.
+        /// </summary>
         private Dictionary<int, string> GetLines(SortedDictionary<int, int> lineIndicesAndRatings)
         {
             int[] sortedLineIndices = lineIndicesAndRatings.Keys.ToArray();
 
-            Dictionary<int, string> foundLines = new Dictionary<int, string>();
+            Dictionary<int, string> foundLines = new();
 
-            using (StreamReader templateReader = new StreamReader(_templateFilePath))
+            try
             {
-                int lineNumber = 0;
-                int index = 0;
-
-                try
+                using (var templateReader = new StreamReader(_templateFilePath))
                 {
+                    int lineNumber = 0;
+                    int index = 0;
+
                     string? line;
                     while ((line = templateReader.ReadLine()) is not null && index < sortedLineIndices.Length)
                     {
@@ -122,10 +139,10 @@ namespace RecommendationSystemInterface.Interfaces
                         lineNumber++;
                     }
                 }
-                catch
-                {
-                    throw new CustomException("Problem when trying to read in templateReader of Convertor!");
-                }
+            }
+            catch
+            {
+                throw new LoggerException("Problem when trying to read in templateReader of Convertor!");
             }
 
             return foundLines;
@@ -135,6 +152,9 @@ namespace RecommendationSystemInterface.Interfaces
 
 
 
+    /// <summary>
+    /// Convertor from a result file to human readable form according to its template file that is present in a database.
+    /// </summary>
     class ContentBasedDbsConvertor : IPageConvertor
     {
         public FileStreamWordReader ResultReader { get; init; }
@@ -147,7 +167,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWordReader in DBS Convertor");
+                throw new LoggerException("Problem has occurred when creating FileStreamWordReader in DBS Convertor");
             }
         }
 

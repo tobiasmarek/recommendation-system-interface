@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace RecommendationSystemInterface
@@ -16,11 +15,12 @@ namespace RecommendationSystemInterface
         public string[] ReadFirstKLines(string filePath, int k)
         {
             string[] lines = new string[k];
-            using (var reader = new StreamReader(filePath))
+
+            try
             {
-                for (int i = 0; i < k; i++)
+                using (var reader = new StreamReader(filePath))
                 {
-                    try
+                    for (int i = 0; i < k; i++)
                     {
                         string? line = reader.ReadLine();
                         if (line == null) { break; }
@@ -34,12 +34,13 @@ namespace RecommendationSystemInterface
                             lines[i] = line;
                         }
                     }
-                    catch
-                    {
-                        throw new CustomException("Problem when trying to read a line in Viewer's StreamReader!");
-                    }
                 }
             }
+            catch
+            {
+                throw new LoggerException("Problem when trying to read a line in Viewer's StreamReader!");
+            }
+
             return lines;
         }
     }

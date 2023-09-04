@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace RecommendationSystemInterface.Interfaces
 {
@@ -37,7 +35,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when creating FileStreamWriter");
+                throw new LoggerException("Problem has occurred when creating FileStreamWriter");
             }
         }
 
@@ -49,7 +47,7 @@ namespace RecommendationSystemInterface.Interfaces
             }
             catch
             {
-                throw new CustomException("Problem has occurred when trying to write in FileStreamWriter");
+                throw new LoggerException("Problem has occurred when trying to write in FileStreamWriter");
             }
         }
 
