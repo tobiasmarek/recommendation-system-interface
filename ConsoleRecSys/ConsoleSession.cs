@@ -4,19 +4,22 @@ using RecommendationSystemInterface;
 
 namespace ConsoleRecSys
 {
+    /// <summary>
+    /// A Session that is controlled and shown in the Console.
+    /// </summary>
     public class ConsoleSession : Session
     {
-        public IConsoleUserUtil? UserUtil { get; set; }
+        public IConsoleUserUtil? UserUtil { get; set; } // A ConsoleUser-creating utility
         public string[]? ApproachParameters { get; set; }
         
         private const string UserNotSelected = "User-type not selected";
 
 
-        public ConsoleSession(Viewer viewer) : base(viewer)
-        {
-            
-        }
+        public ConsoleSession(ConsoleViewer viewer) : base(viewer) { }
 
+        /// <summary>
+        /// Makes sure that the User is created before calling the base Session's function GetRecommendations.
+        /// </summary>
         public void Recommend()
         {
             if (UserUtil is null) { Viewer.ViewString(UserNotSelected); return; }
@@ -33,6 +36,9 @@ namespace ConsoleRecSys
             return !(string.IsNullOrEmpty(DataPath));
         }
 
+        /// <summary>
+        /// Item adding handler. Adds item to a property / field of specified index.
+        /// </summary>
         public void AddItemToUser(string where, string what)
         {
             if (UserUtil is null) { Viewer.ViewString(UserNotSelected); return; }
@@ -49,6 +55,9 @@ namespace ConsoleRecSys
             }
         }
 
+        /// <summary>
+        /// Erases user's items.
+        /// </summary>
         public void ClearUser()
         {
             if (UserUtil is null) { Viewer.ViewString(UserNotSelected); return; }
@@ -65,12 +74,15 @@ namespace ConsoleRecSys
             Viewer.ViewString(UserUtil.Show());
         }
 
+        /// <summary>
+        /// Loads user specific demo.
+        /// </summary>
         public void UserDemo()
         {
             if (UserUtil is null) { Viewer.ViewString(UserNotSelected); return; }
 
             UserUtil.Demo();
-            Viewer.ViewString("Demo successfully selected - here's how the user looks now:");
+            Viewer.ViewString($"{Environment.NewLine}Demo successfully selected - here's how the user looks now:");
             Viewer.ViewString(UserUtil.Show());
         }
 
@@ -107,6 +119,82 @@ namespace ConsoleRecSys
 
             Viewer.ViewString("-------------------------------------------------");
             Viewer.ViewString("");
+        }
+
+        /// <summary>
+        /// Selects specific user utility.
+        /// </summary>
+        public void SelectUserType(string className)
+        {
+            var instance = GetInstance($"Console{className}"); // For it to be Session-specific
+
+            if (instance is IConsoleUserUtil userInstance)
+            {
+                UserUtil = userInstance;
+
+                Viewer.ViewString($"{Environment.NewLine}User-type successfully selected!");
+                Viewer.ViewString($"{Environment.NewLine}Now you'll have to fill in user's fields - this is what you have so far: ");
+                ((ConsoleViewer)Viewer).ShowIndexedArray((userInstance.Show()).Split('\n'));
+                Viewer.ViewString($"{Environment.NewLine}To fill in the variables, use 'useradd [index-of-field] [the-thing-you-want-to]'");
+                Viewer.ViewString("To see how the user looks so far, type 'user'");
+                Viewer.ViewString("To reset the user variables (not its type), use 'userclear'");
+                Viewer.ViewString("Dialogue ended.");
+            }
+            else { Viewer.ViewString("Problem with creating the user instance. Dialogue aborted!"); }
+        }
+
+        /// <summary>
+        /// Loads specific demo ready for recommending.
+        /// Selects Approach and User as well.
+        /// </summary>
+        public void SelectDemo(string line)
+        {
+            Viewer.ViewString(line);
+            string[]? approachParams = null;
+
+            switch (line)
+            {
+                case "MovieDbsDemo":
+                    LoadFromCsv("u.data");
+                    UserUtil = new ConsoleMovieDbsUser();
+                    GetApproachCtorParameterTypes("UserUserCfApproach");
+                    approachParams = new[]
+                    {
+                        "FileStreamLineReader",
+                        "UserItemMatrixRatingsPreProcessor",
+                        "CosineSimilarityEvaluator",
+                        "UserItemMatrixPostProcessor",
+                        "SimilarityAverageRatingsPredictor"
+                    };
+                    break;
+                case "SisSubjectsDemo":
+                    LoadFromCsv("subjects_11310.csv");
+                    UserUtil = new ConsoleSisUser();
+                    GetApproachCtorParameterTypes("StringSimilarityContentBasedApproach");
+                    approachParams = new[]
+                    {
+                        "FileStreamLineReader",
+                        "TfIdf",
+                        "CosineSimilarityEvaluator",
+                        "SimilarityVectorPostProcessor",
+                    };
+                    break;
+                default:
+                    Viewer.ViewString("Demo not found!");
+                    break;
+            }
+
+            if (approachParams is not null)
+            {
+                SelectApproach(approachParams);
+            }
+
+            ApproachParameters = approachParams;
+
+            UserDemo();
+
+            Viewer.ViewString("Demo dialogue has ended!");
+            ShowSummary();
         }
     }
 }

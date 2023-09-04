@@ -32,27 +32,27 @@
             this.RecBtn = new System.Windows.Forms.Button();
             this.loadFromComboBox = new System.Windows.Forms.ComboBox();
             this.LoadFromLbl = new System.Windows.Forms.Label();
-            this.TemplatePropertyLabel = new System.Windows.Forms.Label();
+            this.templatePropertyLbl = new System.Windows.Forms.Label();
             this.templateComboBox = new System.Windows.Forms.ComboBox();
             this.leftSidePnl = new System.Windows.Forms.Panel();
             this.loadParametersPnl = new System.Windows.Forms.Panel();
-            this.MagGlassBtn = new System.Windows.Forms.Button();
+            this.DirectoryBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.FileTextBox = new System.Windows.Forms.TextBox();
             this.SelectApproachLbl = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.approachComboBox = new System.Windows.Forms.ComboBox();
+            this.Demo2Btn = new System.Windows.Forms.Button();
+            this.Demo1Btn = new System.Windows.Forms.Button();
+            this.ApproachComboBox = new System.Windows.Forms.ComboBox();
             this.approachParametersPnl = new System.Windows.Forms.Panel();
             this.rightSidePnl = new System.Windows.Forms.Panel();
             this.userDefinitionTextBox = new System.Windows.Forms.TextBox();
             this.userPnl = new System.Windows.Forms.Panel();
             this.userTypeLbl = new System.Windows.Forms.Label();
-            this.userComboBox = new System.Windows.Forms.ComboBox();
+            this.UserComboBox = new System.Windows.Forms.ComboBox();
             this.waitingLbl = new System.Windows.Forms.Label();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.OutputSignLbl = new System.Windows.Forms.Label();
-            this.waitingTimer = new System.Windows.Forms.Timer(this.components);
+            this.WaitingTimer = new System.Windows.Forms.Timer(this.components);
             this.leftSidePnl.SuspendLayout();
             this.loadParametersPnl.SuspendLayout();
             this.approachParametersPnl.SuspendLayout();
@@ -96,17 +96,17 @@
             this.LoadFromLbl.TabIndex = 2;
             this.LoadFromLbl.Text = "Load from:";
             // 
-            // TemplatePropertyLabel
+            // templatePropertyLbl
             // 
-            this.TemplatePropertyLabel.AutoSize = true;
-            this.TemplatePropertyLabel.Enabled = false;
-            this.TemplatePropertyLabel.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TemplatePropertyLabel.Location = new System.Drawing.Point(5, 11);
-            this.TemplatePropertyLabel.Name = "TemplatePropertyLabel";
-            this.TemplatePropertyLabel.Size = new System.Drawing.Size(54, 14);
-            this.TemplatePropertyLabel.TabIndex = 3;
-            this.TemplatePropertyLabel.Text = "template";
-            this.TemplatePropertyLabel.Visible = false;
+            this.templatePropertyLbl.AutoSize = true;
+            this.templatePropertyLbl.Enabled = false;
+            this.templatePropertyLbl.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.templatePropertyLbl.Location = new System.Drawing.Point(5, 11);
+            this.templatePropertyLbl.Name = "templatePropertyLbl";
+            this.templatePropertyLbl.Size = new System.Drawing.Size(54, 14);
+            this.templatePropertyLbl.TabIndex = 3;
+            this.templatePropertyLbl.Text = "template";
+            this.templatePropertyLbl.Visible = false;
             // 
             // templateComboBox
             // 
@@ -128,12 +128,12 @@
             this.leftSidePnl.BackColor = System.Drawing.Color.AliceBlue;
             this.leftSidePnl.Controls.Add(this.loadParametersPnl);
             this.leftSidePnl.Controls.Add(this.SelectApproachLbl);
-            this.leftSidePnl.Controls.Add(this.button2);
-            this.leftSidePnl.Controls.Add(this.button1);
+            this.leftSidePnl.Controls.Add(this.Demo2Btn);
+            this.leftSidePnl.Controls.Add(this.Demo1Btn);
             this.leftSidePnl.Controls.Add(this.RecBtn);
             this.leftSidePnl.Controls.Add(this.loadFromComboBox);
             this.leftSidePnl.Controls.Add(this.LoadFromLbl);
-            this.leftSidePnl.Controls.Add(this.approachComboBox);
+            this.leftSidePnl.Controls.Add(this.ApproachComboBox);
             this.leftSidePnl.Controls.Add(this.approachParametersPnl);
             this.leftSidePnl.Location = new System.Drawing.Point(21, 21);
             this.leftSidePnl.Name = "leftSidePnl";
@@ -143,7 +143,7 @@
             // loadParametersPnl
             // 
             this.loadParametersPnl.BackColor = System.Drawing.Color.Lavender;
-            this.loadParametersPnl.Controls.Add(this.MagGlassBtn);
+            this.loadParametersPnl.Controls.Add(this.DirectoryBtn);
             this.loadParametersPnl.Controls.Add(this.label1);
             this.loadParametersPnl.Controls.Add(this.FileTextBox);
             this.loadParametersPnl.Location = new System.Drawing.Point(37, 135);
@@ -151,17 +151,17 @@
             this.loadParametersPnl.Size = new System.Drawing.Size(335, 25);
             this.loadParametersPnl.TabIndex = 17;
             // 
-            // MagGlassBtn
+            // DirectoryBtn
             // 
-            this.MagGlassBtn.FlatAppearance.BorderSize = 0;
-            this.MagGlassBtn.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.MagGlassBtn.Location = new System.Drawing.Point(311, 2);
-            this.MagGlassBtn.Name = "MagGlassBtn";
-            this.MagGlassBtn.Size = new System.Drawing.Size(20, 20);
-            this.MagGlassBtn.TabIndex = 13;
-            this.MagGlassBtn.Text = "❏";
-            this.MagGlassBtn.UseVisualStyleBackColor = true;
-            this.MagGlassBtn.Click += new System.EventHandler(this.MagGlassBtn_Click);
+            this.DirectoryBtn.FlatAppearance.BorderSize = 0;
+            this.DirectoryBtn.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.DirectoryBtn.Location = new System.Drawing.Point(311, 2);
+            this.DirectoryBtn.Name = "DirectoryBtn";
+            this.DirectoryBtn.Size = new System.Drawing.Size(20, 20);
+            this.DirectoryBtn.TabIndex = 13;
+            this.DirectoryBtn.Text = "❏";
+            this.DirectoryBtn.UseVisualStyleBackColor = true;
+            this.DirectoryBtn.Click += new System.EventHandler(this.DirectoryBtn_Click);
             // 
             // label1
             // 
@@ -192,45 +192,45 @@
             this.SelectApproachLbl.TabIndex = 14;
             this.SelectApproachLbl.Text = "Select approach";
             // 
-            // button2
+            // Demo2Btn
             // 
-            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(237, 524);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(94, 29);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Demo 2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.Demo2Btn.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Demo2Btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.Demo2Btn.Location = new System.Drawing.Point(237, 524);
+            this.Demo2Btn.Name = "Demo2Btn";
+            this.Demo2Btn.Size = new System.Drawing.Size(94, 29);
+            this.Demo2Btn.TabIndex = 10;
+            this.Demo2Btn.Text = "Demo 2";
+            this.Demo2Btn.UseVisualStyleBackColor = true;
+            this.Demo2Btn.Click += new System.EventHandler(this.Demo2Btn_Click);
             // 
-            // button1
+            // Demo1Btn
             // 
-            this.button1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(61, 524);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Demo 1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Demo1Btn.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Demo1Btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.Demo1Btn.Location = new System.Drawing.Point(61, 524);
+            this.Demo1Btn.Name = "Demo1Btn";
+            this.Demo1Btn.Size = new System.Drawing.Size(94, 29);
+            this.Demo1Btn.TabIndex = 9;
+            this.Demo1Btn.Text = "Demo 1";
+            this.Demo1Btn.UseVisualStyleBackColor = true;
+            this.Demo1Btn.Click += new System.EventHandler(this.Demo1Btn_Click);
             // 
-            // approachComboBox
+            // ApproachComboBox
             // 
-            this.approachComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.approachComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.approachComboBox.FormattingEnabled = true;
-            this.approachComboBox.Location = new System.Drawing.Point(209, 181);
-            this.approachComboBox.Name = "approachComboBox";
-            this.approachComboBox.Size = new System.Drawing.Size(159, 26);
-            this.approachComboBox.TabIndex = 6;
-            this.approachComboBox.SelectedValueChanged += new System.EventHandler(this.approachComboBox_SelectedValueChanged);
+            this.ApproachComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ApproachComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ApproachComboBox.FormattingEnabled = true;
+            this.ApproachComboBox.Location = new System.Drawing.Point(209, 181);
+            this.ApproachComboBox.Name = "ApproachComboBox";
+            this.ApproachComboBox.Size = new System.Drawing.Size(159, 26);
+            this.ApproachComboBox.TabIndex = 6;
+            this.ApproachComboBox.SelectedValueChanged += new System.EventHandler(this.ApproachComboBox_SelectedValueChanged);
             // 
             // approachParametersPnl
             // 
             this.approachParametersPnl.BackColor = System.Drawing.Color.Lavender;
-            this.approachParametersPnl.Controls.Add(this.TemplatePropertyLabel);
+            this.approachParametersPnl.Controls.Add(this.templatePropertyLbl);
             this.approachParametersPnl.Controls.Add(this.templateComboBox);
             this.approachParametersPnl.Location = new System.Drawing.Point(37, 213);
             this.approachParametersPnl.Name = "approachParametersPnl";
@@ -275,7 +275,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.userPnl.BackColor = System.Drawing.Color.Silver;
             this.userPnl.Controls.Add(this.userTypeLbl);
-            this.userPnl.Controls.Add(this.userComboBox);
+            this.userPnl.Controls.Add(this.UserComboBox);
             this.userPnl.Location = new System.Drawing.Point(57, 450);
             this.userPnl.Name = "userPnl";
             this.userPnl.Size = new System.Drawing.Size(496, 103);
@@ -292,20 +292,20 @@
             this.userTypeLbl.TabIndex = 2;
             this.userTypeLbl.Text = "Pick a User Type:";
             // 
-            // userComboBox
+            // UserComboBox
             // 
-            this.userComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.userComboBox.BackColor = System.Drawing.Color.Silver;
-            this.userComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.userComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.userComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.userComboBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.userComboBox.FormattingEnabled = true;
-            this.userComboBox.Location = new System.Drawing.Point(333, 9);
-            this.userComboBox.Name = "userComboBox";
-            this.userComboBox.Size = new System.Drawing.Size(151, 22);
-            this.userComboBox.TabIndex = 1;
-            this.userComboBox.SelectedValueChanged += new System.EventHandler(this.userComboBox_SelectedValueChanged);
+            this.UserComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.UserComboBox.BackColor = System.Drawing.Color.Silver;
+            this.UserComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.UserComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.UserComboBox.Font = new System.Drawing.Font("Roboto Medium", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.UserComboBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.UserComboBox.FormattingEnabled = true;
+            this.UserComboBox.Location = new System.Drawing.Point(333, 9);
+            this.UserComboBox.Name = "UserComboBox";
+            this.UserComboBox.Size = new System.Drawing.Size(151, 22);
+            this.UserComboBox.TabIndex = 1;
+            this.UserComboBox.SelectedValueChanged += new System.EventHandler(this.UserComboBox_SelectedValueChanged);
             // 
             // waitingLbl
             // 
@@ -343,10 +343,10 @@
             this.OutputSignLbl.TabIndex = 0;
             this.OutputSignLbl.Text = ">";
             // 
-            // waitingTimer
+            // WaitingTimer
             // 
-            this.waitingTimer.Interval = 800;
-            this.waitingTimer.Tick += new System.EventHandler(this.waitingTimer_Tick);
+            this.WaitingTimer.Interval = 800;
+            this.WaitingTimer.Tick += new System.EventHandler(this.WaitingTimer_Tick);
             // 
             // Form1
             // 
@@ -380,26 +380,26 @@
         private System.Windows.Forms.Button RecBtn;
         private System.Windows.Forms.ComboBox loadFromComboBox;
         private System.Windows.Forms.Label LoadFromLbl;
-        private System.Windows.Forms.Label TemplatePropertyLabel;
+        private System.Windows.Forms.Label templatePropertyLbl;
         private System.Windows.Forms.ComboBox templateComboBox;
         private Panel leftSidePnl;
         private Panel rightSidePnl;
         private Label OutputSignLbl;
-        private Button button2;
-        private Button button1;
+        private Button Demo2Btn;
+        private Button Demo1Btn;
         private TextBox OutputTextBox;
-        private ComboBox approachComboBox;
+        private ComboBox ApproachComboBox;
         private Label label1;
         private TextBox FileTextBox;
-        private Button MagGlassBtn;
+        private Button DirectoryBtn;
         private Label SelectApproachLbl;
-        private System.Windows.Forms.Timer waitingTimer;
+        private System.Windows.Forms.Timer WaitingTimer;
         private Label waitingLbl;
         private Panel approachParametersPnl;
         private Panel loadParametersPnl;
         private TextBox userDefinitionTextBox;
         private Panel userPnl;
-        private ComboBox userComboBox;
+        private ComboBox UserComboBox;
         private Label userTypeLbl;
     }
 }

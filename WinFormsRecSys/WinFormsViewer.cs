@@ -1,11 +1,13 @@
 ﻿using RecommendationSystemInterface;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WinFormsRecSys
 {
+    /// <summary>
+    /// A Viewer which result is shown in Windows Forms app.
+    /// </summary>
     class WinFormsViewer : Viewer
     {
-        private readonly TextBox _outputTextBox;
+        private readonly TextBox _outputTextBox; // A united output window
 
         public WinFormsViewer(TextBox outputTextBox)
         {
@@ -34,6 +36,16 @@ namespace WinFormsRecSys
             {
                 _outputTextBox.Text = str;
             }
+        }
+
+        public void SetLabelText(Label label, string text)
+        {
+            label.Text = text;
+        }
+
+        public void SetTextBoxText(TextBox textBox, string text)
+        {
+            textBox.Text = text;
         }
     }
 }

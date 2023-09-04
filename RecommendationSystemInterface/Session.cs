@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using RecommendationSystemInterface.Interfaces;
 using System.Text.Json;
-using System.Xml.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection.Metadata;
-using System.Threading;
 
 namespace RecommendationSystemInterface
 {
@@ -26,13 +21,13 @@ namespace RecommendationSystemInterface
         protected Approach? Approach { get; set; }
 
         private Type? ApproachType { get; set; }
-        private ParameterInfo[]? ApproachParams { get; set; }
+        private ParameterInfo[]? ApproachParams { get; set; } // Approach ctor parameters
 
         protected string? DataPath { get; set; }
         protected string? TemplateDataPath { get; set; }
 
+        private IDisposableLineReader? RecordReader { get; set; } // The main reader of this program
         private IPageConvertor? Convertor { get; set; }
-        private IDisposableLineReader? RecordReader { get; set; }
 
 
         protected Session(Viewer viewer)
@@ -41,13 +36,19 @@ namespace RecommendationSystemInterface
         }
 
 
+        /// <summary>
+        /// The main function of the program.
+        /// Checks if everything is set and calls Recommend on the selected Approach.
+        /// Views the result file that Approach has made.
+        /// If Convertor is present the results are converted in human readable form.
+        /// </summary>
         public void GetRecommendations()
         {
             if (DataPath is null) { Viewer.ViewString("Source not selected!"); return; }
             if (Approach is null) {Viewer.ViewString("Approach is null!"); return;}
             if (User is null) {Viewer.ViewString("User is null!"); return;}
+            
             if (Convertor is not null) { Convertor.ResultReader.Dispose(); }
-
             Approach.User = User;
             Approach.RecordReader.Reset();
 
@@ -56,22 +57,29 @@ namespace RecommendationSystemInterface
                 string resultFile = Approach.Recommend();
                 Viewer.ViewFile(resultFile);
 
-                if (Approach.RecordReader is FileStreamLineReader && TemplateDataPath is not null) { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
+                if (Approach.RecordReader is FileStreamLineReader && TemplateDataPath is not null)
+                { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
                 else { Convertor = null; }
             }
-            catch (CustomException e)
+            catch (LoggerException e)
             {
                 Viewer.ViewString($"Error!{Environment.NewLine}{Environment.NewLine}{e}");
             }
             catch (Exception e)
             {
                 Viewer.ViewString(
-                    $"Something went wrong! Check your User and if it works with the logic of your Approach{Environment.NewLine}{Environment.NewLine}{e}");
+                    $"Something went wrong! Check your User and if it works with the logic of your Approach" +
+                    $"{Environment.NewLine}{Environment.NewLine}{e}");
             }
 
             GetNextConvertedResultPage();
         }
 
+        /// <summary>
+        /// Creates an Approach instance when given constructor parameters.
+        /// Approach type must be defined beforehand.
+        /// The first constructor parameter must be a string of a type that implements IDisposableLineReader.
+        /// </summary>
         public void SelectApproach(string[] parameters)
         {
             if (ApproachType == null || ApproachParams == null) { Viewer.ViewString("Fill in all information!"); return; }
@@ -79,34 +87,42 @@ namespace RecommendationSystemInterface
             object[] constructorParameters = new object[parameters.Length];
 
             if (ApproachParams.Length != parameters.Length) { Viewer.ViewString("Insufficient number of parameters."); return; }
-
             if (DataPath is null) { Viewer.ViewString("Before selecting an approach, a source of content needs to be known. Load a csv file for example."); return; }
 
-            Type? readerType = GetClassType(parameters[0]);
-            if (readerType is null) { Viewer.ViewString("Loading reader has failed"); return; }
-
-            constructorParameters[0] = Activator.CreateInstance(readerType, new object[] { DataPath });
+            var instance = GetInstance(parameters[0], new object[] { DataPath });
+            if (instance is not IDisposableLineReader readerInstance) { Viewer.ViewString("Creating an instance of a reader has failed"); return; }
+            
+            constructorParameters[0] = readerInstance;
 
             for (int i = 1; i < parameters.Length; i++)
             {
-                Type? parameterType = GetClassType(parameters[i]);
-                if (parameterType is null) { Viewer.ViewString("Loading parameter type has failed"); return; }
+                instance = GetInstance(parameters[i]);
+                if (instance is null) { Viewer.ViewString($"Creating an instance of {parameters[i]} has failed"); return; }
 
-                constructorParameters[i] = Activator.CreateInstance(parameterType);
+                constructorParameters[i] = instance;
             }
 
-            var resultingApproach = (Approach?)Activator.CreateInstance(ApproachType, constructorParameters);
+            try
+            {
+                instance = Activator.CreateInstance(ApproachType, constructorParameters);
+                if (instance is Approach approachInstance) { Approach = approachInstance; return; }
+            }
+            catch { }
 
-            if (resultingApproach is null) { Viewer.ViewString("Creating approach failed!"); return; }
-
-            Approach = resultingApproach;
+            Viewer.ViewString("Creating approach failed!");
         }
 
+        /// <summary>
+        /// Calls a Convertor to get another page.
+        /// </summary>
         public void GetNextConvertedResultPage()
         {
             if (Convertor is not null) { Viewer.ViewString(Convertor.ConvertPage()); }
         }
 
+        /// <summary>
+        /// Searches all Assemblies and gets a type that a class of a given name bears.
+        /// </summary>
         public Type? GetClassType(string className)
         {
             className = className.Split('.')[^1];
@@ -137,7 +153,7 @@ namespace RecommendationSystemInterface
                 .GetTypes()
                 .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(classType))
                 .Select(type => type.FullName) // type.Name jenom abych nemusel [^1]
-                .ToArray();
+                .ToArray(); // TODO
 
             if (names.Contains(null)) return new[] { "" };
 
@@ -152,7 +168,7 @@ namespace RecommendationSystemInterface
 
         public string[] GetClassesImplementingInterface(string interfaceName)
         {
-            List<string> classNames = new List<string>();
+            List<string> classNames = new();
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -168,6 +184,10 @@ namespace RecommendationSystemInterface
             return classNames.ToArray();
         }
 
+        /// <summary>
+        /// Gets all required Approach ctor parameter types in string format.
+        /// Sets ApproachType and ApproachParams (ctor types).
+        /// </summary>
         public string[] GetApproachCtorParameterTypes(string className)
         {
             Type? classType = GetClassType(className);
@@ -186,52 +206,36 @@ namespace RecommendationSystemInterface
             return parameterTypeNames;
         }
 
+        /// <summary>
+        /// Takes a class name and its constructor parameter.
+        /// Creates an instance of it and assigns it to User.
+        /// </summary>
         public void CreateUser(string className, string parameters)
         {
-            Type? classType = GetClassType(className);
-            if (classType is null) { Viewer.ViewString("User type not found!"); return; }
+            var instance = GetInstance(className, new object[] { parameters });
 
-            try
-            {
-                User = (User)Activator.CreateInstance(classType, new object[] { parameters });
-            }
-            catch (System.MissingMethodException e)
-            {
-                Viewer.ViewString($"Missing Method Exception - Constructor of your User was not found!{Environment.NewLine}{e}");
-            }
-            catch (Exception e)
-            {
-                Viewer.ViewString($"Something went wrong!{Environment.NewLine}{e}");
-            }
+            if (instance is User userInstance) { User = userInstance; }
         }
 
+        /// <summary>
+        /// Tries to find a file by its path at first, if unsuccessful, tries to find a given file name in Data directory.
+        /// The the path is then stored in DataPath variable.
+        /// After that it tries create an instance of FileStreamLineReader with the found file, then buries it.
+        /// </summary>
         public void LoadFromCsv(string filename)
         {
-            if (File.Exists(filename))
-            {
-                DataPath = filename;
-            }
-            else
-            {
-                DataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename));
-            }
+            if (File.Exists(filename)) { DataPath = filename; }
+            else { DataPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data", filename)); }
 
-            try
-            {
-                IDisposableLineReader rr = new FileStreamLineReader(DataPath);
-            }
-            catch (Exception e)
-            {
-                Viewer.ViewString($"Failed to load csv file.{Environment.NewLine}{e}");
-                return;
-            }
+            try { IDisposableLineReader rr = new FileStreamLineReader(DataPath); }
+            catch (Exception e) { Viewer.ViewString($"Failed to load csv file.{Environment.NewLine}{e}"); return; }
 
             Viewer.ViewFile(DataPath);
         }
 
         public void LoadFromDbs()
         {
-            Viewer.ViewString("Not implemented yet!");
+            Viewer.ViewString("Loading from a database is not implemented yet!");
         }
 
         public void ShowSessions()
@@ -262,7 +266,7 @@ namespace RecommendationSystemInterface
                     JsonSerializer.SerializeAsync(fileStream, this, new JsonSerializerOptions { WriteIndented = false });
                 }
 
-                using (StreamWriter sw = new StreamWriter($"{filename}_metadata"))
+                using (var sw = new StreamWriter($"{filename}_metadata"))
                 {
                     sw.WriteLine($"Name: {filename}, Saved at: {DateTime.Now}");
                 }
@@ -291,7 +295,7 @@ namespace RecommendationSystemInterface
             if (loadedSession is null) {return;}
 
             Approach = loadedSession.Approach; // ZOBRAZIT CO JE VYBRANO
-            DataPath = loadedSession.DataPath;
+            DataPath = loadedSession.DataPath; // TODO
 
             Viewer.ViewString("Loaded successfully!");
         }
@@ -306,6 +310,35 @@ namespace RecommendationSystemInterface
 
             File.Delete(filename);
             File.Delete($"{filename}_metadata");
+        }
+
+        /// <summary>
+        /// This function represents extended Activator.CreateInstance() function.
+        /// It implements a try catch statement so that the program does not crash.
+        /// Saves a little space when creating instances all over the solution.
+        /// </summary>
+        protected object? GetInstance(string className, object[]? parameters = null)
+        {
+            Type? classType = GetClassType(className);
+            if (classType is null) { Viewer.ViewString($"{className} type not found!"); return null; }
+
+            object? instance = null;
+            if (parameters is null) { parameters = Array.Empty<object>(); }
+
+            try
+            {
+                instance = Activator.CreateInstance(classType, parameters);
+            }
+            catch (MissingMethodException e)
+            {
+                Viewer.ViewString($"User ctor with these parameters was not found!{Environment.NewLine}{e}");
+            }
+            catch (Exception e)
+            {
+                Viewer.ViewString($"Something went wrong!{Environment.NewLine}{e}");
+            }
+
+            return instance;
         }
     }
 
@@ -325,7 +358,7 @@ namespace RecommendationSystemInterface
 
 
     /// <summary>
-    /// A Session that is controlled and shown in the web.
+    /// A Session that is controlled and shown on the web.
     /// </summary>
     sealed class WebSession : Session
     {

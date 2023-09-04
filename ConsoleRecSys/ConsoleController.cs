@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using ConsoleRecSys.Interfaces;
 using RecommendationSystemInterface;
 
 namespace ConsoleRecSys
 {
+    /// <summary>
+    /// Controller that takes input and parses it from the Console.
+    /// </summary>
     class ConsoleController : Controller
     {
         private readonly ConsoleViewer _viewer;
@@ -30,6 +31,9 @@ To view what you can do type 'help'.");
             }
         }
 
+        /// <summary>
+        /// Processes the command that was received from TakeInput function
+        /// </summary>
         private void Crunch(string[] cmd)
         {
             if (cmd.Length == 0) { return; }
@@ -64,8 +68,8 @@ demo - try one of the demos
                     break;
                 case "selectapproach":
                     if (!((ConsoleSession)Session).DataSourceKnown()) { _viewer.ViewString("Select data-source first. Load a csv for example."); break; }
-                    string[] parameters = CreateApproachDialog();
-                    if (parameters.Length == 0) { _viewer.ViewString("Approach dialog aborted!"); break; }
+                    string[] parameters = CreateApproachDialogue();
+                    if (parameters.Length == 0) { _viewer.ViewString("Approach dialogue aborted!"); break; }
                     Session.SelectApproach(parameters);
                     ((ConsoleSession)Session).ApproachParameters = parameters;
                     _viewer.ViewString("Approach dialogue has ended!");
@@ -74,7 +78,7 @@ demo - try one of the demos
                     ((ConsoleSession)Session).Recommend();
                     break;
                 case "usertype":
-                    CreateUserDialog();
+                    CreateUserDialogue();
                     break;
                 case "useradd":
                     if (cmd.Length != 3) { _viewer.WrongCmdErrorMsg(new[] { "useradd", "index-of-field", "what-to-add" }); break; }
@@ -108,7 +112,7 @@ demo - try one of the demos
                     Session.DeleteSession(cmd[1]);
                     break;
                 case "demo":
-                    DemoDialog();
+                    DemoDialogue();
                     break;
                 default:
                     _viewer.ViewString($"Command not found!{Environment.NewLine}");
@@ -116,9 +120,12 @@ demo - try one of the demos
             }
         }
 
-        private string[] CreateApproachDialog()
+        /// <summary>
+        /// Starts the dialogue of selecting an Approach through the Console.
+        /// </summary>
+        private string[] CreateApproachDialogue()
         {
-            Queue<string> parameters = new Queue<string>();
+            Queue<string> parameters = new();
 
             _viewer.ViewString("The approaches you can choose from are:");
             string[] approaches = Session.GetAvailableClassesOfAType("Approach");
@@ -126,10 +133,10 @@ demo - try one of the demos
             _viewer.ViewString($"{Environment.NewLine}Type '[approach-name]' or '[index-of-approach]' to select one. Or press enter to leave the dialogue.");
 
             string? line = GetChosenValue(Console.ReadLine(), approaches);
-            if (line is null) { return new string[0]; }
+            if (line is null) { return Array.Empty<string>(); }
 
             string[] ctorParameters = Session.GetApproachCtorParameterTypes(line);
-            if (ctorParameters.Length == 0) { return new string[0]; }
+            if (ctorParameters.Length == 0) { return Array.Empty<string>(); }
 
             _viewer.ViewString($"{Environment.NewLine}Now you have to fill in the constructor parameters:");
             _viewer.ShowIndexedArray(ctorParameters);
@@ -143,7 +150,7 @@ demo - try one of the demos
                 _viewer.ShowIndexedArray(classesImplementing);
 
                 line = GetChosenValue(Console.ReadLine(), classesImplementing);
-                if (line is null) { return new string[0]; }
+                if (line is null) { return Array.Empty<string>(); }
 
                 parameters.Enqueue(line);
             }
@@ -151,7 +158,10 @@ demo - try one of the demos
             return parameters.ToArray();
         }
 
-        private void CreateUserDialog()
+        /// <summary>
+        /// Starts the dialogue of selecting an User type through the Console.
+        /// </summary>
+        private void CreateUserDialogue()
         {
             _viewer.ViewString("The user types you can choose from are:");
             string[] userTypes = Session.GetAvailableClassesOfAType("User");
@@ -161,23 +171,13 @@ demo - try one of the demos
             string? line = GetChosenValue(Console.ReadLine(), userTypes);
             if (string.IsNullOrEmpty(line)) { _viewer.ViewString("Dialogue aborted!"); return; }
 
-            Type? classtype = Session.GetClassType($"Console{line}");
-            if (classtype is null) { _viewer.ViewString("Dialogue aborted!"); return; }
-
-            IConsoleUserUtil? userInstance = (IConsoleUserUtil)Activator.CreateInstance(classtype);
-            if (userInstance is null) { _viewer.ViewString("Problem with creating the user instance. Dialogue aborted!"); return; }
-            ((ConsoleSession)Session).UserUtil = userInstance;
-
-            _viewer.ViewString($"{Environment.NewLine}User-type successfully selected!");
-            _viewer.ViewString($"{Environment.NewLine}Now you'll have to fill in user's fields - this is what you have so far: ");
-            _viewer.ShowIndexedArray((userInstance.Show()).Split('\n'));
-            _viewer.ViewString($"{Environment.NewLine}To fill in the variables, use 'useradd [index-of-field] [the-thing-you-want-to]'");
-            _viewer.ViewString("To see how the user looks so far, type 'user'");
-            _viewer.ViewString("To reset the user variables (not its type), use 'userclear'");
-            _viewer.ViewString("Dialogue ended.");
+            ((ConsoleSession)Session).SelectUserType(line);
         }
 
-        private void DemoDialog()
+        /// <summary>
+        /// Starts the dialogue of selecting a demo through the Console.
+        /// </summary>
+        private void DemoDialogue()
         {
             var demos = new[] { "MovieDbsDemo", "SisSubjectsDemo" };
 
@@ -188,54 +188,14 @@ demo - try one of the demos
             string? line = GetChosenValue(Console.ReadLine(), demos);
             if (string.IsNullOrEmpty(line)) { _viewer.ViewString("Dialogue aborted!"); return; }
 
-            _viewer.ViewString(line);
-            string[]? approachParams = null;
-
-            switch (line)
-            {
-                case "MovieDbsDemo":
-                    Session.LoadFromCsv("u.data");
-                    ((ConsoleSession)Session).UserUtil = new ConsoleMovieDbsUser();
-                    Session.GetApproachCtorParameterTypes("UserUserCfApproach");
-                    approachParams = new[]
-                    {
-                        "FileStreamLineReader",
-                        "UserItemMatrixRatingsPreProcessor",
-                        "CosineSimilarityEvaluator",
-                        "UserItemMatrixPostProcessor",
-                        "SimilarityAverageRatingsPredictor"
-                    };
-                    break;
-                case "SisSubjectsDemo":
-                    Session.LoadFromCsv("subjects_11310.csv");
-                    ((ConsoleSession)Session).UserUtil = new ConsoleSisUser();
-                    Session.GetApproachCtorParameterTypes("StringSimilarityContentBasedApproach");
-                    approachParams = new[]
-                    {
-                        "FileStreamLineReader",
-                        "TfIdf",
-                        "CosineSimilarityEvaluator",
-                        "SimilarityVectorPostProcessor",
-                    };
-                    break;
-                default:
-                    _viewer.ViewString("Demo not found!");
-                    break;
-            }
-
-            if (approachParams is not null)
-            {
-                Session.SelectApproach(approachParams);
-            }
-            
-            ((ConsoleSession)Session).ApproachParameters = approachParams;
-            
-            ((ConsoleSession)Session).UserDemo();
-
-            _viewer.ViewString("Demo dialogue has ended!");
-            ((ConsoleSession)Session).ShowSummary();
+            ((ConsoleSession)Session).SelectDemo(line);
         }
 
+        /// <summary>
+        /// Takes an input in string? form and an array.
+        /// Returns an element from the array.
+        /// The element is the input itself or the input serves as an index.
+        /// </summary>
         private string? GetChosenValue(string? line, string[] array)
         {
             bool parsed = int.TryParse(line, out int index);
