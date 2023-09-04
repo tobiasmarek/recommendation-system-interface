@@ -81,7 +81,7 @@
 
             for (int i = 0; i < ratingsVector.Length; i++)
             {
-                ratingsVector[i] = userItemMatrix[i][targetItem]; // SNAD NEBUDE NULL HODNOTA
+                ratingsVector[i] = userItemMatrix[i][targetItem];
             }
 
             return ratingsVector;

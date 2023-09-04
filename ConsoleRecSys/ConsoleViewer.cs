@@ -4,7 +4,10 @@ using RecommendationSystemInterface;
 
 namespace ConsoleRecSys
 {
-    class ConsoleViewer : Viewer
+    /// <summary>
+    /// A Viewer which output is directed to the Console.
+    /// </summary>
+    public class ConsoleViewer : Viewer
     {
         private const string ErrorMsg = "Wrong command format - should be '";
 
@@ -31,6 +34,10 @@ namespace ConsoleRecSys
             }
         }
 
+        /// <summary>
+        /// Constructs an error message about wrong command
+        /// and shows which parameters should be used to make it work properly.
+        /// </summary>
         public void WrongCmdErrorMsg(string[] parameters)
         {
             if (parameters.Length == 0) { return; }

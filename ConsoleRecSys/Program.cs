@@ -1,7 +1,4 @@
-﻿using System;
-using RecommendationSystemInterface;
-
-namespace ConsoleRecSys
+﻿namespace ConsoleRecSys
 {
     internal class Program
     {

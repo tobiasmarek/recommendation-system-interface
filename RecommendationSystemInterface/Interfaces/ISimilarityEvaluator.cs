@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RecommendationSystemInterface.Interfaces
 {
@@ -10,11 +7,7 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     public interface ISimilarityEvaluator
     {
-        float EvaluateSimilarity(float[] u, float[] v); // nebo z toho udělat <T>, protože třeba NN může dostat jinej vstup
-        // protože NN může mít svoje převádění na vektorovou reprezentaci, nebo ne?
-        // tzn dám si pozor jestli vůbec chci dělat jinej interface pro převádění reprezentace do vektorový
-        // protože ještě k tomu - similarity nemusim dělat jen z float[] reprezentace, ale třeba z množin
-        // kdybych předělával měl bych Similarity předávat něco, co convertuje na vektorovou reprezentaci (IVectorConverter)
+        float EvaluateSimilarity(float[] u, float[] v);
     }
 
 

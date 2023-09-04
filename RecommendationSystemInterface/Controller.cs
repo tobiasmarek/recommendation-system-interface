@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RecommendationSystemInterface
 {
     /// <summary>
-    /// Base Controller class that defines the most basic commands.
-    /// Takes input and according to it, further actions are made with TakeCommand.
+    /// Base Controller class.
     /// </summary>
     public abstract class Controller
     {
@@ -17,8 +13,6 @@ namespace RecommendationSystemInterface
         {
             Session = session;
         }
-
-        // NEBO MISTO TOHO JEN INTERFACE KTEREJ TakeInput IMPLEMENTUJE A PARSUJE ODKUDKOLIV
     }
 
 

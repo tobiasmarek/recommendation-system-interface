@@ -1,6 +1,3 @@
-using RecommendationSystemInterface;
-using RecommendationSystemInterface.Interfaces;
-
 namespace WinFormsRecSys
 {
     internal static class Program
