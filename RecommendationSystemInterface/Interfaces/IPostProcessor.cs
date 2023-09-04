@@ -21,6 +21,19 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class UserItemMatrixPostProcessor : IPostProcessor
     {
+        private readonly int _min; // Minimal value of all the matrix values
+        private readonly int _max; // Maximal value
+        private readonly int _conversion; // Conversion used for count sort
+
+        public UserItemMatrixPostProcessor() : this(2, 0, 5) { }
+
+        public UserItemMatrixPostProcessor(int decimalPlace, int min, int max)
+        {
+            _min = min;
+            _max = max;
+            _conversion = Convert.ToInt32(Math.Pow(10, decimalPlace)); // Number of decimal places taken into consideration for count sort
+        }
+
         public string Postprocess(float[][] userItemMatrix)
         {
             string resultsFilePath = "userItemMatrixResults.csv";
@@ -28,22 +41,16 @@ namespace RecommendationSystemInterface.Interfaces
             var sw = new FileStreamWriter(resultsFilePath, false);
             var sb = new StringBuilder();
 
-            // PARAMETRIZOVAT
-            int decimalPlace = 1; // Number of decimal places taken into consideration for count sort
-            int min = 0; // Minimal value of all the matrix values
-            int max = 5; // Maximal value
-            int conversion = Convert.ToInt32(Math.Pow(10, decimalPlace)); // Conversion used for count sort
-
             int negativeMinShift = 0; 
-            if (min < 0) { negativeMinShift = -min * conversion; } // Shift needed for count sort to start from 0
+            if (_min < 0) { negativeMinShift = -_min * _conversion; } // Shift needed for count sort to start from 0
 
             foreach (var userItemRatings in userItemMatrix)
             {
                 sb.Clear();
-                List<int>[] sortedItemRatings = GetCountSortedRatings(userItemRatings, min, max, conversion, negativeMinShift);
+                List<int>[] sortedItemRatings = GetCountSortedRatings(userItemRatings, _min, _max, _conversion, negativeMinShift);
 
                 // Iterates from the most positive rating and creates a line with all the item IDs with this rating
-                for (int ratingIndex = sortedItemRatings.Length - 1; ratingIndex >= 0; ratingIndex--) // SORTEDITEMRATINGS.LENGTH - 1?
+                for (int ratingIndex = sortedItemRatings.Length - 1; ratingIndex >= 0; ratingIndex--)
                 {
                     if (sortedItemRatings[ratingIndex] is null) { continue; }
 
@@ -98,6 +105,19 @@ namespace RecommendationSystemInterface.Interfaces
     /// </summary>
     class SimilarityVectorPostProcessor : IPostProcessor
     {
+        private readonly int _min; // Minimal value of all the matrix values
+        private readonly int _max; // Maximal value
+        private readonly int _conversion; // Conversion used for count sort
+
+        public SimilarityVectorPostProcessor() : this(2, -1, 1) { }
+
+        public SimilarityVectorPostProcessor(int decimalPlace, int min, int max)
+        {
+            _min = min;
+            _max = max;
+            _conversion = Convert.ToInt32(Math.Pow(10, decimalPlace)); // Number of decimal places taken into consideration for count sort
+        }
+
         public string Postprocess(float[][] userItemMatrix)
         {
             string resultsFilePath = "userItemSimilarityResults.csv";
@@ -105,16 +125,10 @@ namespace RecommendationSystemInterface.Interfaces
             float[] similaritiesVector = userItemMatrix[0];
             var sw = new FileStreamWriter(resultsFilePath, false);
 
-            // PARAMETRIZOVAT
-            int decimalPlace = 2; // Number of decimal places taken into consideration for count sort
-            int min = -1; // Minimal value of all the matrix values
-            int max = 1; // Maximal value
-            int conversion = Convert.ToInt32(Math.Pow(10, decimalPlace)); // Conversion used for count sort
-
             int negativeMinShift = 0;
-            if (min < 0) { negativeMinShift = -min * conversion; } // Shift needed for count sort to start from 0
+            if (_min < 0) { negativeMinShift = -_min * _conversion; } // Shift needed for count sort to start from 0
 
-            bool[,] countSortedSimilarities = GetCountSortedSimilaritiesVector(similaritiesVector, min, max, conversion, negativeMinShift);
+            bool[,] countSortedSimilarities = GetCountSortedSimilaritiesVector(similaritiesVector, _min, _max, _conversion, negativeMinShift);
 
             // Iterates from the best similarity to the worst and writes a line with all the item indices that have the same similarity value
             for (int similarityIndex = countSortedSimilarities.GetLength(0) - 1; similarityIndex >= 0; similarityIndex--)
