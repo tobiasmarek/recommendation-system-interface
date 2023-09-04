@@ -59,9 +59,9 @@
         {
             float[] similaritiesVector = new float[similarities.GetLength(0)];
 
-            for (int i = 0; i < targetUser; i++)
+            for (int j = 0; j < targetUser; j++)
             {
-                similaritiesVector[i] = similarities[targetUser][i];
+                similaritiesVector[j] = similarities[targetUser][j];
             }
 
             for (int i = targetUser + 1; i < similaritiesVector.Length; i++)
