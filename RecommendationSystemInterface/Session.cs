@@ -139,29 +139,24 @@ namespace RecommendationSystemInterface
             return null;
         }
 
+        /// <summary>
+        /// Fetches class names that are not abstract and are subclasses of a given class.
+        /// </summary>
         public string[] GetAvailableClassesOfAType(string className)
         {
             Type? classType = GetClassType(className);
             if (classType is null) { Viewer.ViewString("Class type not found!"); return new []{""}; }
 
-            var wantedAssembly = Assembly.GetAssembly(classType); // co kdyz to neni v tomhle assembly
+            var wantedAssembly = Assembly.GetAssembly(classType);
             if (wantedAssembly is null) return new[] { "" };
 
             var names = wantedAssembly
                 .GetTypes()
                 .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(classType))
-                .Select(type => type.FullName) // type.Name jenom abych nemusel [^1]
-                .ToArray(); // TODO
+                .Select(type => type.Name)
+                .ToArray();
 
-            if (names.Contains(null)) return new[] { "" };
-
-            string[] resultingNames = new string[names.Length];
-            for (int i = 0; i < names.Length; i++)
-            {
-                resultingNames[i] = (names[i]!.Split('.'))[^1];
-            }
-
-            return resultingNames;
+            return names;
         }
 
         public string[] GetClassesImplementingInterface(string interfaceName)
@@ -292,8 +287,8 @@ namespace RecommendationSystemInterface
 
             if (loadedSession is null) {return;}
 
-            Approach = loadedSession.Approach; // ZOBRAZIT CO JE VYBRANO
-            DataPath = loadedSession.DataPath; // TODO
+            Approach = loadedSession.Approach;
+            DataPath = loadedSession.DataPath;
 
             Viewer.ViewString("Loaded successfully!");
         }
