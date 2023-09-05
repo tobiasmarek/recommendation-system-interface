@@ -65,16 +65,18 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 if (foundLines.ContainsKey(index))
                 {
-                    _sb.Append($"Index: {index}; Rating: **{lineIndicesAndRatings[index]}**; ");
+                    _sb.Append($"Rating: ** {lineIndicesAndRatings[index]} **; ");
 
                     if (foundLines[index].Length > 300)
                     {
-                        _sb.Append($"{foundLines[index][..300]}...");
+                        _sb.Append($"{foundLines[index][..300]}...; ");
                     }
                     else
                     {
-                        _sb.Append($"{foundLines[index]}");
+                        _sb.Append($"{foundLines[index]}; ");
                     }
+
+                    _sb.Append($"Index: {index}");
                 }
                 else
                 {
