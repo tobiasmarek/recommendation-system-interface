@@ -101,13 +101,13 @@ namespace RecommendationSystemInterface.Interfaces
         {
             for (int userIndex = 0; userIndex < userItemMatrix.GetLongLength(0); userIndex++)
             {
-                float[] similaritiesVector = GetSimilarityVector(userIndex, similarities);
+                float[] ratingsVector = GetRatingsVector(userIndex, userItemMatrix);
 
                 for (int itemIndex = 0; itemIndex < userItemMatrix.GetLongLength(0); itemIndex++)
                 {
-                    if (userItemMatrix[userIndex][itemIndex] != 0) { continue; }
+                    float[] similaritiesVector = GetSimilarityVector(itemIndex, similarities);
 
-                    float[] ratingsVector = GetRatingsVector(itemIndex, userItemMatrix);
+                    if (userItemMatrix[userIndex][itemIndex] != 0) { continue; }
 
                     userItemMatrix[userIndex][itemIndex] = GetWeightedRating(similaritiesVector, ratingsVector);
                 }
@@ -135,18 +135,18 @@ namespace RecommendationSystemInterface.Interfaces
         /// Since similarities matrix is a symmetric one and was calculated efficiently we must extract
         /// the real values of the item's similarity vector differently than just taking its row.
         /// </summary>
-        private float[] GetSimilarityVector(int target, float[][] similarities)
+        private float[] GetSimilarityVector(int targetItem, float[][] similarities)
         {
             float[] similaritiesVector = new float[similarities.GetLongLength(0)];
 
-            for (int j = 0; j < target; j++)
+            for (int j = 0; j < targetItem; j++)
             {
-                similaritiesVector[j] = similarities[target][j];
+                similaritiesVector[j] = similarities[targetItem][j];
             }
 
-            for (int i = target + 1; i < similaritiesVector.Length; i++)
+            for (int i = targetItem + 1; i < similaritiesVector.Length; i++)
             {
-                similaritiesVector[i] = similarities[i][target];
+                similaritiesVector[i] = similarities[i][targetItem];
             }
 
             return similaritiesVector;

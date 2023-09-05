@@ -149,7 +149,7 @@ namespace RecommendationSystemInterface
 
             userItemMatrix[0] = userVector; // Change the user with index 0 to our userVector
 
-            float[][] itemSimilarities = new float[userItemMatrix.GetLongLength(1)][]; // Symmetric matrix of item similarities
+            float[][] itemSimilarities = new float[userItemMatrix[0].LongLength][]; // Symmetric matrix of item similarities
 
             for (int i = 0; i < itemSimilarities.GetLength(0); i++)
             {

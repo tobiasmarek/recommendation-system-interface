@@ -179,7 +179,7 @@ demo - try one of the demos
         /// </summary>
         private void DemoDialogue()
         {
-            var demos = new[] { "MovieDbsDemo", "SisSubjectsDemo" };
+            var demos = new[] { "MovieDbsUserDemo", "SisSubjectsDemo", "MovieDbsItemDemo" };
 
             _viewer.ViewString("You may select one of the demos: ");
 

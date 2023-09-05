@@ -60,26 +60,6 @@ namespace WinFormsRecSys
             UserComboBox.SelectedItem = "MovieDbsUser";
         }
 
-        private void Demo3Btn_Click()
-        {
-            _session.LoadFromCsv("u.data");
-            _viewer.SetTextBoxText(FileTextBox, "u.data");
-            ApproachComboBox.SelectedItem = "ItemItemCfApproach";
-            _session.SetConvertorParams("u.item", 1);
-
-            string[] approachParams = new[] {
-                "FileStreamLineReader",
-                "UserItemMatrixRatingsPreProcessor",
-                "CosineSimilarityEvaluator",
-                "UserItemMatrixPostProcessor",
-                "ItemSimilarityAverageRatingsPredictor",
-            };
-
-            _session.FillBoxesInPanel(approachParams, approachParametersPnl);
-            _session.SetUserDefinition("MovieDbsUser", userDefinitionTextBox);
-            UserComboBox.SelectedItem = "MovieDbsUser";
-        }
-
         private void Demo2Btn_Click(object sender, EventArgs e)
         {
             _session.LoadFromCsv("subjects_11310.csv");
@@ -97,6 +77,26 @@ namespace WinFormsRecSys
             _session.FillBoxesInPanel(approachParams, approachParametersPnl);
             _session.SetUserDefinition("SisUser", userDefinitionTextBox);
             UserComboBox.SelectedItem = "SisUser";
+        }
+
+        private void Demo3Btn_Click(object sender, EventArgs e)
+        {
+            _session.LoadFromCsv("u.data");
+            _viewer.SetTextBoxText(FileTextBox, "u.data");
+            ApproachComboBox.SelectedItem = "ItemItemCfApproach";
+            _session.SetConvertorParams("u.item", 1);
+
+            string[] approachParams = new[] {
+                "FileStreamLineReader",
+                "UserItemMatrixRatingsPreProcessor",
+                "CosineSimilarityEvaluator",
+                "UserItemMatrixPostProcessor",
+                "ItemSimilarityAverageRatingsPredictor",
+            };
+
+            _session.FillBoxesInPanel(approachParams, approachParametersPnl);
+            _session.SetUserDefinition("MovieDbsUser", userDefinitionTextBox);
+            UserComboBox.SelectedItem = "MovieDbsUser";
         }
 
         private void DirectoryBtn_Click(object sender, EventArgs e)

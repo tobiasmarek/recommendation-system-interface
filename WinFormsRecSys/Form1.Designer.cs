@@ -35,6 +35,7 @@
             this.templatePropertyLbl = new System.Windows.Forms.Label();
             this.templateComboBox = new System.Windows.Forms.ComboBox();
             this.leftSidePnl = new System.Windows.Forms.Panel();
+            this.Demo3Btn = new System.Windows.Forms.Button();
             this.loadParametersPnl = new System.Windows.Forms.Panel();
             this.DirectoryBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -126,6 +127,7 @@
             this.leftSidePnl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.leftSidePnl.BackColor = System.Drawing.Color.AliceBlue;
+            this.leftSidePnl.Controls.Add(this.Demo3Btn);
             this.leftSidePnl.Controls.Add(this.loadParametersPnl);
             this.leftSidePnl.Controls.Add(this.SelectApproachLbl);
             this.leftSidePnl.Controls.Add(this.Demo2Btn);
@@ -139,6 +141,18 @@
             this.leftSidePnl.Name = "leftSidePnl";
             this.leftSidePnl.Size = new System.Drawing.Size(387, 602);
             this.leftSidePnl.TabIndex = 9;
+            // 
+            // Demo3Btn
+            // 
+            this.Demo3Btn.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Demo3Btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.Demo3Btn.Location = new System.Drawing.Point(268, 524);
+            this.Demo3Btn.Name = "Demo3Btn";
+            this.Demo3Btn.Size = new System.Drawing.Size(79, 29);
+            this.Demo3Btn.TabIndex = 18;
+            this.Demo3Btn.Text = "Demo 3";
+            this.Demo3Btn.UseVisualStyleBackColor = true;
+            this.Demo3Btn.Click += new System.EventHandler(this.Demo3Btn_Click);
             // 
             // loadParametersPnl
             // 
@@ -196,9 +210,9 @@
             // 
             this.Demo2Btn.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.Demo2Btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.Demo2Btn.Location = new System.Drawing.Point(237, 524);
+            this.Demo2Btn.Location = new System.Drawing.Point(154, 524);
             this.Demo2Btn.Name = "Demo2Btn";
-            this.Demo2Btn.Size = new System.Drawing.Size(94, 29);
+            this.Demo2Btn.Size = new System.Drawing.Size(79, 29);
             this.Demo2Btn.TabIndex = 10;
             this.Demo2Btn.Text = "Demo 2";
             this.Demo2Btn.UseVisualStyleBackColor = true;
@@ -208,9 +222,9 @@
             // 
             this.Demo1Btn.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.Demo1Btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.Demo1Btn.Location = new System.Drawing.Point(61, 524);
+            this.Demo1Btn.Location = new System.Drawing.Point(42, 524);
             this.Demo1Btn.Name = "Demo1Btn";
-            this.Demo1Btn.Size = new System.Drawing.Size(94, 29);
+            this.Demo1Btn.Size = new System.Drawing.Size(79, 29);
             this.Demo1Btn.TabIndex = 9;
             this.Demo1Btn.Text = "Demo 1";
             this.Demo1Btn.UseVisualStyleBackColor = true;
@@ -401,5 +415,6 @@
         private Panel userPnl;
         private ComboBox UserComboBox;
         private Label userTypeLbl;
+        private Button Demo3Btn;
     }
 }
