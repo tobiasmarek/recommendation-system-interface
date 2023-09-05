@@ -25,7 +25,7 @@ namespace RecommendationSystemInterface.Interfaces
         private readonly int _max; // Maximal value
         private readonly int _conversion; // Conversion used for count sort
 
-        public UserItemMatrixPostProcessor() : this(2, 0, 5) { }
+        public UserItemMatrixPostProcessor() : this(3, 0, 5) { }
 
         public UserItemMatrixPostProcessor(int decimalPlace, int min, int max)
         {
@@ -110,7 +110,7 @@ namespace RecommendationSystemInterface.Interfaces
         private readonly int _max; // Maximal value
         private readonly int _conversion; // Conversion used for count sort
 
-        public SimilarityVectorPostProcessor() : this(2, -1, 1) { }
+        public SimilarityVectorPostProcessor() : this(3, -1, 1) { }
 
         public SimilarityVectorPostProcessor(int decimalPlace, int min, int max)
         {
