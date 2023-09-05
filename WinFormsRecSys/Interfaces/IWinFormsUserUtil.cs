@@ -62,6 +62,9 @@ Wish-list: 1, 10, 12";
             for (int i = 0; i < lineParams.Length; i++)
             {
                 if (!int.TryParse(lineParams[i], out num)) { return null; }
+                
+                if (num < 0) { return null; }
+
                 result[i] = num;
             }
 
@@ -92,7 +95,7 @@ Wish-list: 1, 10, 12";
 
         public string ShowExampleParamString()
         {
-            return "User-Item rating (1-5): 227 5, 228 4, 229 5, 230 3";
+            return "User-Item rating (1-5): 50 5, 174 4, 222 4, 210 4, 1 1, 80 1, 173 1";
         }
 
         private Dictionary<int, int>? GetParamOutOfLine(string line)
@@ -108,6 +111,8 @@ Wish-list: 1, 10, 12";
             {
                 string[] pair = pairStr.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 if (pair.Length != 2 || !int.TryParse(pair[0], out index) || !int.TryParse(pair[1], out rating)) return null;
+
+                if (index < 1 || rating > 5) return null;
 
                 result[index] = rating;
             }
