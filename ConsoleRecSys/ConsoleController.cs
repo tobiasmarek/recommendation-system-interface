@@ -52,10 +52,6 @@ userdemo - fill user's variables (demo)
 userclear - reset user's variables
 user - show your user
 summary - shows info about everything - to check if everything went as expected
-save - save your session (your current settings)
-load - load a session
-show - show saved sessions
-delete - delete a session
 demo - try one of the demos
 ");
                     break;
