@@ -1,4 +1,6 @@
-﻿namespace RecommendationSystemInterface.Interfaces
+﻿using System;
+
+namespace RecommendationSystemInterface.Interfaces
 {
     /// <summary>
     /// Completing userItemMatrix.
@@ -36,7 +38,7 @@
 
         /// <summary>
         /// Predicts the user's rating of unrated item.
-        /// predicted_rating = (SUM sim(target_user, user_i) * user_i_rating) / (SUM sim(target_user, user_i))
+        /// predicted_rating = (SUM sim(target_user, user_i) * user_i_rating) / (SUM |sim(target_user, user_i)|)
         /// </summary>
         private float GetWeightedRating(float[] similaritiesVector, float[] ratingsVector)
         {
@@ -45,7 +47,7 @@
             for (int i = 0; i < similaritiesVector.Length; i++)
             {
                 numerator += similaritiesVector[i] * ratingsVector[i];
-                denominator += similaritiesVector[i];
+                denominator += Math.Abs(similaritiesVector[i]);
             }
 
             return numerator / denominator;
