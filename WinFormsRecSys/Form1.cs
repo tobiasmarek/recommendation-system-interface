@@ -22,6 +22,9 @@ namespace WinFormsRecSys
             UserComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User"));
         }
 
+        /// <summary>
+        /// Selects Approach given in combo box values, creates a user and starts recommending asynchronously.
+        /// </summary>
         private async void RecBtn_Click(object sender, System.EventArgs e)
         {
             WaitingTimer.Start();
@@ -114,6 +117,9 @@ namespace WinFormsRecSys
             }
         }
 
+        /// <summary>
+        /// Writing down a file name or a path and then confirming with Enter key selects a file to load from.
+        /// </summary>
         private void FileTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -123,6 +129,9 @@ namespace WinFormsRecSys
             }
         }
 
+        /// <summary>
+        /// When changed a new dialogue with a different Approach parameters appears.
+        /// </summary>
         private void ApproachComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             string? selectedApproach = ((ComboBox)sender).SelectedItem.ToString();
@@ -138,6 +147,9 @@ namespace WinFormsRecSys
             _viewer.SetLabelText(waitingLbl, "".PadLeft((waitingLbl.Text.Length + 1) % 4, '.'));
         }
 
+        /// <summary>
+        /// When changed loads a different User demo value as a template.
+        /// </summary>
         private void UserComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             string? selectedUser = ((ComboBox)sender).SelectedItem.ToString();
