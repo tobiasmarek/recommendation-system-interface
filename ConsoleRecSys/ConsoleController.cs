@@ -96,21 +96,6 @@ demo - try one of the demos
                 case "summary":
                     ((ConsoleSession)Session).ShowSummary();
                     break;
-                case "save":
-                    if (cmd.Length != 2) { _viewer.WrongCmdErrorMsg(new[] { "save", "session-name" }); break; }
-                    Session.SaveSession(cmd[1]);
-                    break;
-                case "load":
-                    if (cmd.Length != 2) { _viewer.WrongCmdErrorMsg(new[] { "load", "session-name" }); break; }
-                    Session.LoadSession(cmd[1]);
-                    break;
-                case "show":
-                    Session.ShowSessions();
-                    break;
-                case "delete":
-                    if (cmd.Length != 2) { _viewer.WrongCmdErrorMsg(new[] { "delete", "session-name" }); break; }
-                    Session.DeleteSession(cmd[1]);
-                    break;
                 case "demo":
                     DemoDialogue();
                     break;
