@@ -154,7 +154,7 @@ namespace ConsoleRecSys
 
             switch (line)
             {
-                case "MovieDbsDemo":
+                case "MovieDbsUserDemo":
                     LoadFromCsv("u.data");
                     UserUtil = new ConsoleMovieDbsUser();
                     GetApproachCtorParameterTypes("UserUserCfApproach");
@@ -164,7 +164,20 @@ namespace ConsoleRecSys
                         "UserItemMatrixRatingsPreProcessor",
                         "CosineSimilarityEvaluator",
                         "UserItemMatrixPostProcessor",
-                        "SimilarityAverageRatingsPredictor"
+                        "UserSimilarityAverageRatingsPredictor"
+                    };
+                    break;
+                case "MovieDbsItemDemo":
+                    LoadFromCsv("u.data");
+                    UserUtil = new ConsoleMovieDbsUser();
+                    GetApproachCtorParameterTypes("ItemItemCfApproach");
+                    approachParams = new[]
+                    {
+                        "FileStreamLineReader",
+                        "UserItemMatrixRatingsPreProcessor",
+                        "CosineSimilarityEvaluator",
+                        "UserItemMatrixPostProcessor",
+                        "ItemSimilarityAverageRatingsPredictor"
                     };
                     break;
                 case "SisSubjectsDemo":

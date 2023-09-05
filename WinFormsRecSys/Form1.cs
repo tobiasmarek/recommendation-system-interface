@@ -52,7 +52,27 @@ namespace WinFormsRecSys
                 "UserItemMatrixRatingsPreProcessor",
                 "CosineSimilarityEvaluator",
                 "UserItemMatrixPostProcessor",
-                "SimilarityAverageRatingsPredictor",
+                "UserSimilarityAverageRatingsPredictor",
+            };
+
+            _session.FillBoxesInPanel(approachParams, approachParametersPnl);
+            _session.SetUserDefinition("MovieDbsUser", userDefinitionTextBox);
+            UserComboBox.SelectedItem = "MovieDbsUser";
+        }
+
+        private void Demo3Btn_Click()
+        {
+            _session.LoadFromCsv("u.data");
+            _viewer.SetTextBoxText(FileTextBox, "u.data");
+            ApproachComboBox.SelectedItem = "ItemItemCfApproach";
+            _session.SetConvertorParams("u.item", 1);
+
+            string[] approachParams = new[] {
+                "FileStreamLineReader",
+                "UserItemMatrixRatingsPreProcessor",
+                "CosineSimilarityEvaluator",
+                "UserItemMatrixPostProcessor",
+                "ItemSimilarityAverageRatingsPredictor",
             };
 
             _session.FillBoxesInPanel(approachParams, approachParametersPnl);

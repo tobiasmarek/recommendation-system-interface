@@ -50,7 +50,7 @@ namespace RecommendationSystemInterface
         {
             float[][] dataMatrix = PreProcessor.Preprocess(RecordReader);
 
-            float[] userVector = new float[dataMatrix[0].Length];
+            float[] userVector = new float[dataMatrix[0].LongLength];
             if (User is not null)
             {
                 userVector = User.UserVectorizer.VectorizeUser(User, dataMatrix);
@@ -96,7 +96,7 @@ namespace RecommendationSystemInterface
         {
             float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader); // The creation of userItemMatrix
 
-            float[] userVector = new float[userItemMatrix[0].Length];
+            float[] userVector = new float[userItemMatrix[0].LongLength];
             if (User is not null)
             {
                 userVector = User.UserVectorizer.VectorizeUser(User, userItemMatrix);
@@ -106,7 +106,7 @@ namespace RecommendationSystemInterface
 
             float[][] userSimilarities = new float[userItemMatrix.LongLength][]; // Symmetric matrix of user similarities
 
-            for (int i = 0; i < userSimilarities.GetLength(0); i++)
+            for (int i = 0; i < userSimilarities.GetLongLength(0); i++)
             {
                 userSimilarities[i] = new float[i];
 
@@ -123,7 +123,7 @@ namespace RecommendationSystemInterface
         }
     }
 
-
+    
     /// <summary>
     /// Calculates similarities between *items* and makes predictions of missing item ratings in userItemMatrix according to it.
     /// The results are then saved in a file.
@@ -139,10 +139,48 @@ namespace RecommendationSystemInterface
 
         public override string Recommend()
         {
-            throw new LoggerException("ItemItemCfApproach is not implemented yet");
+            float[][] userItemMatrix = PreProcessor.Preprocess(RecordReader); // The creation of userItemMatrix
+
+            float[] userVector = new float[userItemMatrix[0].LongLength];
+            if (User is not null)
+            {
+                userVector = User.UserVectorizer.VectorizeUser(User, userItemMatrix);
+            }
+
+            userItemMatrix[0] = userVector; // Change the user with index 0 to our userVector
+
+            float[][] itemSimilarities = new float[userItemMatrix.GetLongLength(1)][]; // Symmetric matrix of item similarities
+
+            for (int i = 0; i < itemSimilarities.GetLength(0); i++)
+            {
+                itemSimilarities[i] = new float[i];
+
+                for (int j = 0; j < i; j++)
+                {
+                    if (i == j) { continue; }
+                    itemSimilarities[i][j] = Evaluator.EvaluateSimilarity(GetItem(i, userItemMatrix), GetItem(j, userItemMatrix));
+                }
+            }
+
+            Predictor.Predict(userItemMatrix, itemSimilarities); // Predicts missing values of userItemMatrix
+
+            return PostProcessor.Postprocess(userItemMatrix);
+        }
+
+        private float[] GetItem(int index, float[][] userItemMatrix)
+        {
+            float[] itemVector = new float[userItemMatrix.GetLongLength(0)];
+
+            for (int i = 0; i < itemVector.LongLength; i++)
+            {
+                if (index >= userItemMatrix[i].LongLength) { continue; }
+                itemVector[i] = userItemMatrix[i][index];
+            }
+
+            return itemVector;
         }
     }
-
+    
 
 
 
