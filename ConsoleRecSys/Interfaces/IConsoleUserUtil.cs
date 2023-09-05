@@ -78,6 +78,7 @@ namespace ConsoleRecSys.Interfaces
         public bool TryAdd(int index, string what)
         {
             if (index > 1 || !int.TryParse(what, out int number)) { return false; }
+            if (number < 0) { return false; }
 
             if (index == 0)
             {
@@ -142,7 +143,7 @@ namespace ConsoleRecSys.Interfaces
 
             if (!int.TryParse(pair[0], out int itemIndex) || !int.TryParse(pair[1], out int rating)) { return false; }
 
-            if (itemIndex < 0 || rating < 1 || rating > 5) { return false; }
+            if (itemIndex < 1 || rating < 1 || rating > 5) { return false; }
 
             UserItemRatings[itemIndex] = rating;
 
