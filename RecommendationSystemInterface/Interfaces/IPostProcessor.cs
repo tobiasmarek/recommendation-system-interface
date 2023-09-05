@@ -90,9 +90,10 @@ namespace RecommendationSystemInterface.Interfaces
             {
                 int ratingIndex = (int)Math.Round(userItemRatings[i] * conversion + negativeMinShift);
 
+                if (ratingIndex < 0 || ratingIndex >= countingList.Length) { continue; }
                 if (countingList[ratingIndex] is null) { countingList[ratingIndex] = new List<int>(); }
 
-                countingList[ratingIndex].Add(i); // +1??
+                countingList[ratingIndex].Add(i);
             }
 
             return countingList;
@@ -163,6 +164,7 @@ namespace RecommendationSystemInterface.Interfaces
             for (int i = 0; i < similaritiesVector.Length; i++)
             {
                 int ratingIndex = (int)Math.Round(similaritiesVector[i] * conversion + negativeMinShift);
+                if (ratingIndex < 0 || ratingIndex >= countingMatrix.GetLength(0)) { continue; }
                 countingMatrix[ratingIndex, i] = true;
             }
 
