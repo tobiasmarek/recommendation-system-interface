@@ -24,10 +24,11 @@ namespace RecommendationSystemInterface
         private ParameterInfo[]? ApproachParams { get; set; } // Approach ctor parameters
 
         protected string? DataPath { get; set; }
-        protected string? TemplateDataPath { get; set; }
 
         private IDisposableLineReader? RecordReader { get; set; } // The main reader of this program
+        
         private IPageConvertor? Convertor { get; set; }
+        protected object[]? ConvertorParamsWithoutResultFile { get; set; }
 
 
         protected Session(Viewer viewer)
@@ -45,10 +46,10 @@ namespace RecommendationSystemInterface
         public void GetRecommendations()
         {
             if (DataPath is null) { Viewer.ViewString("Source not selected!"); return; }
-            if (Approach is null) {Viewer.ViewString("Approach is null!"); return;}
-            if (User is null) {Viewer.ViewString("User is null!"); return;}
-            
-            if (Convertor is not null) { Convertor.ResultReader.Dispose(); }
+            if (Approach is null) { Viewer.ViewString("Approach is null!"); return; }
+            if (User is null) { Viewer.ViewString("User is null!"); return; }
+
+            Convertor = null;
             Approach.User = User;
             Approach.RecordReader.Reset();
 
@@ -56,10 +57,7 @@ namespace RecommendationSystemInterface
             {
                 string resultFile = Approach.Recommend();
                 Viewer.ViewFile(resultFile);
-
-                if (Approach.RecordReader is FileStreamLineReader && TemplateDataPath is not null)
-                { Convertor = new FileConvertor(resultFile, TemplateDataPath); }
-                else { Convertor = null; }
+                SetUpFileConvertor(resultFile);
             }
             catch (LoggerException e)
             {
@@ -339,6 +337,34 @@ namespace RecommendationSystemInterface
             }
 
             return instance;
+        }
+
+        /// <summary>
+        /// Tries to create an instance of FileConvertor
+        /// </summary>
+        private void SetUpFileConvertor(string resultFile)
+        {
+            if (ConvertorParamsWithoutResultFile is null) { return; }
+
+            object[] ctorParameters = new object[ConvertorParamsWithoutResultFile.Length + 1];
+            ctorParameters[0] = resultFile;
+
+            for (int i = 0; i < ConvertorParamsWithoutResultFile.Length; i++) { ctorParameters[i+1] = ConvertorParamsWithoutResultFile[i]; }
+
+            string resultTempFile = Path.GetTempFileName();
+            File.Copy(resultFile, resultTempFile, true);
+
+            try
+            {
+                var instance = Activator.CreateInstance(typeof(FileConvertor), ctorParameters);
+                if (instance is FileConvertor fileConvertor) { Convertor = fileConvertor; }
+            }
+            catch
+            {
+                throw new LoggerException("Problem with creating the instance of Convertor!");
+            }
+
+            ConvertorParamsWithoutResultFile = null;
         }
     }
 

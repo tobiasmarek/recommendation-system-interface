@@ -29,9 +29,10 @@ namespace RecommendationSystemInterface.Interfaces
 
         private readonly string _templateFilePath;
         private readonly StringBuilder _sb;
+        private readonly int _shiftInIndexing;
         private readonly int _chunkSize;
 
-        public FileConvertor(string resultFilePath, string templateFilePath, int chunkSize = 20)
+        public FileConvertor(string resultFilePath, string templateFilePath, int shiftInIndexing, int chunkSize)
         {
             try
             {
@@ -44,6 +45,7 @@ namespace RecommendationSystemInterface.Interfaces
 
             _templateFilePath = templateFilePath;
             _sb = new StringBuilder();
+            _shiftInIndexing = shiftInIndexing;
             _chunkSize = chunkSize;
         }
 
@@ -102,7 +104,7 @@ namespace RecommendationSystemInterface.Interfaces
                 if (stringPair.Length == 2 && int.TryParse(stringPair[0], out int itemIndex) &&
                     int.TryParse(stringPair[1], out int itemValue))
                 {
-                    resultDictionary.Add(itemIndex, itemValue);
+                    resultDictionary.Add(itemIndex - _shiftInIndexing, itemValue);
                 }
 
                 wordCounter++;
@@ -146,34 +148,6 @@ namespace RecommendationSystemInterface.Interfaces
             }
 
             return foundLines;
-        }
-    }
-
-
-
-
-    /// <summary>
-    /// Convertor from a result file to human readable form according to its template file that is present in a database.
-    /// </summary>
-    class ContentBasedDbsConvertor : IPageConvertor
-    {
-        public FileStreamWordReader ResultReader { get; init; }
-
-        public ContentBasedDbsConvertor(string resultFilePath)
-        {
-            try
-            {
-                ResultReader = new FileStreamWordReader(resultFilePath, new[] {','});
-            }
-            catch
-            {
-                throw new LoggerException("Problem has occurred when creating FileStreamWordReader in DBS Convertor");
-            }
-        }
-
-        public string ConvertPage()
-        {
-            throw new NotImplementedException();
         }
     }
 }

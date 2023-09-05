@@ -38,7 +38,6 @@ namespace WinFormsRecSys
             leftSidePnl.Enabled = true;
             userPnl.Enabled = true;
             userDefinitionTextBox.Enabled = true;
-            _session.SetTemplateDataPath("");
         }
 
         private void Demo1Btn_Click(object sender, EventArgs e)
@@ -46,7 +45,7 @@ namespace WinFormsRecSys
             _session.LoadFromCsv("u.data");
             _viewer.SetTextBoxText(FileTextBox, "u.data");
             ApproachComboBox.SelectedItem = "UserUserCfApproach";
-            _session.SetTemplateDataPath("u.item");
+            _session.SetConvertorParams("u.item", 1);
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
@@ -66,7 +65,7 @@ namespace WinFormsRecSys
             _session.LoadFromCsv("subjects_11310.csv");
             _viewer.SetTextBoxText(FileTextBox, "subjects_11310.csv");
             ApproachComboBox.SelectedItem = "StringSimilarityContentBasedApproach";
-            _session.SetTemplateDataPath("subjects_11310.csv");
+            _session.SetConvertorParams("subjects_11310.csv");
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",

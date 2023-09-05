@@ -14,13 +14,18 @@ namespace WinFormsRecSys
         /// Sets TemplateDataPath to a template file by getting its path at first
         /// and then, if needed, searches for a file name in Data directory. 
         /// </summary>
-        public void SetTemplateDataPath(string path)
+        public void SetConvertorParams(string path, int indexShift = 0, int chunkSize = 20)
         {
-            if (path == "") { TemplateDataPath = null; return; }
+            if (path == "") { ConvertorParamsWithoutResultFile = null; return; }
+
+            ConvertorParamsWithoutResultFile = new object[3];
+
+            ConvertorParamsWithoutResultFile[1] = indexShift;
+            ConvertorParamsWithoutResultFile[2] = chunkSize;
 
             if (File.Exists(path))
             {
-                TemplateDataPath = path;
+                ConvertorParamsWithoutResultFile[0] = path;
             }
             else
             {
@@ -28,11 +33,11 @@ namespace WinFormsRecSys
 
                 if (File.Exists(newPath))
                 {
-                    TemplateDataPath = newPath;
+                    ConvertorParamsWithoutResultFile[0] = newPath;
                 }
                 else
                 {
-                    TemplateDataPath = null;
+                    ConvertorParamsWithoutResultFile = null;
                     Viewer.ViewString("Template file does not exist!");
                 }
             }
