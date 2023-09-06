@@ -17,9 +17,9 @@ namespace WinFormsRecSys
             _viewer = new WinFormsViewer(this.OutputTextBox);
             _session = new WinFormsSession(_viewer);
 
-            loadFromComboBox.SelectedIndex = 0;
-            ApproachComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("Approach"));
-            UserComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User"));
+            loadFromComboBox.SelectedIndex = 0; // Select LoadFromCSV option
+            ApproachComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("Approach")); // Fill combo box with instantiable Approach classes
+            UserComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User")); // ..with instantiable User classes
         }
 
         /// <summary>
