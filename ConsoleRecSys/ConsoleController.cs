@@ -59,9 +59,6 @@ demo - try one of the demos
                     if (cmd.Length != 2) { _viewer.WrongCmdErrorMsg(new[] {"loadcsv", "filename / filepath without spaces"}); break; }
                     Session.LoadFromCsv(cmd[1]);
                     break;
-                case "loaddbs":
-                    Session.LoadFromDbs();
-                    break;
                 case "selectapproach":
                     if (!((ConsoleSession)Session).DataSourceKnown()) { _viewer.ViewString("Select data-source first. Load a csv for example."); break; }
                     string[] parameters = CreateApproachDialogue();
