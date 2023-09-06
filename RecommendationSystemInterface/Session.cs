@@ -27,7 +27,7 @@ namespace RecommendationSystemInterface
 
         private IDisposableLineReader? RecordReader { get; set; } // The main reader of this program
         
-        private IPageConvertor? Convertor { get; set; }
+        private IPageConvertor? Convertor { get; set; } // Converts result file according to a template file
         protected object[]? ConvertorParamsWithoutResultFile { get; set; }
 
 

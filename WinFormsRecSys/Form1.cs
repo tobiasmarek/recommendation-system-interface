@@ -5,7 +5,7 @@ using WinFormsRecSys.Interfaces;
 
 namespace WinFormsRecSys
 {
-    public partial class Form1 : Form // tady spis nejakej interface, kterej mi pomuze doplnit property "Session" a melo by byt : Controller
+    public partial class Form1 : Form
     {
         private readonly WinFormsSession _session;
         private readonly WinFormsViewer _viewer;
