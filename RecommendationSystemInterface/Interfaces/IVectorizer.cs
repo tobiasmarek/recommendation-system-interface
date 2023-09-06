@@ -61,7 +61,7 @@
 
 
     /// <summary>
-    /// Creates a vector as long as there is known items and fills in the user's ratings.
+    /// Creates a vector as long as there are known items and fills in the user's ratings.
     /// </summary>
     class MovieDbsUserVectorizer : IUserVectorizer
     {
