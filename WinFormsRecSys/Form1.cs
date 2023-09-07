@@ -22,7 +22,7 @@ namespace WinFormsRecSys
             loadFromComboBox.SelectedIndex = 0; // Select LoadFromCSV option
             ApproachComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("Approach")); // Fill combo box with instantiable Approach classes
             UserComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User")); // ..with instantiable User classes
-            _convertorPath = "";
+            _convertorPath = ""; // For making sure if the original csv file corresponds to the template file
         }
 
         /// <summary>
