@@ -63,11 +63,10 @@ namespace RecommendationSystemInterface
             {
                 Viewer.ViewString($"Error!{Environment.NewLine}{Environment.NewLine}{e}");
             }
-            catch (Exception e)
+            catch
             {
                 Viewer.ViewString(
-                    $"Something went wrong! Check your User and if it works with the logic of your Approach" +
-                    $"{Environment.NewLine}{Environment.NewLine}{e}");
+                    $"Something went wrong - logically! Check your User and if it works with the logic of your Approach");
             }
 
             GetNextConvertedResultPage();
