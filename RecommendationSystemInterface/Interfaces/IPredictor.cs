@@ -44,7 +44,7 @@ namespace RecommendationSystemInterface.Interfaces
         {
             float numerator = 0;
             float denominator = 0;
-            for (int i = 0; i < similaritiesVector.Length; i++)
+            for (int i = 0; i < Math.Min(similaritiesVector.Length, ratingsVector.Length); i++)
             {
                 numerator += similaritiesVector[i] * ratingsVector[i];
                 denominator += Math.Abs(similaritiesVector[i]);
