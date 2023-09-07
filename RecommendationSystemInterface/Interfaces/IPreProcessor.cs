@@ -71,6 +71,8 @@ namespace RecommendationSystemInterface.Interfaces
                 if (sr.EndOfLine && i != height - 1) { i++; matrix[i] = new float[width]; }
             }
 
+            sr.Dispose();
+
             return matrix;
         }
 
