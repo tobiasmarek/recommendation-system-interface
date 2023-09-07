@@ -1,4 +1,5 @@
-﻿using RecommendationSystemInterface.Interfaces;
+﻿using System;
+using RecommendationSystemInterface.Interfaces;
 
 namespace RecommendationSystemInterface
 {
@@ -113,6 +114,9 @@ namespace RecommendationSystemInterface
                 for (int j = 0; j < i; j++)
                 {
                     if (i == j) { continue; }
+                    userItemMatrix[i] ??= new float[userVector.Length];
+                    userItemMatrix[j] ??= new float[userVector.Length];
+
                     userSimilarities[i][j] = Evaluator.EvaluateSimilarity(userItemMatrix[i], userItemMatrix[j]);
                 }
             }
@@ -151,13 +155,14 @@ namespace RecommendationSystemInterface
 
             float[][] itemSimilarities = new float[userItemMatrix[0].LongLength][]; // Symmetric matrix of item similarities
 
-            for (int i = 0; i < itemSimilarities.GetLength(0); i++)
+            for (int i = 0; i < itemSimilarities.GetLongLength(0); i++)
             {
                 itemSimilarities[i] = new float[i];
 
                 for (int j = 0; j < i; j++)
                 {
                     if (i == j) { continue; }
+
                     itemSimilarities[i][j] = Evaluator.EvaluateSimilarity(GetItem(i, userItemMatrix), GetItem(j, userItemMatrix));
                 }
             }
@@ -173,6 +178,7 @@ namespace RecommendationSystemInterface
 
             for (int i = 0; i < itemVector.LongLength; i++)
             {
+                userItemMatrix[i] ??= new float[userItemMatrix[0].LongLength];
                 if (index >= userItemMatrix[i].LongLength) { continue; }
                 itemVector[i] = userItemMatrix[i][index];
             }
