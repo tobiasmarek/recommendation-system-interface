@@ -54,7 +54,7 @@ namespace WinFormsRecSys
             _viewer.SetTextBoxText(FileTextBox, "u.data");
             ApproachComboBox.SelectedItem = "UserUserCfApproach";
             _session.SetConvertorParams("u.item", 1);
-            _convertorPath = "u.item";
+            _convertorPath = "u.data";
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
@@ -95,7 +95,7 @@ namespace WinFormsRecSys
             _viewer.SetTextBoxText(FileTextBox, "u.data");
             ApproachComboBox.SelectedItem = "ItemItemCfApproach";
             _session.SetConvertorParams("u.item", 1);
-            _convertorPath = "u.item";
+            _convertorPath = "u.data";
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
