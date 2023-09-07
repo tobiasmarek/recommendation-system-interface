@@ -10,6 +10,8 @@ namespace WinFormsRecSys
         private readonly WinFormsSession _session;
         private readonly WinFormsViewer _viewer;
 
+        private string _convertorPath; // To keep track from which file's results are we converting
+
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +22,7 @@ namespace WinFormsRecSys
             loadFromComboBox.SelectedIndex = 0; // Select LoadFromCSV option
             ApproachComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("Approach")); // Fill combo box with instantiable Approach classes
             UserComboBox.Items.AddRange(_session.GetAvailableClassesOfAType("User")); // ..with instantiable User classes
+            _convertorPath = "";
         }
 
         /// <summary>
@@ -28,7 +31,9 @@ namespace WinFormsRecSys
         private async void RecBtn_Click(object sender, System.EventArgs e)
         {
             WaitingTimer.Start();
-            _session.SelectApproach(_session.GetSelectedComboBoxValues(approachParametersPnl));
+            var parameters = _session.GetSelectedComboBoxValues(approachParametersPnl);
+            if (!string.Equals(_convertorPath, _session.GetDataPathFileName())) { _session.SetConvertorParams(""); } // Checking if the original file has not changed
+            _session.SelectApproach(parameters);
             leftSidePnl.Enabled = false;
             _session.CreateUser($"WinForms{UserComboBox.SelectedItem}", userDefinitionTextBox.Text);
             userPnl.Enabled = false;
@@ -49,6 +54,7 @@ namespace WinFormsRecSys
             _viewer.SetTextBoxText(FileTextBox, "u.data");
             ApproachComboBox.SelectedItem = "UserUserCfApproach";
             _session.SetConvertorParams("u.item", 1);
+            _convertorPath = "u.item";
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
@@ -69,6 +75,7 @@ namespace WinFormsRecSys
             _viewer.SetTextBoxText(FileTextBox, "subjects_11310.csv");
             ApproachComboBox.SelectedItem = "StringSimilarityContentBasedApproach";
             _session.SetConvertorParams("subjects_11310.csv");
+            _convertorPath = "subjects_11310.csv";
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",
@@ -88,6 +95,7 @@ namespace WinFormsRecSys
             _viewer.SetTextBoxText(FileTextBox, "u.data");
             ApproachComboBox.SelectedItem = "ItemItemCfApproach";
             _session.SetConvertorParams("u.item", 1);
+            _convertorPath = "u.item";
 
             string[] approachParams = new[] {
                 "FileStreamLineReader",

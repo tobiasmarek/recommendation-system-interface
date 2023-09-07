@@ -134,6 +134,13 @@ namespace WinFormsRecSys
             }
         }
 
+        public string GetDataPathFileName()
+        {
+            if (DataPath is null) { return ""; }
+
+            return Path.GetFileName(DataPath);
+        }
+
         /// <summary>
         /// Removes everything but the solids (specified Controls that remain) from a panel.
         /// </summary>
