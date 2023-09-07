@@ -115,7 +115,7 @@ namespace WinFormsRecSys
             OpenFileDialog openFileDialog = new()
             {
                 Title = "Select a CSV file",
-                InitialDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Data"))
+                InitialDirectory = Path.GetFullPath(Environment.CurrentDirectory)
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
